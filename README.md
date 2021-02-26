@@ -1,2 +1,2 @@
-# DipSYN
+# DIPSYN
 it is synthesis
