@@ -1,0 +1,23 @@
+{
+	"name": "dipsyn",
+	"version": "1.0.0",
+	"license": "MIT",
+	"description": "dipsyn smart contracts",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Dipper-Labs/DIPSYN.git"
+	},
+	"keywords": [
+		"dUSD",
+		"Solidity",
+		"DeFi"
+	],
+	"engines": {
+		"node": ">=8.10.0"
+	},
+	"devDependencies": {},
+	"dependencies": {
+		"abi-decoder": "2.3.0",
+		"openzeppelin-solidity-2.3.0": "npm:openzeppelin-solidity@2.3.0"
+	}
+}
