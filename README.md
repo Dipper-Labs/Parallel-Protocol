@@ -1,2 +1,3 @@
 # DIPSYN
-it is synthesis
+It is a crypto-backed synthetic asset platform.
+
