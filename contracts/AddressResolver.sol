@@ -46,6 +46,7 @@ contract AddressResolver is Owned, IAddressResolver {
         return true;
     }
 
+    // get contract address
     function getAddress(bytes32 name) external view returns (address) {
         return repository[name];
     }
