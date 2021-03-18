@@ -82,7 +82,7 @@ contract SupplySchedule is Owned, ISupplySchedule {
 
     function getDaySupply(uint _dayCounter) internal view returns (uint) {
         uint numOfYears = _dayCounter.div(DAYS_PER_YEAR);
-        uint effectiveDecay = (SafeDecimalMath.unit().sub(DECAY_RATE)).powDecimal(numOfYears);
+        uint effectiveDecay = (DECAY_RATE).powDecimal(numOfYears);
         uint supplyForDay = INITIAL_DAILY_SUPPLY.multiplyDecimal(effectiveDecay);
         return supplyForDay;
     }

@@ -3,6 +3,9 @@ pragma solidity ^0.5.16;
 // Inheritance
 import "./BaseSynthetix.sol";
 
+// Libraries
+import "./SafeDecimalMath.sol";
+
 // Internal references
 import "./interfaces/IRewardEscrowV2.sol";
 import "./interfaces/ISupplySchedule.sol";
@@ -13,6 +16,11 @@ contract Synthetix is BaseSynthetix {
     bytes32 private constant CONTRACT_REWARDESCROW_V2 = "RewardEscrowV2";
     bytes32 private constant CONTRACT_SUPPLYSCHEDULE = "SupplySchedule";
 
+    address public dev; // dev address
+    address public eco; // ecology address
+    uint public constant DEV_PART = 150000000000000000; // 15%
+    uint public constant ECO_PART = 50000000000000000; // 5%
+
     // ========== CONSTRUCTOR ==========
 
     constructor(
@@ -20,8 +28,13 @@ contract Synthetix is BaseSynthetix {
         TokenState _tokenState,
         address _owner,
         uint _totalSupply,
-        address _resolver
-    ) public BaseSynthetix(_proxy, _tokenState, _owner, _totalSupply, _resolver) {}
+        address _resolver,
+        address _dev,
+        address _eco
+    ) public BaseSynthetix(_proxy, _tokenState, _owner, _totalSupply, _resolver) {
+        dev = _dev;
+        eco = _eco;
+    }
 
     function resolverAddressesRequired() public view returns (bytes32[] memory addresses) {
         bytes32[] memory existingAddresses = BaseSynthetix.resolverAddressesRequired();
@@ -156,6 +169,13 @@ contract Synthetix is BaseSynthetix {
         uint minterReward = _supplySchedule.minterReward();
         // Get the remainder
         uint amountToDistribute = supplyToMint.sub(minterReward);
+        // Get the dev reward
+        uint devReward = amountToDistribute.multiplyDecimal(DEV_PART);
+        // Get the eco reward
+        uint ecoReward = amountToDistribute.multiplyDecimal(ECO_PART);
+
+        // get the remainder
+        amountToDistribute = amountToDistribute.sub(minterReward).sub(devReward).sub(ecoReward);
 
         // Set the token balance to the RewardsDistribution contract
         tokenState.setBalanceOf(
@@ -170,6 +190,14 @@ contract Synthetix is BaseSynthetix {
         // Assign the minters reward.
         tokenState.setBalanceOf(msg.sender, tokenState.balanceOf(msg.sender).add(minterReward));
         emitTransfer(address(this), msg.sender, minterReward);
+
+        // Assign the dev reward.
+        tokenState.setBalanceOf(dev, tokenState.balanceOf(dev).add(devReward));
+        emitTransfer(address(this), dev, devReward);
+
+        // Assign the echo reward.
+        tokenState.setBalanceOf(eco, tokenState.balanceOf(eco).add(ecoReward));
+        emitTransfer(address(this), eco, ecoReward);
 
         totalSupply = totalSupply.add(supplyToMint);
 
