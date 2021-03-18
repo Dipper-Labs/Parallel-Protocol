@@ -22,43 +22,37 @@ contract SupplySchedule is Owned, ISupplySchedule {
     // Time of the last inflation supply mint event
     uint public lastMintEvent;
 
-    // Counter for number of weeks since the start of supply inflation
-    uint public weekCounter;
+    // Counter for number of days since the start of supply inflation
+    uint public dayCounter;
 
-    // The number of SNX rewarded to the caller of Synthetix.mint()
-    uint public minterReward = 200 * SafeDecimalMath.unit();
+    uint public constant DAYS_PER_YEAR = 365;
 
-    // The initial weekly inflationary supply is 75m / 52 until the start of the decay rate.
-    // 75e6 * SafeDecimalMath.unit() / 52
-    uint public constant INITIAL_WEEKLY_SUPPLY = 1442307692307692307692307;
+    // The number of SDIP rewarded to the caller of Synthetix.mint()
+    uint public minterReward = 20 * SafeDecimalMath.unit();
+
+    // The initial daily inflationary supply
+    uint public constant INITIAL_DAILY_SUPPLY = 864000 * 1e18;
 
     // Address of the SynthetixProxy for the onlySynthetix modifier
     address payable public synthetixProxy;
 
-    // Max SNX rewards for minter
+    // Max SDIP rewards for minter
     uint public constant MAX_MINTER_REWARD = 200 * 1e18;
 
     // How long each inflation period is before mint can be called
-    uint public constant MINT_PERIOD_DURATION = 1 weeks;
+    uint public constant MINT_PERIOD_DURATION = 1 days;
 
     uint public constant INFLATION_START_DATE = 1551830400; // 2019-03-06T00:00:00+00:00
-    uint public constant MINT_BUFFER = 1 days;
-    uint8 public constant SUPPLY_DECAY_START = 40; // Week 40
-    uint8 public constant SUPPLY_DECAY_END = 234; //  Supply Decay ends on Week 234 (inclusive of Week 234 for a total of 195 weeks of inflation decay)
 
-    // Weekly percentage decay of inflationary supply from the first 40 weeks of the 75% inflation rate
-    uint public constant DECAY_RATE = 12500000000000000; // 1.25% weekly
-
-    // Percentage growth of terminal supply per annum
-    uint public constant TERMINAL_SUPPLY_RATE_ANNUAL = 25000000000000000; // 2.5% pa
+    // Yearly percentage decay of inflationary supply
+    uint public constant DECAY_RATE = 500000000000000000; // 50% yearly
 
     constructor(
         address _owner,
-        uint _lastMintEvent,
-        uint _currentWeek
+        uint _lastMintEvent
     ) public Owned(_owner) {
         lastMintEvent = _lastMintEvent;
-        weekCounter = _currentWeek;
+        dayCounter = 0;
     }
 
     // ========== VIEWS ==========
@@ -73,78 +67,39 @@ contract SupplySchedule is Owned, ISupplySchedule {
             return totalAmount;
         }
 
-        uint remainingWeeksToMint = weeksSinceLastIssuance();
-
-        uint currentWeek = weekCounter;
-
+        uint currentDay = dayCounter;
+        uint remainingDaysToMint = daysSinceLastIssuance();
         // Calculate total mintable supply from exponential decay function
-        // The decay function stops after week 234
-        while (remainingWeeksToMint > 0) {
-            currentWeek++;
-
-            if (currentWeek < SUPPLY_DECAY_START) {
-                // If current week is before supply decay we add initial supply to mintableSupply
-                totalAmount = totalAmount.add(INITIAL_WEEKLY_SUPPLY);
-                remainingWeeksToMint--;
-            } else if (currentWeek <= SUPPLY_DECAY_END) {
-                // if current week before supply decay ends we add the new supply for the week
-                // diff between current week and (supply decay start week - 1)
-                uint decayCount = currentWeek.sub(SUPPLY_DECAY_START - 1);
-
-                totalAmount = totalAmount.add(tokenDecaySupplyForWeek(decayCount));
-                remainingWeeksToMint--;
-            } else {
-                // Terminal supply is calculated on the total supply of Synthetix including any new supply
-                // We can compound the remaining week's supply at the fixed terminal rate
-                uint totalSupply = IERC20(synthetixProxy).totalSupply();
-                uint currentTotalSupply = totalSupply.add(totalAmount);
-
-                totalAmount = totalAmount.add(terminalInflationSupply(currentTotalSupply, remainingWeeksToMint));
-                remainingWeeksToMint = 0;
-            }
+        while (remainingDaysToMint > 0) {
+            currentDay++;
+            uint daySupply = getDaySupply(currentDay);
+            totalAmount = totalAmount.add(daySupply);
+            remainingDaysToMint--;
         }
 
         return totalAmount;
     }
 
-    /**
-     * @return A unit amount of decaying inflationary supply from the INITIAL_WEEKLY_SUPPLY
-     * @dev New token supply reduces by the decay rate each week calculated as supply = INITIAL_WEEKLY_SUPPLY * ()
-     */
-    function tokenDecaySupplyForWeek(uint counter) public pure returns (uint) {
-        // Apply exponential decay function to number of weeks since
-        // start of inflation smoothing to calculate diminishing supply for the week.
-        uint effectiveDecay = (SafeDecimalMath.unit().sub(DECAY_RATE)).powDecimal(counter);
-        uint supplyForWeek = INITIAL_WEEKLY_SUPPLY.multiplyDecimal(effectiveDecay);
-
-        return supplyForWeek;
-    }
-
-    /**
-     * @return A unit amount of terminal inflation supply
-     * @dev Weekly compound rate based on number of weeks
-     */
-    function terminalInflationSupply(uint totalSupply, uint numOfWeeks) public pure returns (uint) {
-        // rate = (1 + weekly rate) ^ num of weeks
-        uint effectiveCompoundRate = SafeDecimalMath.unit().add(TERMINAL_SUPPLY_RATE_ANNUAL.div(52)).powDecimal(numOfWeeks);
-
-        // return Supply * (effectiveRate - 1) for extra supply to issue based on number of weeks
-        return totalSupply.multiplyDecimal(effectiveCompoundRate.sub(SafeDecimalMath.unit()));
+    function getDaySupply(uint _dayCounter) internal view returns (uint) {
+        uint numOfYears = _dayCounter.div(DAYS_PER_YEAR);
+        uint effectiveDecay = (SafeDecimalMath.unit().sub(DECAY_RATE)).powDecimal(numOfYears);
+        uint supplyForDay = INITIAL_DAILY_SUPPLY.multiplyDecimal(effectiveDecay);
+        return supplyForDay;
     }
 
     /**
      * @dev Take timeDiff in seconds (Dividend) and MINT_PERIOD_DURATION as (Divisor)
-     * @return Calculate the numberOfWeeks since last mint rounded down to 1 week
+     * @return Calculate the numberOfDays since last mint rounded down to 1 day
      */
-    function weeksSinceLastIssuance() public view returns (uint) {
-        // Get weeks since lastMintEvent
+    function daysSinceLastIssuance() public view returns (uint) {
+        // Get days since lastMintEvent
         // If lastMintEvent not set or 0, then start from inflation start date.
         uint timeDiff = lastMintEvent > 0 ? now.sub(lastMintEvent) : now.sub(INFLATION_START_DATE);
         return timeDiff.div(MINT_PERIOD_DURATION);
     }
 
     /**
-     * @return boolean whether the MINT_PERIOD_DURATION (7 days)
+     * @return boolean whether the MINT_PERIOD_DURATION (1 days)
      * has passed since the lastMintEvent.
      * */
     function isMintable() public view returns (bool) {
@@ -163,16 +118,15 @@ contract SupplySchedule is Owned, ISupplySchedule {
      * @param supplyMinted the amount of SNX the total supply was inflated by.
      * */
     function recordMintEvent(uint supplyMinted) external onlySynthetix returns (bool) {
-        uint numberOfWeeksIssued = weeksSinceLastIssuance();
+        uint numberOfDaysIssued = daysSinceLastIssuance();
 
-        // add number of weeks minted to weekCounter
-        weekCounter = weekCounter.add(numberOfWeeksIssued);
+        // add number of weeks minted to dayCounter
+        dayCounter = dayCounter.add(numberOfDaysIssued);
 
-        // Update mint event to latest week issued (start date + number of weeks issued * seconds in week)
-        // 1 day time buffer is added so inflation is minted after feePeriod closes
-        lastMintEvent = INFLATION_START_DATE.add(weekCounter.mul(MINT_PERIOD_DURATION)).add(MINT_BUFFER);
+        // Update mint event to latest day issued (start date + number of days issued * seconds in day)
+        lastMintEvent = INFLATION_START_DATE.add(dayCounter.mul(MINT_PERIOD_DURATION));
 
-        emit SupplyMinted(supplyMinted, numberOfWeeksIssued, lastMintEvent, now);
+        emit SupplyMinted(supplyMinted, numberOfDaysIssued, lastMintEvent, now);
         return true;
     }
 

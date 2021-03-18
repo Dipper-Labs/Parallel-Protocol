@@ -61,7 +61,6 @@ contract Issuer is Owned, MixinSystemSettings, IIssuer {
     /* ========== ENCODED NAMES ========== */
 
     bytes32 internal constant sUSD = "sUSD";
-    bytes32 internal constant sETH = "sETH";
     bytes32 internal constant SNX = "SNX";
 
     // Flexible storage names
