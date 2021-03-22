@@ -24,12 +24,6 @@ import "./interfaces/ICollateralManager.sol";
 import "./interfaces/IDebtCache.sol";
 
 
-interface IRewardEscrowV2 {
-    // Views
-    function balanceOf(address account) external view returns (uint);
-}
-
-
 interface IIssuerInternalDebtCache {
     function updateCachedSynthDebtWithRate(bytes32 currencyKey, uint currencyRate) external;
 
@@ -79,7 +73,6 @@ contract Issuer is Owned, MixinSystemSettings, IIssuer {
     bytes32 private constant CONTRACT_ETHERCOLLATERAL = "EtherCollateral";
     bytes32 private constant CONTRACT_ETHERCOLLATERAL_SUSD = "EtherCollateralsUSD";
     bytes32 private constant CONTRACT_COLLATERALMANAGER = "CollateralManager";
-    bytes32 private constant CONTRACT_REWARDESCROW_V2 = "RewardEscrowV2";
     bytes32 private constant CONTRACT_SYNTHETIXESCROW = "SynthetixEscrow";
     bytes32 private constant CONTRACT_LIQUIDATIONS = "Liquidations";
     bytes32 private constant CONTRACT_DEBTCACHE = "DebtCache";
@@ -98,11 +91,10 @@ contract Issuer is Owned, MixinSystemSettings, IIssuer {
         newAddresses[5] = CONTRACT_DELEGATEAPPROVALS;
         newAddresses[6] = CONTRACT_ETHERCOLLATERAL;
         newAddresses[7] = CONTRACT_ETHERCOLLATERAL_SUSD;
-        newAddresses[8] = CONTRACT_REWARDESCROW_V2;
-        newAddresses[9] = CONTRACT_SYNTHETIXESCROW;
-        newAddresses[10] = CONTRACT_LIQUIDATIONS;
-        newAddresses[11] = CONTRACT_DEBTCACHE;
-        newAddresses[12] = CONTRACT_COLLATERALMANAGER;
+        newAddresses[8] = CONTRACT_SYNTHETIXESCROW;
+        newAddresses[9] = CONTRACT_LIQUIDATIONS;
+        newAddresses[10] = CONTRACT_DEBTCACHE;
+        newAddresses[11] = CONTRACT_COLLATERALMANAGER;
         return combineArrays(existingAddresses, newAddresses);
     }
 
@@ -136,14 +128,6 @@ contract Issuer is Owned, MixinSystemSettings, IIssuer {
 
     function collateralManager() internal view returns (ICollateralManager) {
         return ICollateralManager(requireAndGetAddress(CONTRACT_COLLATERALMANAGER));
-    }
-
-    function rewardEscrowV2() internal view returns (IRewardEscrowV2) {
-        return IRewardEscrowV2(requireAndGetAddress(CONTRACT_REWARDESCROW_V2));
-    }
-
-    function synthetixEscrow() internal view returns (IHasBalance) {
-        return IHasBalance(requireAndGetAddress(CONTRACT_SYNTHETIXESCROW));
     }
 
     function debtCache() internal view returns (IIssuerInternalDebtCache) {
@@ -293,15 +277,6 @@ contract Issuer is Owned, MixinSystemSettings, IIssuer {
 
     function _collateral(address account) internal view returns (uint) {
         uint balance = IERC20(address(synthetix())).balanceOf(account);
-
-        if (address(synthetixEscrow()) != address(0)) {
-            balance = balance.add(synthetixEscrow().balanceOf(account));
-        }
-
-        if (address(rewardEscrowV2()) != address(0)) {
-            balance = balance.add(rewardEscrowV2().balanceOf(account));
-        }
-
         return balance;
     }
 

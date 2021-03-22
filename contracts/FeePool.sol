@@ -69,7 +69,6 @@ contract FeePool is Owned, Proxyable, LimitedSetup, MixinSystemSettings, IFeePoo
     bytes32 private constant CONTRACT_SYNTHETIXSTATE = "SynthetixState";
     bytes32 private constant CONTRACT_REWARDESCROW_V2 = "RewardEscrowV2";
     bytes32 private constant CONTRACT_DELEGATEAPPROVALS = "DelegateApprovals";
-    bytes32 private constant CONTRACT_ETH_COLLATERAL_SUSD = "EtherCollateralsUSD";
     bytes32 private constant CONTRACT_COLLATERALMANAGER = "CollateralManager";
     bytes32 private constant CONTRACT_REWARDSDISTRIBUTION = "RewardsDistribution";
 
@@ -98,11 +97,9 @@ contract FeePool is Owned, Proxyable, LimitedSetup, MixinSystemSettings, IFeePoo
         newAddresses[4] = CONTRACT_EXCHANGER;
         newAddresses[5] = CONTRACT_ISSUER;
         newAddresses[6] = CONTRACT_SYNTHETIXSTATE;
-        newAddresses[7] = CONTRACT_REWARDESCROW_V2;
-        newAddresses[8] = CONTRACT_DELEGATEAPPROVALS;
-        newAddresses[9] = CONTRACT_ETH_COLLATERAL_SUSD;
-        newAddresses[10] = CONTRACT_REWARDSDISTRIBUTION;
-        newAddresses[11] = CONTRACT_COLLATERALMANAGER;
+        newAddresses[7] = CONTRACT_DELEGATEAPPROVALS;
+        newAddresses[8] = CONTRACT_REWARDSDISTRIBUTION;
+        newAddresses[9] = CONTRACT_COLLATERALMANAGER;
         addresses = combineArrays(existingAddresses, newAddresses);
     }
 
@@ -126,10 +123,6 @@ contract FeePool is Owned, Proxyable, LimitedSetup, MixinSystemSettings, IFeePoo
         return IExchanger(requireAndGetAddress(CONTRACT_EXCHANGER));
     }
 
-    function etherCollateralsUSD() internal view returns (IEtherCollateralsUSD) {
-        return IEtherCollateralsUSD(requireAndGetAddress(CONTRACT_ETH_COLLATERAL_SUSD));
-    }
-
     function collateralManager() internal view returns (ICollateralManager) {
         return ICollateralManager(requireAndGetAddress(CONTRACT_COLLATERALMANAGER));
     }
@@ -140,10 +133,6 @@ contract FeePool is Owned, Proxyable, LimitedSetup, MixinSystemSettings, IFeePoo
 
     function synthetixState() internal view returns (ISynthetixState) {
         return ISynthetixState(requireAndGetAddress(CONTRACT_SYNTHETIXSTATE));
-    }
-
-    function rewardEscrowV2() internal view returns (IRewardEscrowV2) {
-        return IRewardEscrowV2(requireAndGetAddress(CONTRACT_REWARDESCROW_V2));
     }
 
     function delegateApprovals() internal view returns (IDelegateApprovals) {
@@ -474,12 +463,7 @@ contract FeePool is Owned, Proxyable, LimitedSetup, MixinSystemSettings, IFeePoo
      * @param snxAmount The amount of SNX.
      */
     function _payRewards(address account, uint snxAmount) internal notFeeAddress(account) {
-        /* Escrow the tokens for 1 year. */
-        uint escrowDuration = 52 weeks;
-
-        // Record vesting entry for claiming address and amount
-        // SNX already minted to rewardEscrow balance
-        rewardEscrowV2().appendVestingEntry(account, snxAmount, escrowDuration);
+        IERC20(address(synthetix())).transfer(account, snxAmount);
     }
 
     /**
@@ -719,10 +703,9 @@ contract FeePool is Owned, Proxyable, LimitedSetup, MixinSystemSettings, IFeePoo
     modifier onlyInternalContracts {
         bool isExchanger = msg.sender == address(exchanger());
         bool isSynth = issuer().synthsByAddress(msg.sender) != bytes32(0);
-        bool isEtherCollateralsUSD = msg.sender == address(etherCollateralsUSD());
         bool isCollateral = collateralManager().hasCollateral(msg.sender);
 
-        require(isExchanger || isSynth || isEtherCollateralsUSD || isCollateral, "Only Internal Contracts");
+        require(isExchanger || isSynth || isCollateral, "Only Internal Contracts");
         _;
     }
 
