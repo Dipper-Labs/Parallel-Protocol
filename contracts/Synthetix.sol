@@ -7,13 +7,11 @@ import "./BaseSynthetix.sol";
 import "./SafeDecimalMath.sol";
 
 // Internal references
-import "./interfaces/IRewardEscrowV2.sol";
 import "./interfaces/ISupplySchedule.sol";
 
 
 contract Synthetix is BaseSynthetix {
     // ========== ADDRESS RESOLVER CONFIGURATION ==========
-    bytes32 private constant CONTRACT_REWARDESCROW_V2 = "RewardEscrowV2";
     bytes32 private constant CONTRACT_SUPPLYSCHEDULE = "SupplySchedule";
 
     address public dev; // dev address
@@ -39,14 +37,8 @@ contract Synthetix is BaseSynthetix {
     function resolverAddressesRequired() public view returns (bytes32[] memory addresses) {
         bytes32[] memory existingAddresses = BaseSynthetix.resolverAddressesRequired();
         bytes32[] memory newAddresses = new bytes32[](3);
-        newAddresses[0] = CONTRACT_REWARDESCROW_V2;
-        newAddresses[1] = CONTRACT_SUPPLYSCHEDULE;
+        newAddresses[0] = CONTRACT_SUPPLYSCHEDULE;
         return combineArrays(existingAddresses, newAddresses);
-    }
-
-    // ========== VIEWS ==========
-    function rewardEscrowV2() internal view returns (IRewardEscrowV2) {
-        return IRewardEscrowV2(requireAndGetAddress(CONTRACT_REWARDESCROW_V2));
     }
 
     function supplySchedule() internal view returns (ISupplySchedule) {
