@@ -20,7 +20,6 @@ contract MixinSystemSettings is MixinResolver {
     bytes32 internal constant SETTING_RATE_STALE_PERIOD = "rateStalePeriod";
     bytes32 internal constant SETTING_EXCHANGE_FEE_RATE = "exchangeFeeRate";
     bytes32 internal constant SETTING_MINIMUM_STAKE_TIME = "minimumStakeTime";
-    bytes32 internal constant SETTING_TRADING_REWARDS_ENABLED = "tradingRewardsEnabled";
     bytes32 internal constant SETTING_DEBT_SNAPSHOT_STALE_TIME = "debtSnapshotStaleTime";
     bytes32 internal constant SETTING_CROSS_DOMAIN_DEPOSIT_GAS_LIMIT = "crossDomainDepositGasLimit";
     bytes32 internal constant SETTING_CROSS_DOMAIN_ESCROW_GAS_LIMIT = "crossDomainEscrowGasLimit";
@@ -58,10 +57,6 @@ contract MixinSystemSettings is MixinResolver {
 
     function getCrossDomainMessageGasLimit(CrossDomainMessageGasLimits gasLimitType) internal view returns (uint) {
         return flexibleStorage().getUIntValue(SETTING_CONTRACT_NAME, _getGasLimitSetting(gasLimitType));
-    }
-
-    function getTradingRewardsEnabled() internal view returns (bool) {
-        return flexibleStorage().getBoolValue(SETTING_CONTRACT_NAME, SETTING_TRADING_REWARDS_ENABLED);
     }
 
     function getWaitingPeriodSecs() internal view returns (uint) {

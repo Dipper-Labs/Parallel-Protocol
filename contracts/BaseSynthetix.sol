@@ -231,31 +231,11 @@ contract BaseSynthetix is IERC20, ExternStateToken, MixinResolver, ISynthetix {
         _notImplemented();
     }
 
-    function exchangeWithTracking(
-        bytes32,
-        uint,
-        bytes32,
-        address,
-        bytes32
-    ) external returns (uint) {
-        _notImplemented();
-    }
 
-    function exchangeOnBehalfWithTracking(
-        address,
-        bytes32,
-        uint,
-        bytes32,
-        address,
-        bytes32
-    ) external returns (uint) {
-        _notImplemented();
-    }
 
     function exchangeWithVirtual(
         bytes32,
         uint,
-        bytes32,
         bytes32
     ) external returns (uint, IVirtualSynth) {
         _notImplemented();

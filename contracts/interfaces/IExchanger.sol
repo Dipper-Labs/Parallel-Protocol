@@ -65,33 +65,12 @@ interface IExchanger {
         bytes32 destinationCurrencyKey
     ) external returns (uint amountReceived);
 
-    function exchangeWithTracking(
-        address from,
-        bytes32 sourceCurrencyKey,
-        uint sourceAmount,
-        bytes32 destinationCurrencyKey,
-        address destinationAddress,
-        address originator,
-        bytes32 trackingCode
-    ) external returns (uint amountReceived);
-
-    function exchangeOnBehalfWithTracking(
-        address exchangeForAddress,
-        address from,
-        bytes32 sourceCurrencyKey,
-        uint sourceAmount,
-        bytes32 destinationCurrencyKey,
-        address originator,
-        bytes32 trackingCode
-    ) external returns (uint amountReceived);
-
     function exchangeWithVirtual(
         address from,
         bytes32 sourceCurrencyKey,
         uint sourceAmount,
         bytes32 destinationCurrencyKey,
-        address destinationAddress,
-        bytes32 trackingCode
+        address destinationAddress
     ) external returns (uint amountReceived, IVirtualSynth vSynth);
 
     function settle(address from, bytes32 currencyKey)

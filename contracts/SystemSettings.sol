@@ -114,12 +114,6 @@ contract SystemSettings is Owned, MixinSystemSettings, ISystemSettings {
         return getDebtSnapshotStaleTime();
     }
 
-    // SIP-63 Trading incentives
-    // determines if Exchanger records fee entries in TradingRewards
-    function tradingRewardsEnabled() external view returns (bool) {
-        return getTradingRewardsEnabled();
-    }
-
     function crossDomainMessageGasLimit(CrossDomainMessageGasLimits gasLimitType) external view returns (uint) {
         return getCrossDomainMessageGasLimit(gasLimitType);
     }
@@ -141,11 +135,6 @@ contract SystemSettings is Owned, MixinSystemSettings, ISystemSettings {
             _crossDomainMessageGasLimit
         );
         emit CrossDomainMessageGasLimitChanged(_gasLimitType, _crossDomainMessageGasLimit);
-    }
-
-    function setTradingRewardsEnabled(bool _tradingRewardsEnabled) external onlyOwner {
-        flexibleStorage().setBoolValue(SETTING_CONTRACT_NAME, SETTING_TRADING_REWARDS_ENABLED, _tradingRewardsEnabled);
-        emit TradingRewardsEnabled(_tradingRewardsEnabled);
     }
 
     function setWaitingPeriodSecs(uint _waitingPeriodSecs) external onlyOwner {
@@ -257,7 +246,6 @@ contract SystemSettings is Owned, MixinSystemSettings, ISystemSettings {
 
     // ========== EVENTS ==========
     event CrossDomainMessageGasLimitChanged(CrossDomainMessageGasLimits gasLimitType, uint newLimit);
-    event TradingRewardsEnabled(bool enabled);
     event WaitingPeriodSecsUpdated(uint waitingPeriodSecs);
     event PriceDeviationThresholdUpdated(uint threshold);
     event IssuanceRatioUpdated(uint newRatio);
