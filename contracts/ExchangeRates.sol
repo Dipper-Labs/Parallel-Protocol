@@ -10,10 +10,6 @@ import "./interfaces/IExchangeRates.sol";
 import "./SafeDecimalMath.sol";
 
 // Internal references
-// AggregatorInterface from Chainlink represents a decentralized pricing network for a single currency key
-import "@chainlink/contracts-0.0.10/src/v0.5/interfaces/AggregatorV2V3Interface.sol";
-// FlagsInterface from Chainlink addresses SIP-76
-import "@chainlink/contracts-0.0.10/src/v0.5/interfaces/FlagsInterface.sol";
 import "./interfaces/IExchanger.sol";
 
 
@@ -27,16 +23,10 @@ contract ExchangeRates is Owned, MixinSystemSettings, IExchangeRates {
     // The address of the oracle which pushes rate updates to this contract
     address public oracle;
 
-    // Decentralized oracle networks that feed into pricing aggregators
-    mapping(bytes32 => AggregatorV2V3Interface) public aggregators;
-
     mapping(bytes32 => uint8) public currencyKeyDecimals;
 
-    // List of aggregator keys for convenient iteration
-    bytes32[] public aggregatorKeys;
-
     // Do not allow the oracle to submit times any further forward into the future than this constant.
-    uint private constant ORACLE_FUTURE_LIMIT = 10 minutes;
+    uint private constant ORACLE_FUTURE_LIMIT = 1 minutes;
 
     mapping(bytes32 => InversePricing) public inversePricing;
 
@@ -161,34 +151,6 @@ contract ExchangeRates is Owned, MixinSystemSettings, IExchangeRates {
         }
     }
 
-    function addAggregator(bytes32 currencyKey, address aggregatorAddress) external onlyOwner {
-        AggregatorV2V3Interface aggregator = AggregatorV2V3Interface(aggregatorAddress);
-        // This check tries to make sure that a valid aggregator is being added.
-        // It checks if the aggregator is an existing smart contract that has implemented `latestTimestamp` function.
-
-        require(aggregator.latestRound() >= 0, "Given Aggregator is invalid");
-        uint8 decimals = aggregator.decimals();
-        require(decimals <= 18, "Aggregator decimals should be lower or equal to 18");
-        if (address(aggregators[currencyKey]) == address(0)) {
-            aggregatorKeys.push(currencyKey);
-        }
-        aggregators[currencyKey] = aggregator;
-        currencyKeyDecimals[currencyKey] = decimals;
-        emit AggregatorAdded(currencyKey, address(aggregator));
-    }
-
-    function removeAggregator(bytes32 currencyKey) external onlyOwner {
-        address aggregator = address(aggregators[currencyKey]);
-        require(aggregator != address(0), "No aggregator exists for key");
-        delete aggregators[currencyKey];
-        delete currencyKeyDecimals[currencyKey];
-
-        bool wasRemoved = removeFromArray(currencyKey, aggregatorKeys);
-
-        if (wasRemoved) {
-            emit AggregatorRemoved(currencyKey, aggregator);
-        }
-    }
 
     // SIP-75 Public keeper function to freeze a synth that is out of bounds
     function freezeRate(bytes32 currencyKey) external {
@@ -229,23 +191,8 @@ contract ExchangeRates is Owned, MixinSystemSettings, IExchangeRates {
         }
     }
 
-    function currenciesUsingAggregator(address aggregator) external view returns (bytes32[] memory currencies) {
-        uint count = 0;
-        currencies = new bytes32[](aggregatorKeys.length);
-        for (uint i = 0; i < aggregatorKeys.length; i++) {
-            bytes32 currencyKey = aggregatorKeys[i];
-            if (address(aggregators[currencyKey]) == aggregator) {
-                currencies[count++] = currencyKey;
-            }
-        }
-    }
-
     function rateStalePeriod() external view returns (uint) {
         return getRateStalePeriod();
-    }
-
-    function aggregatorWarningFlags() external view returns (address) {
-        return getAggregatorWarningFlags();
     }
 
     function rateAndUpdatedTime(bytes32 currencyKey) external view returns (uint rate, uint time) {
@@ -384,8 +331,7 @@ contract ExchangeRates is Owned, MixinSystemSettings, IExchangeRates {
         }
         return (
             rateAndTime.rate,
-            _rateIsStaleWithTime(getRateStalePeriod(), rateAndTime.time) ||
-                _rateIsFlagged(currencyKey, FlagsInterface(getAggregatorWarningFlags()))
+            _rateIsStaleWithTime(getRateStalePeriod(), rateAndTime.time)
         );
     }
 
@@ -398,15 +344,12 @@ contract ExchangeRates is Owned, MixinSystemSettings, IExchangeRates {
 
         uint256 _rateStalePeriod = getRateStalePeriod();
 
-        // fetch all flags at once
-        bool[] memory flagList = getFlagsForRates(currencyKeys);
-
         for (uint i = 0; i < currencyKeys.length; i++) {
             // do one lookup of the rate & time to minimize gas
             RateAndUpdatedTime memory rateEntry = _getRateAndUpdatedTime(currencyKeys[i]);
             rates[i] = rateEntry.rate;
             if (!anyRateInvalid && currencyKeys[i] != "sUSD") {
-                anyRateInvalid = flagList[i] || _rateIsStaleWithTime(_rateStalePeriod, rateEntry.time);
+                anyRateInvalid = _rateIsStaleWithTime(_rateStalePeriod, rateEntry.time);
             }
         }
     }
@@ -420,23 +363,16 @@ contract ExchangeRates is Owned, MixinSystemSettings, IExchangeRates {
     }
 
     function rateIsInvalid(bytes32 currencyKey) external view returns (bool) {
-        return
-            _rateIsStale(currencyKey, getRateStalePeriod()) ||
-            _rateIsFlagged(currencyKey, FlagsInterface(getAggregatorWarningFlags()));
-    }
-
-    function rateIsFlagged(bytes32 currencyKey) external view returns (bool) {
-        return _rateIsFlagged(currencyKey, FlagsInterface(getAggregatorWarningFlags()));
+        return _rateIsStale(currencyKey, getRateStalePeriod());
     }
 
     function anyRateIsInvalid(bytes32[] calldata currencyKeys) external view returns (bool) {
         // Loop through each key and check whether the data point is stale.
 
         uint256 _rateStalePeriod = getRateStalePeriod();
-        bool[] memory flagList = getFlagsForRates(currencyKeys);
 
         for (uint i = 0; i < currencyKeys.length; i++) {
-            if (flagList[i] || _rateIsStale(currencyKeys[i], _rateStalePeriod)) {
+            if (_rateIsStale(currencyKeys[i], _rateStalePeriod)) {
                 return true;
             }
         }
@@ -448,23 +384,6 @@ contract ExchangeRates is Owned, MixinSystemSettings, IExchangeRates {
 
     function exchanger() internal view returns (IExchanger) {
         return IExchanger(requireAndGetAddress(CONTRACT_EXCHANGER));
-    }
-
-    function getFlagsForRates(bytes32[] memory currencyKeys) internal view returns (bool[] memory flagList) {
-        FlagsInterface _flags = FlagsInterface(getAggregatorWarningFlags());
-
-        // fetch all flags at once
-        if (_flags != FlagsInterface(0)) {
-            address[] memory _aggregators = new address[](currencyKeys.length);
-
-            for (uint i = 0; i < currencyKeys.length; i++) {
-                _aggregators[i] = address(aggregators[currencyKeys[i]]);
-            }
-
-            flagList = _flags.getFlags(_aggregators);
-        } else {
-            flagList = new bool[](currencyKeys.length);
-        }
     }
 
     function _setRate(
@@ -587,65 +506,19 @@ contract ExchangeRates is Owned, MixinSystemSettings, IExchangeRates {
     }
 
     function _getRateAndUpdatedTime(bytes32 currencyKey) internal view returns (RateAndUpdatedTime memory) {
-        AggregatorV2V3Interface aggregator = aggregators[currencyKey];
+        uint roundId = currentRoundForRate[currencyKey];
+        RateAndUpdatedTime memory entry = _rates[currencyKey][roundId];
 
-        if (aggregator != AggregatorV2V3Interface(0)) {
-            // this view from the aggregator is the most gas efficient but it can throw when there's no data,
-            // so let's call it low-level to suppress any reverts
-            bytes memory payload = abi.encodeWithSignature("latestRoundData()");
-            // solhint-disable avoid-low-level-calls
-            (bool success, bytes memory returnData) = address(aggregator).staticcall(payload);
-
-            if (success) {
-                (uint80 roundId, int256 answer, , uint256 updatedAt, ) = abi.decode(
-                    returnData,
-                    (uint80, int256, uint256, uint256, uint80)
-                );
-                return
-                    RateAndUpdatedTime({
-                        rate: uint216(_rateOrInverted(currencyKey, _formatAggregatorAnswer(currencyKey, answer), roundId)),
-                        time: uint40(updatedAt)
-                    });
-            }
-        } else {
-            uint roundId = currentRoundForRate[currencyKey];
-            RateAndUpdatedTime memory entry = _rates[currencyKey][roundId];
-
-            return RateAndUpdatedTime({rate: uint216(_rateOrInverted(currencyKey, entry.rate, roundId)), time: entry.time});
-        }
+        return RateAndUpdatedTime({rate: uint216(_rateOrInverted(currencyKey, entry.rate, roundId)), time: entry.time});
     }
 
     function _getCurrentRoundId(bytes32 currencyKey) internal view returns (uint) {
-        AggregatorV2V3Interface aggregator = aggregators[currencyKey];
-
-        if (aggregator != AggregatorV2V3Interface(0)) {
-            return aggregator.latestRound();
-        } else {
-            return currentRoundForRate[currencyKey];
-        }
+        return currentRoundForRate[currencyKey];
     }
 
     function _getRateAndTimestampAtRound(bytes32 currencyKey, uint roundId) internal view returns (uint rate, uint time) {
-        AggregatorV2V3Interface aggregator = aggregators[currencyKey];
-
-        if (aggregator != AggregatorV2V3Interface(0)) {
-            // this view from the aggregator is the most gas efficient but it can throw when there's no data,
-            // so let's call it low-level to suppress any reverts
-            bytes memory payload = abi.encodeWithSignature("getRoundData(uint80)", roundId);
-            // solhint-disable avoid-low-level-calls
-            (bool success, bytes memory returnData) = address(aggregator).staticcall(payload);
-
-            if (success) {
-                (, int256 answer, , uint256 updatedAt, ) = abi.decode(
-                    returnData,
-                    (uint80, int256, uint256, uint256, uint80)
-                );
-                return (_rateOrInverted(currencyKey, _formatAggregatorAnswer(currencyKey, answer), roundId), updatedAt);
-            }
-        } else {
-            RateAndUpdatedTime memory update = _rates[currencyKey][roundId];
-            return (_rateOrInverted(currencyKey, update.rate, roundId), update.time);
-        }
+        RateAndUpdatedTime memory update = _rates[currencyKey][roundId];
+        return (_rateOrInverted(currencyKey, update.rate, roundId), update.time);
     }
 
     function _getRate(bytes32 currencyKey) internal view returns (uint256) {
@@ -698,17 +571,6 @@ contract ExchangeRates is Owned, MixinSystemSettings, IExchangeRates {
     function _rateIsFrozen(bytes32 currencyKey) internal view returns (bool) {
         InversePricing memory inverse = inversePricing[currencyKey];
         return inverse.frozenAtUpperLimit || inverse.frozenAtLowerLimit;
-    }
-
-    function _rateIsFlagged(bytes32 currencyKey, FlagsInterface flags) internal view returns (bool) {
-        // sUSD is a special case and is never invalid
-        if (currencyKey == "sUSD") return false;
-        address aggregator = address(aggregators[currencyKey]);
-        // when no aggregator or when the flags haven't been setup
-        if (aggregator == address(0) || flags == FlagsInterface(0)) {
-            return false;
-        }
-        return flags.getFlag(aggregator);
     }
 
     /* ========== MODIFIERS ========== */

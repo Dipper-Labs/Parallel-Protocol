@@ -114,10 +114,6 @@ contract SystemSettings is Owned, MixinSystemSettings, ISystemSettings {
         return getDebtSnapshotStaleTime();
     }
 
-    function aggregatorWarningFlags() external view returns (address) {
-        return getAggregatorWarningFlags();
-    }
-
     // SIP-63 Trading incentives
     // determines if Exchanger records fee entries in TradingRewards
     function tradingRewardsEnabled() external view returns (bool) {
@@ -259,12 +255,6 @@ contract SystemSettings is Owned, MixinSystemSettings, ISystemSettings {
         emit DebtSnapshotStaleTimeUpdated(_seconds);
     }
 
-    function setAggregatorWarningFlags(address _flags) external onlyOwner {
-        require(_flags != address(0), "Valid address must be given");
-        flexibleStorage().setAddressValue(SETTING_CONTRACT_NAME, SETTING_AGGREGATOR_WARNING_FLAGS, _flags);
-        emit AggregatorWarningFlagsUpdated(_flags);
-    }
-
     // ========== EVENTS ==========
     event CrossDomainMessageGasLimitChanged(CrossDomainMessageGasLimits gasLimitType, uint newLimit);
     event TradingRewardsEnabled(bool enabled);
@@ -280,5 +270,4 @@ contract SystemSettings is Owned, MixinSystemSettings, ISystemSettings {
     event ExchangeFeeUpdated(bytes32 synthKey, uint newExchangeFeeRate);
     event MinimumStakeTimeUpdated(uint minimumStakeTime);
     event DebtSnapshotStaleTimeUpdated(uint debtSnapshotStaleTime);
-    event AggregatorWarningFlagsUpdated(address flags);
 }

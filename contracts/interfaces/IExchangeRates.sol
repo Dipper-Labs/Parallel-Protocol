@@ -17,17 +17,11 @@ interface IExchangeRates {
     }
 
     // Views
-    function aggregators(bytes32 currencyKey) external view returns (address);
-
-    function aggregatorWarningFlags() external view returns (address);
-
     function anyRateIsInvalid(bytes32[] calldata currencyKeys) external view returns (bool);
 
     function canFreezeRate(bytes32 currencyKey) external view returns (bool);
 
     function currentRoundForRate(bytes32 currencyKey) external view returns (uint);
-
-    function currenciesUsingAggregator(address aggregator) external view returns (bytes32[] memory);
 
     function effectiveValue(
         bytes32 sourceCurrencyKey,
