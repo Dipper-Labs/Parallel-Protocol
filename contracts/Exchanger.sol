@@ -59,7 +59,6 @@ interface IExchangerInternalDebtCache {
 }
 
 
-// https://docs.synthetix.io/contracts/source/contracts/exchanger
 contract Exchanger is Owned, MixinSystemSettings, IExchanger {
     using SafeMath for uint;
     using SafeDecimalMath for uint;
@@ -121,6 +120,7 @@ contract Exchanger is Owned, MixinSystemSettings, IExchanger {
     }
 
     function exchangeRates() internal view returns (IExchangeRates) {
+
         return IExchangeRates(requireAndGetAddress(CONTRACT_EXRATES));
     }
 
