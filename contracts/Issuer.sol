@@ -21,26 +21,6 @@ import "./interfaces/IHasBalance.sol";
 import "./interfaces/IERC20.sol";
 import "./interfaces/ILiquidations.sol";
 import "./interfaces/ICollateralManager.sol";
-import "./interfaces/IDebtCache.sol";
-
-
-interface IIssuerInternalDebtCache {
-    function updateCachedSynthDebtWithRate(bytes32 currencyKey, uint currencyRate) external;
-
-    function updateCachedSynthDebtsWithRates(bytes32[] calldata currencyKeys, uint[] calldata currencyRates) external;
-
-    function updateDebtCacheValidity(bool currentlyInvalid) external;
-
-    function cacheInfo()
-        external
-        view
-        returns (
-            uint cachedDebt,
-            uint timestamp,
-            bool isInvalid,
-            bool isStale
-        );
-}
 
 
 contract Issuer is Owned, MixinSystemSettings, IIssuer {
@@ -75,7 +55,6 @@ contract Issuer is Owned, MixinSystemSettings, IIssuer {
     bytes32 private constant CONTRACT_COLLATERALMANAGER = "CollateralManager";
     bytes32 private constant CONTRACT_SYNTHETIXESCROW = "SynthetixEscrow";
     bytes32 private constant CONTRACT_LIQUIDATIONS = "Liquidations";
-    bytes32 private constant CONTRACT_DEBTCACHE = "DebtCache";
 
     constructor(address _owner, address _resolver) public Owned(_owner) MixinSystemSettings(_resolver) {}
 
@@ -93,8 +72,7 @@ contract Issuer is Owned, MixinSystemSettings, IIssuer {
         newAddresses[7] = CONTRACT_ETHERCOLLATERAL_SUSD;
         newAddresses[8] = CONTRACT_SYNTHETIXESCROW;
         newAddresses[9] = CONTRACT_LIQUIDATIONS;
-        newAddresses[10] = CONTRACT_DEBTCACHE;
-        newAddresses[11] = CONTRACT_COLLATERALMANAGER;
+        newAddresses[10] = CONTRACT_COLLATERALMANAGER;
         return combineArrays(existingAddresses, newAddresses);
     }
 
@@ -130,10 +108,6 @@ contract Issuer is Owned, MixinSystemSettings, IIssuer {
         return ICollateralManager(requireAndGetAddress(CONTRACT_COLLATERALMANAGER));
     }
 
-    function debtCache() internal view returns (IIssuerInternalDebtCache) {
-        return IIssuerInternalDebtCache(requireAndGetAddress(CONTRACT_DEBTCACHE));
-    }
-
     function issuanceRatio() external view returns (uint) {
         return getIssuanceRatio();
     }
@@ -157,8 +131,7 @@ contract Issuer is Owned, MixinSystemSettings, IIssuer {
         view
         returns (uint totalIssued, bool anyRateIsInvalid)
     {
-        (uint debt, , bool cacheIsInvalid, bool cacheIsStale) = debtCache().cacheInfo();
-        anyRateIsInvalid = cacheIsInvalid || cacheIsStale;
+        uint debt = 0;
 
         IExchangeRates exRates = exchangeRates();
 
@@ -405,10 +378,6 @@ contract Issuer is Owned, MixinSystemSettings, IIssuer {
 
     function addSynth(ISynth synth) external onlyOwner {
         _addSynth(synth);
-        // Invalidate the cache to force a snapshot to be recomputed. If a synth were to be added
-        // back to the system and it still somehow had cached debt, this would force the value to be
-        // updated.
-        debtCache().updateDebtCacheValidity(true);
     }
 
     function addSynths(ISynth[] calldata synthsToAdd) external onlyOwner {
@@ -416,9 +385,6 @@ contract Issuer is Owned, MixinSystemSettings, IIssuer {
         for (uint i = 0; i < numSynths; i++) {
             _addSynth(synthsToAdd[i]);
         }
-
-        // Invalidate the cache to force a snapshot to be recomputed.
-        debtCache().updateDebtCacheValidity(true);
     }
 
     function _removeSynth(bytes32 currencyKey) internal {
@@ -452,24 +418,11 @@ contract Issuer is Owned, MixinSystemSettings, IIssuer {
     }
 
     function removeSynth(bytes32 currencyKey) external onlyOwner {
-        // Remove its contribution from the debt pool snapshot, and
-        // invalidate the cache to force a new snapshot.
-        IIssuerInternalDebtCache cache = debtCache();
-        cache.updateCachedSynthDebtWithRate(currencyKey, 0);
-        cache.updateDebtCacheValidity(true);
-
         _removeSynth(currencyKey);
     }
 
     function removeSynths(bytes32[] calldata currencyKeys) external onlyOwner {
         uint numKeys = currencyKeys.length;
-
-        // Remove their contributions from the debt pool snapshot, and
-        // invalidate the cache to force a new snapshot.
-        IIssuerInternalDebtCache cache = debtCache();
-        uint[] memory zeroRates = new uint[](numKeys);
-        cache.updateCachedSynthDebtsWithRates(currencyKeys, zeroRates);
-        cache.updateDebtCacheValidity(true);
 
         for (uint i = 0; i < numKeys; i++) {
             _removeSynth(currencyKeys[i]);
@@ -616,9 +569,6 @@ contract Issuer is Owned, MixinSystemSettings, IIssuer {
         // Create their synths
         synths[sUSD].issue(from, amount);
 
-        // Account for the issued debt in the cache
-        debtCache().updateCachedSynthDebtWithRate(sUSD, SafeDecimalMath.unit());
-
         // Store their locked SNX amount to determine their fee % for the period
         _appendAccountIssuanceRecord(from);
     }
@@ -641,9 +591,6 @@ contract Issuer is Owned, MixinSystemSettings, IIssuer {
 
         // synth.burn does a safe subtraction on balance (so it will revert if there are not enough synths).
         synths[sUSD].burn(burnAccount, amountBurnt);
-
-        // Account for the burnt debt in the cache.
-        debtCache().updateCachedSynthDebtWithRate(sUSD, SafeDecimalMath.unit());
 
         // Store their debtRatio against a fee period to determine their fee/rewards % for the period
         _appendAccountIssuanceRecord(debtAccount);

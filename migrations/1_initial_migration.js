@@ -78,6 +78,6 @@ module.exports = async function (deployer) {
   // Issuer
   // constructor(address _owner, address _resolver)
   ContractIssuer.link('SafeDecimalMath', SafeDecimalMath.address);
-  await deployer.deploy(ContractIssuer, owner, AddressResolver.address);
+  await deployer.deploy(ContractIssuer, owner, owner);
   const Issuer = await ContractIssuer.deployed();
 };

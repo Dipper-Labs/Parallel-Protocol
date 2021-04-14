@@ -17,7 +17,6 @@ import "./interfaces/ISynthetix.sol";
 import "./interfaces/IFeePool.sol";
 import "./interfaces/IDelegateApprovals.sol";
 import "./interfaces/IIssuer.sol";
-import "./interfaces/IDebtCache.sol";
 import "./interfaces/IVirtualSynth.sol";
 import "./Proxyable.sol";
 
@@ -51,14 +50,6 @@ interface ISynthetixInternal {
     ) external;
 }
 
-
-interface IExchangerInternalDebtCache {
-    function updateCachedSynthDebtsWithRates(bytes32[] calldata currencyKeys, uint[] calldata currencyRates) external;
-
-    function updateCachedSynthDebts(bytes32[] calldata currencyKeys) external;
-}
-
-
 contract Exchanger is Owned, MixinSystemSettings, IExchanger {
     using SafeMath for uint;
     using SafeDecimalMath for uint;
@@ -91,7 +82,6 @@ contract Exchanger is Owned, MixinSystemSettings, IExchanger {
     bytes32 private constant CONTRACT_TRADING_REWARDS = "TradingRewards";
     bytes32 private constant CONTRACT_DELEGATEAPPROVALS = "DelegateApprovals";
     bytes32 private constant CONTRACT_ISSUER = "Issuer";
-    bytes32 private constant CONTRACT_DEBTCACHE = "DebtCache";
 
     constructor(address _owner, address _resolver) public Owned(_owner) MixinSystemSettings(_resolver) {}
 
@@ -107,7 +97,6 @@ contract Exchanger is Owned, MixinSystemSettings, IExchanger {
         newAddresses[4] = CONTRACT_FEEPOOL;
         newAddresses[5] = CONTRACT_DELEGATEAPPROVALS;
         newAddresses[6] = CONTRACT_ISSUER;
-        newAddresses[7] = CONTRACT_DEBTCACHE;
         addresses = combineArrays(existingAddresses, newAddresses);
     }
 
@@ -138,10 +127,6 @@ contract Exchanger is Owned, MixinSystemSettings, IExchanger {
 
     function issuer() internal view returns (IIssuer) {
         return IIssuer(requireAndGetAddress(CONTRACT_ISSUER));
-    }
-
-    function debtCache() internal view returns (IExchangerInternalDebtCache) {
-        return IExchangerInternalDebtCache(requireAndGetAddress(CONTRACT_DEBTCACHE));
     }
 
     function maxSecsLeftInWaitingPeriod(address account, bytes32 currencyKey) public view returns (uint) {
@@ -384,10 +369,6 @@ contract Exchanger is Owned, MixinSystemSettings, IExchanger {
             keys[2] = sUSD; // And we'll also update sUSD to account for any fees if it wasn't one of the exchanged currencies
             rates[2] = SafeDecimalMath.unit();
         }
-
-        // Note that exchanges can't invalidate the debt cache, since if a rate is invalid,
-        // the exchange will have failed already.
-        debtCache().updateCachedSynthDebtsWithRates(keys, rates);
     }
 
     function _settleAndCalcSourceAmountRemaining(
@@ -651,12 +632,6 @@ contract Exchanger is Owned, MixinSystemSettings, IExchanger {
         } else if (rebateAmount > reclaimAmount) {
             refunded = rebateAmount.sub(reclaimAmount);
             refund(from, currencyKey, refunded);
-        }
-
-        if (updateCache) {
-            bytes32[] memory key = new bytes32[](1);
-            key[0] = currencyKey;
-            debtCache().updateCachedSynthDebts(key);
         }
 
         // emit settlement event for each settled exchange entry
