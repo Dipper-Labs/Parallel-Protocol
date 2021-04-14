@@ -41,7 +41,7 @@ contract SystemSettings is Owned, MixinSystemSettings, ISystemSettings {
     uint public constant MAX_CROSS_DOMAIN_GAS_LIMIT = 8e6;
     uint public constant MIN_CROSS_DOMAIN_GAS_LIMIT = 3e6;
 
-    constructor(address _owner, address _resolver) public Owned(_owner) MixinSystemSettings(_resolver) {}
+    constructor(address _owner, AddressResolver _resolver) public Owned(_owner) MixinSystemSettings(_resolver) {}
 
     // ========== VIEWS ==========
 

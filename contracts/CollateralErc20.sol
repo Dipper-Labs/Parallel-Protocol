@@ -21,7 +21,7 @@ contract CollateralErc20 is ICollateralErc20, Collateral {
         CollateralState _state,
         address _owner,
         address _manager,
-        address _resolver,
+        AddressResolver _resolver,
         bytes32 _collateralKey,
         uint _minCratio,
         uint _minCollateral,

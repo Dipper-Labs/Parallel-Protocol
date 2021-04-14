@@ -42,7 +42,7 @@ contract Synth is Owned, IERC20, ExternStateToken, MixinResolver, ISynth {
         address _owner,
         bytes32 _currencyKey,
         uint _totalSupply,
-        address _resolver
+        AddressResolver _resolver
     )
         public
         ExternStateToken(_proxy, _tokenState, _tokenName, _tokenSymbol, _totalSupply, DECIMALS, _owner)

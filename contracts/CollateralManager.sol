@@ -15,7 +15,6 @@ import "./SafeDecimalMath.sol";
 import "./CollateralManagerState.sol";
 import "./interfaces/IIssuer.sol";
 import "./interfaces/IExchangeRates.sol";
-import "./interfaces/IDebtCache.sol";
 import "./interfaces/IERC20.sol";
 import "./interfaces/ISynth.sol";
 
@@ -79,7 +78,7 @@ contract CollateralManager is ICollateralManager, Owned, Pausable, MixinResolver
     constructor(
         CollateralManagerState _state,
         address _owner,
-        address _resolver,
+        AddressResolver _resolver,
         uint _maxDebt,
         uint _baseBorrowRate,
         uint _baseShortRate

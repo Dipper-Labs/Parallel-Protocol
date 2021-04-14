@@ -12,8 +12,8 @@ contract MixinResolver {
 
     mapping(bytes32 => address) private addressCache;
 
-    constructor(address _resolver) internal {
-        resolver = AddressResolver(_resolver);
+    constructor(AddressResolver _resolver) internal {
+        resolver = _resolver;
     }
 
     /* ========== INTERNAL FUNCTIONS ========== */

@@ -45,7 +45,7 @@ contract ExchangeRates is Owned, MixinSystemSettings, IExchangeRates {
     constructor(
         address _owner,
         address _oracle,
-        address _resolver,
+        AddressResolver _resolver,
         bytes32[] memory _currencyKeys,
         uint[] memory _newRates
     ) public Owned(_owner) MixinSystemSettings(_resolver) {

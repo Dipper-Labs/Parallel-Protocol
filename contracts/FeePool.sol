@@ -77,7 +77,7 @@ contract FeePool is Owned, Proxyable, LimitedSetup, MixinSystemSettings, IFeePoo
     constructor(
         address payable _proxy,
         address _owner,
-        address _resolver
+        AddressResolver _resolver
     ) public Owned(_owner) Proxyable(_proxy) LimitedSetup(3 weeks) MixinSystemSettings(_resolver) {
         // Set our initial fee period
         _recentFeePeriodsStorage(0).feePeriodId = 1;

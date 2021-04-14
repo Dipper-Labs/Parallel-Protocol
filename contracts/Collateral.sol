@@ -84,7 +84,7 @@ contract Collateral is ICollateralLoan, Owned, MixinSystemSettings {
         CollateralState _state,
         address _owner,
         address _manager,
-        address _resolver,
+        AddressResolver _resolver,
         bytes32 _collateralKey,
         uint _minCratio,
         uint _minCollateral

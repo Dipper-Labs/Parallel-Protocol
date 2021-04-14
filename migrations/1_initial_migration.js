@@ -8,6 +8,7 @@ const ContractOwned = artifacts.require("Owned");
 const ContractMixinSystemSettings =artifacts.require("MixinSystemSettings");
 const ContractReadProxy = artifacts.require("ReadProxy");
 const ContractAddressResolver = artifacts.require("AddressResolver")
+const ContractExchanger = artifacts.require("Exchanger")
 
 module.exports = async function (deployer) {
   var owner = "0xEa3ED7E36aBb9AC0Adb61c58359Be48Ad87C3bCC";
@@ -67,17 +68,25 @@ module.exports = async function (deployer) {
         address _eco
     )
    */
-  // await deployer.deploy(ContractSynthetix, Proxy.address, TokenState.address, owner, totalSupply, owner, devAddress, echAddress);
-  // const Synthetix = await ContractSynthetix.deployed();
-  // return;
-
-  // AddressResolver
+  var resolver = owner;
   await deployer.deploy(ContractAddressResolver, owner);
   const AddressResolver = await ContractAddressResolver.deployed();
+  await deployer.deploy(ContractSynthetix, Proxy.address, TokenState.address, owner, totalSupply, AddressResolver.address, devAddress, echAddress);
+  const Synthetix = await ContractSynthetix.deployed();
+  return;
+
+  // AddressResolver
+  // await deployer.deploy(ContractAddressResolver, owner);
+  // const AddressResolver = await ContractAddressResolver.deployed();
 
   // Issuer
   // constructor(address _owner, address _resolver)
-  ContractIssuer.link('SafeDecimalMath', SafeDecimalMath.address);
-  await deployer.deploy(ContractIssuer, owner, owner);
-  const Issuer = await ContractIssuer.deployed();
+  // ContractIssuer.link('SafeDecimalMath', SafeDecimalMath.address);
+  // await deployer.deploy(ContractIssuer, owner, owner);
+  // const Issuer = await ContractIssuer.deployed();
+
+  // Exchange
+  // ContractExchanger.link('SafeDecimalMath', SafeDecimalMath.address);
+  // await deployer.deploy(ContractExchanger, owner, owner);
+  // const Exchanger = await ContractExchanger.deployed();
 };

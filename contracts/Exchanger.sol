@@ -83,7 +83,7 @@ contract Exchanger is Owned, MixinSystemSettings, IExchanger {
     bytes32 private constant CONTRACT_DELEGATEAPPROVALS = "DelegateApprovals";
     bytes32 private constant CONTRACT_ISSUER = "Issuer";
 
-    constructor(address _owner, address _resolver) public Owned(_owner) MixinSystemSettings(_resolver) {}
+    constructor(address _owner, AddressResolver _resolver) public Owned(_owner) MixinSystemSettings(_resolver) {}
 
     /* ========== VIEWS ========== */
 
