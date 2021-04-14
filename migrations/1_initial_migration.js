@@ -22,10 +22,6 @@ module.exports = async function (deployer) {
   const SafeDecimalMath = await ContractSafeDecimalMath.deployed();
   console.log("SafeDecimalMath:", SafeDecimalMath.address)
 
-  // ContractReadProxy
-  await deployer.deploy(ContractReadProxy, owner);
-  const ReadProxy = await ContractReadProxy.deployed();
-
   // Proxy
   await deployer.deploy(ContractProxy, owner);
   const Proxy = await ContractProxy.deployed();
@@ -49,18 +45,22 @@ module.exports = async function (deployer) {
         uint8 _decimals,
         address _owner
    */
-  var totalSupply = 100000000000000;
+  let BigNumber=require('bignumber.js');
+  let totalSupply=new BigNumber('1000000000000000000000000000');
+  // var totalSupply = 100000000000000;
   var decimal = 6;
   await deployer.deploy(ContractExternStateToken, Proxy.address, TokenState.address, "SDIP", "SDIP", totalSupply, decimal, owner);
   const ExternStateToken = await ContractExternStateToken.deployed();
   const symbol = await ExternStateToken.symbol();
   console.log("symbol:", symbol)
+  const rTotalSupply = await ExternStateToken.totalSupply()
+  console.log("totalSupply:", rTotalSupply.toString())
 
-  // Synthetix
+  //////////////////////////////////////////// Synthetix
   /*
       constructor(
-        address payable _proxy,
-        TokenState _tokenState,
+        address payable _proxy, // ProxyERC20
+        TokenState _tokenState, // TokenState
         address _owner,
         uint _totalSupply,
         address _resolver,
@@ -68,25 +68,33 @@ module.exports = async function (deployer) {
         address _eco
     )
    */
-  var resolver = owner;
   await deployer.deploy(ContractAddressResolver, owner);
   const AddressResolver = await ContractAddressResolver.deployed();
+  // ProxyErc20
+  await deployer.deploy(ContractReadProxy, owner);
+  const AddressResolver = await ContractReadProxy.deployed();
+
   await deployer.deploy(ContractSynthetix, Proxy.address, TokenState.address, owner, totalSupply, AddressResolver.address, devAddress, echAddress);
   const Synthetix = await ContractSynthetix.deployed();
-  return;
 
+  ///////////////////////////////// Issuer
+  // ReadProxy
+  await deployer.deploy(ContractReadProxy, owner);
+  const ReadProxy = await ContractReadProxy.deployed();
   // AddressResolver
-  // await deployer.deploy(ContractAddressResolver, owner);
-  // const AddressResolver = await ContractAddressResolver.deployed();
-
+  await deployer.deploy(ContractAddressResolver, ReadProxy.address);
+  const AddressResolver2 = await ContractAddressResolver.deployed();
   // Issuer
   // constructor(address _owner, address _resolver)
-  // ContractIssuer.link('SafeDecimalMath', SafeDecimalMath.address);
-  // await deployer.deploy(ContractIssuer, owner, owner);
-  // const Issuer = await ContractIssuer.deployed();
+  ContractIssuer.link('SafeDecimalMath', SafeDecimalMath.address);
+  await deployer.deploy(ContractIssuer, owner, AddressResolver2.address);
+  const Issuer = await ContractIssuer.deployed();
 
-  // Exchange
+  // // AddressResolver
+  // await deployer.deploy(ContractAddressResolver, owner);
+  // const AddressResolver3 = await ContractAddressResolver.deployed();
+  // // Exchange
   // ContractExchanger.link('SafeDecimalMath', SafeDecimalMath.address);
-  // await deployer.deploy(ContractExchanger, owner, owner);
+  // await deployer.deploy(ContractExchanger, owner, AddressResolver3.address);
   // const Exchanger = await ContractExchanger.deployed();
 };
