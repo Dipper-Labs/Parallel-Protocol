@@ -63,29 +63,6 @@ interface ISynthetix {
         bytes32 destinationCurrencyKey
     ) external returns (uint amountReceived);
 
-    function exchangeWithTracking(
-        bytes32 sourceCurrencyKey,
-        uint sourceAmount,
-        bytes32 destinationCurrencyKey,
-        address originator,
-        bytes32 trackingCode
-    ) external returns (uint amountReceived);
-
-    function exchangeOnBehalfWithTracking(
-        address exchangeForAddress,
-        bytes32 sourceCurrencyKey,
-        uint sourceAmount,
-        bytes32 destinationCurrencyKey,
-        address originator,
-        bytes32 trackingCode
-    ) external returns (uint amountReceived);
-
-    function exchangeWithVirtual(
-        bytes32 sourceCurrencyKey,
-        uint sourceAmount,
-        bytes32 destinationCurrencyKey,
-        bytes32 trackingCode
-    ) external returns (uint amountReceived, IVirtualSynth vSynth);
 
     function issueMaxSynths() external;
 

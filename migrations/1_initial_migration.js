@@ -4,19 +4,26 @@ const ContractExternStateToken = artifacts.require("ExternStateToken");
 const ContractSynthetix = artifacts.require("Synthetix");
 const ContractIssuer = artifacts.require("Issuer");
 const ContractSafeDecimalMath = artifacts.require("SafeDecimalMath");
+const ContractOwned = artifacts.require("Owned");
+const ContractMixinSystemSettings =artifacts.require("MixinSystemSettings");
+const ContractReadProxy = artifacts.require("ReadProxy");
+const ContractAddressResolver = artifacts.require("AddressResolver")
 
 module.exports = async function (deployer) {
-  var owner = "0x5b0B5A7e5790668956D5360FFe64f658ce1d9d9E";
-  var nilAddress = "0x2c3Af4800d0ebfE733Ce904d15b1647229aF574E"
-  var associatedContractAddr = "0x2c3Af4800d0ebfE733Ce904d15b1647229aF574E";
-  var devAddress = "0x2c3Af4800d0ebfE733Ce904d15b1647229aF574E"
-  var echAddress = "0x2c3Af4800d0ebfE733Ce904d15b1647229aF574E"
+  var owner = "0xEa3ED7E36aBb9AC0Adb61c58359Be48Ad87C3bCC";
+  var nilAddress = "0xEa3ED7E36aBb9AC0Adb61c58359Be48Ad87C3bCC"
+  var associatedContractAddr = "0xEa3ED7E36aBb9AC0Adb61c58359Be48Ad87C3bCC";
+  var devAddress = "0xEa3ED7E36aBb9AC0Adb61c58359Be48Ad87C3bCC"
+  var echAddress = "0xEa3ED7E36aBb9AC0Adb61c58359Be48Ad87C3bCC"
 
   // SafeDecimalMath
   await deployer.deploy(ContractSafeDecimalMath);
   const SafeDecimalMath = await ContractSafeDecimalMath.deployed();
   console.log("SafeDecimalMath:", SafeDecimalMath.address)
 
+  // ContractReadProxy
+  await deployer.deploy(ContractReadProxy, owner);
+  const ReadProxy = await ContractReadProxy.deployed();
 
   // Proxy
   await deployer.deploy(ContractProxy, owner);
@@ -48,7 +55,6 @@ module.exports = async function (deployer) {
   const symbol = await ExternStateToken.symbol();
   console.log("symbol:", symbol)
 
-
   // Synthetix
   /*
       constructor(
@@ -63,10 +69,15 @@ module.exports = async function (deployer) {
    */
   // await deployer.deploy(ContractSynthetix, Proxy.address, TokenState.address, owner, totalSupply, owner, devAddress, echAddress);
   // const Synthetix = await ContractSynthetix.deployed();
+  // return;
+
+  // AddressResolver
+  await deployer.deploy(ContractAddressResolver, owner);
+  const AddressResolver = await ContractAddressResolver.deployed();
 
   // Issuer
   // constructor(address _owner, address _resolver)
   ContractIssuer.link('SafeDecimalMath', SafeDecimalMath.address);
-  await deployer.deploy(ContractIssuer, owner, owner);
+  await deployer.deploy(ContractIssuer, owner, AddressResolver.address);
   const Issuer = await ContractIssuer.deployed();
 };
