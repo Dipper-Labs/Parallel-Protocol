@@ -9,6 +9,8 @@ const ContractMixinSystemSettings =artifacts.require("MixinSystemSettings");
 const ContractReadProxy = artifacts.require("ReadProxy");
 const ContractAddressResolver = artifacts.require("AddressResolver")
 const ContractExchanger = artifacts.require("Exchanger")
+const ContractSystemStatus = artifacts.require("SystemStatus")
+
 
 module.exports = async function (deployer) {
   var owner = "0xEa3ED7E36aBb9AC0Adb61c58359Be48Ad87C3bCC";
@@ -56,6 +58,12 @@ module.exports = async function (deployer) {
   const rTotalSupply = await ExternStateToken.totalSupply()
   console.log("totalSupply:", rTotalSupply.toString())
 
+
+  /////////////////////////////////////////// SystemStatus
+  await deployer.deploy(ContractSystemStatus, owner);
+  const SystemStatus = await ContractSystemStatus.deployed();
+
+
   //////////////////////////////////////////// Synthetix
   /*
       constructor(
@@ -68,27 +76,39 @@ module.exports = async function (deployer) {
         address _eco
     )
    */
-  await deployer.deploy(ContractAddressResolver, owner);
-  const AddressResolver = await ContractAddressResolver.deployed();
-  // ProxyErc20
-  await deployer.deploy(ContractReadProxy, owner);
-  const AddressResolver = await ContractReadProxy.deployed();
+  // await deployer.deploy(ContractAddressResolver, owner);
+  // const AddressResolver = await ContractAddressResolver.deployed();
+  // // ProxyErc20
+  // await deployer.deploy(ContractReadProxy, owner);
+  // const AddressResolver = await ContractReadProxy.deployed();
+  //
+  // await deployer.deploy(ContractSynthetix, Proxy.address, TokenState.address, owner, totalSupply, AddressResolver.address, devAddress, echAddress);
+  // const Synthetix = await ContractSynthetix.deployed();
+  //
+  // ///////////////////////////////// Issuer
+  // // ReadProxy
+  // await deployer.deploy(ContractReadProxy, owner);
+  // const ReadProxy = await ContractReadProxy.deployed();
+  // // AddressResolver
+  // await deployer.deploy(ContractAddressResolver, ReadProxy.address);
+  // const AddressResolver2 = await ContractAddressResolver.deployed();
+  // // Issuer
+  // // constructor(address _owner, address _resolver)
+  // ContractIssuer.link('SafeDecimalMath', SafeDecimalMath.address);
+  // await deployer.deploy(ContractIssuer, owner, AddressResolver2.address);
+  // const Issuer = await ContractIssuer.deployed();
 
-  await deployer.deploy(ContractSynthetix, Proxy.address, TokenState.address, owner, totalSupply, AddressResolver.address, devAddress, echAddress);
-  const Synthetix = await ContractSynthetix.deployed();
+  await deployer.deploy(ContractReadProxy, owner).then(function() {
+    return deployer.deploy(ContractAddressResolver, ContractReadProxy.address);
+  }).then(function(instance) {
+    ContractIssuer.link('SafeDecimalMath', SafeDecimalMath.address);
+    await deployer.deploy(ContractIssuer, owner, ContractAddressResolver.address);
+    const Issuer = await ContractIssuer.deployed();
+    return Issuer;
+  });
 
-  ///////////////////////////////// Issuer
-  // ReadProxy
-  await deployer.deploy(ContractReadProxy, owner);
-  const ReadProxy = await ContractReadProxy.deployed();
-  // AddressResolver
-  await deployer.deploy(ContractAddressResolver, ReadProxy.address);
-  const AddressResolver2 = await ContractAddressResolver.deployed();
-  // Issuer
-  // constructor(address _owner, address _resolver)
-  ContractIssuer.link('SafeDecimalMath', SafeDecimalMath.address);
-  await deployer.deploy(ContractIssuer, owner, AddressResolver2.address);
-  const Issuer = await ContractIssuer.deployed();
+
+
 
   // // AddressResolver
   // await deployer.deploy(ContractAddressResolver, owner);
