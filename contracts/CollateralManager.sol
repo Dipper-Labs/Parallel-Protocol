@@ -78,7 +78,7 @@ contract CollateralManager is ICollateralManager, Owned, Pausable, MixinResolver
     constructor(
         CollateralManagerState _state,
         address _owner,
-        AddressResolver _resolver,
+        IAddressResolver _resolver,
         uint _maxDebt,
         uint _baseBorrowRate,
         uint _baseShortRate

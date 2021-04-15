@@ -40,7 +40,7 @@ contract BaseSynthetix is IERC20, ExternStateToken, MixinResolver, ISynthetix {
         TokenState _tokenState,
         address _owner,
         uint _totalSupply,
-        AddressResolver _resolver
+        IAddressResolver _resolver
     )
         public
         ExternStateToken(_proxy, _tokenState, TOKEN_NAME, TOKEN_SYMBOL, _totalSupply, DECIMALS, _owner)

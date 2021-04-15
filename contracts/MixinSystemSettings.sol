@@ -30,7 +30,7 @@ contract MixinSystemSettings is MixinResolver {
 
     enum CrossDomainMessageGasLimits {Deposit, Escrow, Reward, Withdrawal}
 
-    constructor(AddressResolver _resolver) internal MixinResolver(_resolver) {}
+    constructor(IAddressResolver _resolver) internal MixinResolver(_resolver) {}
 
     function resolverAddressesRequired() public view returns (bytes32[] memory addresses) {
         addresses = new bytes32[](1);

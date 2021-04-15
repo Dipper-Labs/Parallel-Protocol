@@ -3,16 +3,18 @@ pragma solidity ^0.5.16;
 // Inheritance
 import "./Owned.sol";
 
+import "./interfaces/IAddressResolver.sol";
+
 // Internal references
 import "./AddressResolver.sol";
 import "./ReadProxy.sol";
 
 contract MixinResolver {
-    AddressResolver public resolver;
+    IAddressResolver public resolver;
 
     mapping(bytes32 => address) private addressCache;
 
-    constructor(AddressResolver _resolver) internal {
+    constructor(IAddressResolver _resolver) internal {
         resolver = _resolver;
     }
 
