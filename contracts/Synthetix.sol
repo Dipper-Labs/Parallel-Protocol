@@ -254,7 +254,7 @@ contract Synthetix is BaseSynthetix {
         _;
     }
 
-    function _onlyExchanger() private {
+    function _onlyExchanger() private view {
         require(msg.sender == address(exchanger()), "Only Exchanger can invoke this");
     }
 
@@ -263,7 +263,7 @@ contract Synthetix is BaseSynthetix {
         _;
     }
 
-    function _exchangeActive(bytes32 src, bytes32 dest) private {
+    function _exchangeActive(bytes32 src, bytes32 dest) private view {
         systemStatus().requireExchangeActive();
         systemStatus().requireSynthsActive(src, dest);
     }

@@ -42,13 +42,13 @@ interface ISynthetix {
     function transferableSynthetix(address account) external view returns (uint transferable);
 
     // Mutative Functions
-    function burnSynths(uint amount) external;
+    function burnSynths(bytes32 stake, uint amount) external;
 
-    function burnSynthsOnBehalf(address burnForAddress, uint amount) external;
+    function burnSynthsOnBehalf(bytes32 stake, address burnForAddress, uint amount) external;
 
-    function burnSynthsToTarget() external;
+    function burnSynthsToTarget(bytes32 stake) external;
 
-    function burnSynthsToTargetOnBehalf(address burnForAddress) external;
+    function burnSynthsToTargetOnBehalf(bytes32 stake, address burnForAddress) external;
 
     function exchange(
         bytes32 sourceCurrencyKey,
@@ -64,13 +64,13 @@ interface ISynthetix {
     ) external returns (uint amountReceived);
 
 
-    function issueMaxSynths() external;
+    function issueMaxSynths(bytes32 stake) external;
 
-    function issueMaxSynthsOnBehalf(address issueForAddress) external;
+    function issueMaxSynthsOnBehalf(bytes32 stake, address issueForAddress) external;
 
-    function issueSynths(uint amount) external;
+    function issueSynths(bytes32 stake, uint amount) external;
 
-    function issueSynthsOnBehalf(address issueForAddress, uint amount) external;
+    function issueSynthsOnBehalf(bytes32 stake, address issueForAddress, uint amount) external;
 
     function mint() external returns (bool);
 

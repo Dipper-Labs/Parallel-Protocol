@@ -84,7 +84,7 @@ contract BaseSynthetix is IERC20, ExternStateToken, MixinResolver, ISynthetix {
     }
 
     function totalIssuedSynths(bytes32 currencyKey) external view returns (uint) {
-        return issuer().totalIssuedSynths(currencyKey, false);
+        return issuer().totalIssuedSynths(currencyKey);
     }
 
     function availableCurrencyKeys() external view returns (bytes32[] memory) {
@@ -182,36 +182,36 @@ contract BaseSynthetix is IERC20, ExternStateToken, MixinResolver, ISynthetix {
         return _transferFromByProxy(messageSender, from, to, value);
     }
 
-    function issueSynths(uint amount) external issuanceActive optionalProxy {
-        return issuer().issueSynths(messageSender, amount);
+    function issueSynths(bytes32 stake, uint amount) external issuanceActive optionalProxy {
+        return issuer().issueSynths(stake, messageSender, amount);
     }
 
-    function issueSynthsOnBehalf(address issueForAddress, uint amount) external issuanceActive optionalProxy {
-        return issuer().issueSynthsOnBehalf(issueForAddress, messageSender, amount);
+    function issueSynthsOnBehalf(bytes32 stake, address issueForAddress, uint amount) external issuanceActive optionalProxy {
+        return issuer().issueSynthsOnBehalf(stake, issueForAddress, messageSender, amount);
     }
 
-    function issueMaxSynths() external issuanceActive optionalProxy {
-        return issuer().issueMaxSynths(messageSender);
+    function issueMaxSynths(bytes32 stake) external issuanceActive optionalProxy {
+        return issuer().issueMaxSynths(stake, messageSender);
     }
 
-    function issueMaxSynthsOnBehalf(address issueForAddress) external issuanceActive optionalProxy {
-        return issuer().issueMaxSynthsOnBehalf(issueForAddress, messageSender);
+    function issueMaxSynthsOnBehalf(bytes32 stake, address issueForAddress) external issuanceActive optionalProxy {
+        return issuer().issueMaxSynthsOnBehalf(stake, issueForAddress, messageSender);
     }
 
-    function burnSynths(uint amount) external issuanceActive optionalProxy {
-        return issuer().burnSynths(messageSender, amount);
+    function burnSynths(bytes32 stake, uint amount) external issuanceActive optionalProxy {
+        return issuer().burnSynths(stake, messageSender, amount);
     }
 
-    function burnSynthsOnBehalf(address burnForAddress, uint amount) external issuanceActive optionalProxy {
-        return issuer().burnSynthsOnBehalf(burnForAddress, messageSender, amount);
+    function burnSynthsOnBehalf(bytes32 stake, address burnForAddress, uint amount) external issuanceActive optionalProxy {
+        return issuer().burnSynthsOnBehalf(stake, burnForAddress, messageSender, amount);
     }
 
-    function burnSynthsToTarget() external issuanceActive optionalProxy {
-        return issuer().burnSynthsToTarget(messageSender);
+    function burnSynthsToTarget(bytes32 stake) external issuanceActive optionalProxy {
+        return issuer().burnSynthsToTarget(stake, messageSender);
     }
 
-    function burnSynthsToTargetOnBehalf(address burnForAddress) external issuanceActive optionalProxy {
-        return issuer().burnSynthsToTargetOnBehalf(burnForAddress, messageSender);
+    function burnSynthsToTargetOnBehalf(bytes32 stake, address burnForAddress) external issuanceActive optionalProxy {
+        return issuer().burnSynthsToTargetOnBehalf(stake, burnForAddress, messageSender);
     }
 
     function exchange(
@@ -283,7 +283,7 @@ contract BaseSynthetix is IERC20, ExternStateToken, MixinResolver, ISynthetix {
         _;
     }
 
-    function _systemActive() private {
+    function _systemActive() private view {
         systemStatus().requireSystemActive();
     }
 
@@ -292,7 +292,7 @@ contract BaseSynthetix is IERC20, ExternStateToken, MixinResolver, ISynthetix {
         _;
     }
 
-    function _issuanceActive() private {
+    function _issuanceActive() private view {
         systemStatus().requireIssuanceActive();
     }
 }

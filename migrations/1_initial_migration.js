@@ -86,26 +86,18 @@ module.exports = async function (deployer) {
   // const Synthetix = await ContractSynthetix.deployed();
   //
   // ///////////////////////////////// Issuer
-  // // ReadProxy
-  // await deployer.deploy(ContractReadProxy, owner);
-  // const ReadProxy = await ContractReadProxy.deployed();
-  // // AddressResolver
-  // await deployer.deploy(ContractAddressResolver, ReadProxy.address);
-  // const AddressResolver2 = await ContractAddressResolver.deployed();
-  // // Issuer
-  // // constructor(address _owner, address _resolver)
-  // ContractIssuer.link('SafeDecimalMath', SafeDecimalMath.address);
-  // await deployer.deploy(ContractIssuer, owner, AddressResolver2.address);
-  // const Issuer = await ContractIssuer.deployed();
+  // ReadProxy
+  await deployer.deploy(ContractReadProxy, owner);
+  const ReadProxy = await ContractReadProxy.deployed();
+  // AddressResolver
+  await deployer.deploy(ContractAddressResolver, ReadProxy.address);
+  const AddressResolver2 = await ContractAddressResolver.deployed();
+  // Issuer
+  // constructor(address _owner, address _resolver)
+  ContractIssuer.link('SafeDecimalMath', SafeDecimalMath.address);
+  await deployer.deploy(ContractIssuer, owner, AddressResolver2.address);
+  const Issuer = await ContractIssuer.deployed();
 
-  await deployer.deploy(ContractReadProxy, owner).then(function() {
-    return deployer.deploy(ContractAddressResolver, ContractReadProxy.address);
-  }).then(function(instance) {
-    ContractIssuer.link('SafeDecimalMath', SafeDecimalMath.address);
-    await deployer.deploy(ContractIssuer, owner, ContractAddressResolver.address);
-    const Issuer = await ContractIssuer.deployed();
-    return Issuer;
-  });
 
 
 

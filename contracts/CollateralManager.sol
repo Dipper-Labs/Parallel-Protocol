@@ -204,7 +204,7 @@ contract CollateralManager is ICollateralManager, Owned, Pausable, MixinResolver
 
     function getBorrowRate() external view returns (uint borrowRate, bool anyRateIsInvalid) {
         // get the snx backed debt.
-        uint snxDebt = _issuer().totalIssuedSynths(sUSD, true);
+        uint snxDebt = _issuer().totalIssuedSynths(sUSD);
 
         // now get the non snx backed debt.
         (uint nonSnxDebt, bool ratesInvalid) = totalLong();

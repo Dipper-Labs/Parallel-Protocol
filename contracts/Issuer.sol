@@ -429,48 +429,50 @@ contract Issuer is Owned, MixinSystemSettings, IIssuer {
         }
     }
 
-    function issueSynths(address from, uint amount) external onlySynthetix {
-        _issueSynths(from, amount, false);
+    function issueSynths(bytes32 stake, address from, uint amount) external onlySynthetix {
+        _issueSynths(stake, from, amount, false);
     }
 
-    function issueMaxSynths(address from) external onlySynthetix {
-        _issueSynths(from, 0, true);
+    function issueMaxSynths(bytes32 stake, address from) external onlySynthetix {
+        _issueSynths(stake, from, 0, true);
     }
 
     function issueSynthsOnBehalf(
+        bytes32 stake,
         address issueForAddress,
         address from,
         uint amount
     ) external onlySynthetix {
         _requireCanIssueOnBehalf(issueForAddress, from);
-        _issueSynths(issueForAddress, amount, false);
+        _issueSynths(stake, issueForAddress, amount, false);
     }
 
-    function issueMaxSynthsOnBehalf(address issueForAddress, address from) external onlySynthetix {
+    function issueMaxSynthsOnBehalf(bytes32 stake, address issueForAddress, address from) external onlySynthetix {
         _requireCanIssueOnBehalf(issueForAddress, from);
-        _issueSynths(issueForAddress, 0, true);
+        _issueSynths(stake, issueForAddress, 0, true);
     }
 
-    function burnSynths(address from, uint amount) external onlySynthetix {
-        _voluntaryBurnSynths(from, amount, false);
+    function burnSynths(bytes32 stake, address from, uint amount) external onlySynthetix {
+        _voluntaryBurnSynths(stake, from, amount, false);
     }
 
     function burnSynthsOnBehalf(
+        bytes32 stake,
         address burnForAddress,
         address from,
         uint amount
     ) external onlySynthetix {
         _requireCanBurnOnBehalf(burnForAddress, from);
-        _voluntaryBurnSynths(burnForAddress, amount, false);
+        _voluntaryBurnSynths(stake, burnForAddress, amount, false);
     }
 
-    function burnSynthsToTarget(address from) external onlySynthetix {
-        _voluntaryBurnSynths(from, 0, true);
+    function burnSynthsToTarget(bytes32 stake, address from) external onlySynthetix {
+        _voluntaryBurnSynths(stake, from, 0, true);
     }
 
-    function burnSynthsToTargetOnBehalf(address burnForAddress, address from) external onlySynthetix {
+    function burnSynthsToTargetOnBehalf(bytes32 stake, address burnForAddress, address from) external onlySynthetix {
         _requireCanBurnOnBehalf(burnForAddress, from);
-        _voluntaryBurnSynths(burnForAddress, 0, true);
+        _voluntaryBurnSynths(stake, burnForAddress, 0, true);
     }
 
     function liquidateDelinquentAccount(
@@ -547,6 +549,7 @@ contract Issuer is Owned, MixinSystemSettings, IIssuer {
     }
 
     function _issueSynths(
+        bytes32 stake,
         address from,
         uint amount,
         bool issueMax
@@ -600,6 +603,7 @@ contract Issuer is Owned, MixinSystemSettings, IIssuer {
     // c-ratio, allowing fees to be claimed. In this case, pending settlements will be skipped as the user
     // will still have debt remaining after reaching their target.
     function _voluntaryBurnSynths(
+        bytes32 stake,
         address from,
         uint amount,
         bool burnToTarget

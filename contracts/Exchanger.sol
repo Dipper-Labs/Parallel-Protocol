@@ -353,7 +353,7 @@ contract Exchanger is Owned, MixinSystemSettings, IExchanger {
         }
     }
 
-    function _updateSNXIssuedDebtOnExchange(bytes32[2] memory currencyKeys, uint[2] memory currencyRates) internal {
+    function _updateSNXIssuedDebtOnExchange(bytes32[2] memory currencyKeys, uint[2] memory currencyRates) internal view {
         bool includesSUSD = currencyKeys[0] == sUSD || currencyKeys[1] == sUSD;
         uint numKeys = includesSUSD ? 2 : 3;
 
@@ -376,7 +376,7 @@ contract Exchanger is Owned, MixinSystemSettings, IExchanger {
         address from,
         bytes32 sourceCurrencyKey
     ) internal returns (uint sourceAmountAfterSettlement) {
-        (, uint refunded, uint numEntriesSettled) = _internalSettle(from, sourceCurrencyKey, false);
+        (, uint refunded, uint numEntriesSettled) = _internalSettle(from, sourceCurrencyKey);
 
         sourceAmountAfterSettlement = sourceAmount;
 
@@ -519,7 +519,7 @@ contract Exchanger is Owned, MixinSystemSettings, IExchanger {
         address,
         uint,
         bytes32
-    ) internal returns (IVirtualSynth) {
+    ) internal pure returns (IVirtualSynth) {
         revert("Cannot be run on this layer");
     }
 
@@ -533,7 +533,7 @@ contract Exchanger is Owned, MixinSystemSettings, IExchanger {
         )
     {
         systemStatus().requireSynthActive(currencyKey);
-        return _internalSettle(from, currencyKey, true);
+        return _internalSettle(from, currencyKey);
     }
 
     function suspendSynthWithInvalidRate(bytes32 currencyKey) external {
@@ -607,8 +607,7 @@ contract Exchanger is Owned, MixinSystemSettings, IExchanger {
 
     function _internalSettle(
         address from,
-        bytes32 currencyKey,
-        bool updateCache
+        bytes32 currencyKey
     )
         internal
         returns (

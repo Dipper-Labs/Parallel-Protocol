@@ -49,7 +49,7 @@ interface IIssuer {
 
     function synthsByAddress(address synthAddress) external view returns (bytes32);
 
-    function totalIssuedSynths(bytes32 currencyKey, bool excludeEtherCollateral) external view returns (uint);
+    function totalIssuedSynths(bytes32 currencyKey) external view returns (uint);
 
     function transferableSynthetixAndAnyRateIsInvalid(address account, uint balance)
         external
@@ -57,29 +57,31 @@ interface IIssuer {
         returns (uint transferable, bool anyRateIsInvalid);
 
     // Restricted: used internally to Synthetix
-    function issueSynths(address from, uint amount) external;
+    function issueSynths(bytes32 stake, address from, uint amount) external;
 
     function issueSynthsOnBehalf(
+        bytes32 stake,
         address issueFor,
         address from,
         uint amount
     ) external;
 
-    function issueMaxSynths(address from) external;
+    function issueMaxSynths(bytes32 stake, address from) external;
 
-    function issueMaxSynthsOnBehalf(address issueFor, address from) external;
+    function issueMaxSynthsOnBehalf(bytes32 stake, address issueFor, address from) external;
 
-    function burnSynths(address from, uint amount) external;
+    function burnSynths(bytes32 stake, address from, uint amount) external;
 
     function burnSynthsOnBehalf(
+        bytes32 stake,
         address burnForAddress,
         address from,
         uint amount
     ) external;
 
-    function burnSynthsToTarget(address from) external;
+    function burnSynthsToTarget(bytes32 stake, address from) external;
 
-    function burnSynthsToTargetOnBehalf(address burnForAddress, address from) external;
+    function burnSynthsToTargetOnBehalf(bytes32 stake, address burnForAddress, address from) external;
 
     function liquidateDelinquentAccount(
         address account,
