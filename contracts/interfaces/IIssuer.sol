@@ -24,7 +24,7 @@ interface IIssuer {
         view
         returns (uint cratio, bool anyRateIsInvalid);
 
-    function debtBalanceOf(address issuer, bytes32 currencyKey) external view returns (uint debtBalance);
+    function debtBalanceOf(bytes32 stake, address issuer, bytes32 currencyKey) external view returns (uint debtBalance);
 
     function issuanceRatio() external view returns (uint);
 
@@ -57,7 +57,7 @@ interface IIssuer {
         returns (uint transferable, bool anyRateIsInvalid);
 
     // Restricted: used internally to Synthetix
-    function issueSynths(bytes32 stake, address from, uint amount) external;
+    function issueSynths(bytes32 stake, address from, uint amount, uint synthAmount) external;
 
     function issueSynthsOnBehalf(
         bytes32 stake,

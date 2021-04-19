@@ -16,9 +16,9 @@ interface ISynthetix {
 
     function collateral(address account) external view returns (uint);
 
-    function collateralisationRatio(address issuer) external view returns (uint);
+    function collateralisationRatio(bytes32 stake, address issuer) external view returns (uint);
 
-    function debtBalanceOf(address issuer, bytes32 currencyKey) external view returns (uint);
+    function debtBalanceOf(bytes32 stake, address issuer, bytes32 currencyKey) external view returns (uint);
 
     function isWaitingPeriod(bytes32 currencyKey) external view returns (bool);
 

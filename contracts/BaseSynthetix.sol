@@ -13,6 +13,7 @@ import "./interfaces/ISynthetixState.sol";
 import "./interfaces/ISystemStatus.sol";
 import "./interfaces/IExchanger.sol";
 import "./interfaces/IIssuer.sol";
+import "./interfaces/IStaker.sol";
 import "./interfaces/IRewardsDistribution.sol";
 import "./interfaces/IVirtualSynth.sol";
 
@@ -26,11 +27,14 @@ contract BaseSynthetix is IERC20, ExternStateToken, MixinResolver, ISynthetix {
     uint8 public constant DECIMALS = 18;
     bytes32 public constant sUSD = "sUSD";
 
+    bytes32 public nativeCoin;
+
     // ========== ADDRESS RESOLVER CONFIGURATION ==========
     bytes32 private constant CONTRACT_SYNTHETIXSTATE = "SynthetixState";
     bytes32 private constant CONTRACT_SYSTEMSTATUS = "SystemStatus";
     bytes32 private constant CONTRACT_EXCHANGER = "Exchanger";
     bytes32 private constant CONTRACT_ISSUER = "Issuer";
+    bytes32 private constant CONTRACT_STAKER = "Staker";
     bytes32 private constant CONTRACT_REWARDSDISTRIBUTION = "RewardsDistribution";
 
     // ========== CONSTRUCTOR ==========
@@ -40,12 +44,15 @@ contract BaseSynthetix is IERC20, ExternStateToken, MixinResolver, ISynthetix {
         TokenState _tokenState,
         address _owner,
         uint _totalSupply,
-        IAddressResolver _resolver
+        IAddressResolver _resolver,
+        bytes32 _nativeCoin
     )
         public
         ExternStateToken(_proxy, _tokenState, TOKEN_NAME, TOKEN_SYMBOL, _totalSupply, DECIMALS, _owner)
         MixinResolver(_resolver)
-    {}
+    {
+        nativeCoin = _nativeCoin;
+    }
 
     // ========== VIEWS ==========
 
@@ -56,7 +63,8 @@ contract BaseSynthetix is IERC20, ExternStateToken, MixinResolver, ISynthetix {
         addresses[1] = CONTRACT_SYSTEMSTATUS;
         addresses[2] = CONTRACT_EXCHANGER;
         addresses[3] = CONTRACT_ISSUER;
-        addresses[4] = CONTRACT_REWARDSDISTRIBUTION;
+        addresses[4] = CONTRACT_STAKER;
+        addresses[5] = CONTRACT_REWARDSDISTRIBUTION;
     }
 
     function synthetixState() internal view returns (ISynthetixState) {
@@ -75,12 +83,17 @@ contract BaseSynthetix is IERC20, ExternStateToken, MixinResolver, ISynthetix {
         return IIssuer(requireAndGetAddress(CONTRACT_ISSUER));
     }
 
+
+    function staker() internal view returns (IStaker) {
+        return IStaker(requireAndGetAddress(CONTRACT_STAKER));
+    }
+
     function rewardsDistribution() internal view returns (IRewardsDistribution) {
         return IRewardsDistribution(requireAndGetAddress(CONTRACT_REWARDSDISTRIBUTION));
     }
 
-    function debtBalanceOf(address account, bytes32 currencyKey) external view returns (uint) {
-        return issuer().debtBalanceOf(account, currencyKey);
+    function debtBalanceOf(bytes32 stake, address account, bytes32 currencyKey) external view returns (uint) {
+        return issuer().debtBalanceOf(stake, account, currencyKey);
     }
 
     function totalIssuedSynths(bytes32 currencyKey) external view returns (uint) {
@@ -105,6 +118,14 @@ contract BaseSynthetix is IERC20, ExternStateToken, MixinResolver, ISynthetix {
 
     function synthsByAddress(address synthAddress) external view returns (bytes32) {
         return issuer().synthsByAddress(synthAddress);
+    }
+
+    function asset(bytes32 currencyKey) external view returns (address) {
+        return staker().getAsset(currencyKey);
+    }
+
+    function assetByAddress(address assetAddress) external view returns (bytes32) {
+        return staker().getAssetByAddress(assetAddress);
     }
 
     function isWaitingPeriod(bytes32 currencyKey) external view returns (bool) {
@@ -182,8 +203,9 @@ contract BaseSynthetix is IERC20, ExternStateToken, MixinResolver, ISynthetix {
         return _transferFromByProxy(messageSender, from, to, value);
     }
 
-    function issueSynths(bytes32 stake, uint amount) external issuanceActive optionalProxy {
-        return issuer().issueSynths(stake, messageSender, amount);
+    function issueSynths(bytes32 stake, uint amount, uint synthAmount) external issuanceActive optionalProxy {
+        IERC20 token = IERC20(staker().requireAsset(stake));
+        return issuer().issueSynths(stake, messageSender, amount, synthAmount);
     }
 
     function issueSynthsOnBehalf(bytes32 stake, address issueForAddress, uint amount) external issuanceActive optionalProxy {

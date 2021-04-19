@@ -28,8 +28,9 @@ contract Synthetix is BaseSynthetix {
         uint _totalSupply,
         AddressResolver _resolver,
         address _dev,
-        address _eco
-    ) public BaseSynthetix(_proxy, _tokenState, _owner, _totalSupply, _resolver) {
+        address _eco,
+        bytes32 _nativeCoin
+    ) public BaseSynthetix(_proxy, _tokenState, _owner, _totalSupply, _resolver, _nativeCoin) {
         dev = _dev;
         eco = _eco;
     }

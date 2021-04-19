@@ -293,8 +293,8 @@ contract Issuer is Owned, MixinSystemSettings, IIssuer {
         return _collateralisationRatio(_issuer);
     }
 
-    function collateral(address account) external view returns (uint) {
-        return _collateral(account);
+    function collateral(bytes32 stake, address account) external view returns (uint) {
+        return _collateral(stake, account);
     }
 
     function debtBalanceOf(address _issuer, bytes32 currencyKey) external view returns (uint debtBalance) {
@@ -429,8 +429,8 @@ contract Issuer is Owned, MixinSystemSettings, IIssuer {
         }
     }
 
-    function issueSynths(bytes32 stake, address from, uint amount) external onlySynthetix {
-        _issueSynths(stake, from, amount, false);
+    function issueSynths(bytes32 stake, address from, uint amount, uint synthAmount) external onlySynthetix {
+        _issueSynths(stake, from, amount, synthAmount, false);
     }
 
     function issueMaxSynths(bytes32 stake, address from) external onlySynthetix {
@@ -552,25 +552,26 @@ contract Issuer is Owned, MixinSystemSettings, IIssuer {
         bytes32 stake,
         address from,
         uint amount,
+        uint synthAmount,
         bool issueMax
     ) internal {
         (uint maxIssuable, uint existingDebt, uint totalSystemDebt, bool anyRateIsInvalid) = _remainingIssuableSynths(from);
         _requireRatesNotInvalid(anyRateIsInvalid);
 
         if (!issueMax) {
-            require(amount <= maxIssuable, "Amount too large");
+            require(synthAmount <= maxIssuable, "Amount too large");
         } else {
-            amount = maxIssuable;
+            synthAmount = maxIssuable;
         }
 
         // Keep track of the debt they're about to create
-        _addToDebtRegister(from, amount, existingDebt, totalSystemDebt);
+        _addToDebtRegister(from, synthAmount, existingDebt, totalSystemDebt);
 
         // record issue timestamp
         _setLastIssueEvent(from);
 
         // Create their synths
-        synths[sUSD].issue(from, amount);
+        synths[sUSD].issue(from, synthAmount);
 
         // Store their locked SNX amount to determine their fee % for the period
         _appendAccountIssuanceRecord(from);
