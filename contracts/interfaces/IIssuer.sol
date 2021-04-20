@@ -15,16 +15,16 @@ interface IIssuer {
 
     function canBurnSynths(address account) external view returns (bool);
 
-    function collateral(address account) external view returns (uint);
+    function collateral(bytes32 token, address account) external view returns (uint);
 
-    function collateralisationRatio(address issuer) external view returns (uint);
+    function collateralisationRatio(bytes32 token, address issuer) external view returns (uint);
 
     function collateralisationRatioAndAnyRatesInvalid(address _issuer)
         external
         view
         returns (uint cratio, bool anyRateIsInvalid);
 
-    function debtBalanceOf(bytes32 stake, address issuer, bytes32 currencyKey) external view returns (uint debtBalance);
+    function debtBalanceOf(bytes32 token, address issuer, bytes32 currencyKey) external view returns (uint debtBalance);
 
     function issuanceRatio() external view returns (uint);
 
@@ -63,7 +63,8 @@ interface IIssuer {
         bytes32 stake,
         address issueFor,
         address from,
-        uint amount
+        uint amount,
+        uint synthAmount
     ) external;
 
     function issueMaxSynths(bytes32 stake, address from) external;

@@ -1,0 +1,317 @@
+[{
+	"constant": true,
+	"inputs": [],
+	"name": "DECIMALS",
+	"outputs": [{
+		"internalType": "uint8",
+		"name": "",
+		"type": "uint8"
+	}],
+	"payable": false,
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"constant": true,
+	"inputs": [],
+	"name": "TOKEN_NAME",
+	"outputs": [{
+		"internalType": "string",
+		"name": "",
+		"type": "string"
+	}],
+	"payable": false,
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"constant": true,
+	"inputs": [],
+	"name": "TOKEN_SYMBOL",
+	"outputs": [{
+		"internalType": "string",
+		"name": "",
+		"type": "string"
+	}],
+	"payable": false,
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"constant": true,
+	"inputs": [],
+	"name": "availableCurrencyKeys",
+	"outputs": [{
+		"internalType": "bytes32[]",
+		"name": "",
+		"type": "bytes32[]"
+	}],
+	"payable": false,
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"constant": true,
+	"inputs": [],
+	"name": "availableSynthCount",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "",
+		"type": "uint256"
+	}],
+	"payable": false,
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"constant": false,
+	"inputs": [{
+		"internalType": "bytes32",
+		"name": "stake",
+		"type": "bytes32"
+	}, {
+		"internalType": "uint256",
+		"name": "amount",
+		"type": "uint256"
+	}],
+	"name": "burnSynths",
+	"outputs": [],
+	"payable": false,
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"constant": true,
+	"inputs": [{
+		"internalType": "bytes32",
+		"name": "stake",
+		"type": "bytes32"
+	}, {
+		"internalType": "address",
+		"name": "account",
+		"type": "address"
+	}],
+	"name": "collateral",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "",
+		"type": "uint256"
+	}],
+	"payable": false,
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"constant": true,
+	"inputs": [{
+		"internalType": "bytes32",
+		"name": "stake",
+		"type": "bytes32"
+	}, {
+		"internalType": "address",
+		"name": "_issuer",
+		"type": "address"
+	}],
+	"name": "collateralisationRatio",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "",
+		"type": "uint256"
+	}],
+	"payable": false,
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"constant": true,
+	"inputs": [{
+		"internalType": "bytes32",
+		"name": "stake",
+		"type": "bytes32"
+	}, {
+		"internalType": "address",
+		"name": "account",
+		"type": "address"
+	}, {
+		"internalType": "bytes32",
+		"name": "currencyKey",
+		"type": "bytes32"
+	}],
+	"name": "debtBalanceOf",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "",
+		"type": "uint256"
+	}],
+	"payable": false,
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"constant": false,
+	"inputs": [{
+		"internalType": "bytes32",
+		"name": "",
+		"type": "bytes32"
+	}, {
+		"internalType": "uint256",
+		"name": "",
+		"type": "uint256"
+	}, {
+		"internalType": "bytes32",
+		"name": "",
+		"type": "bytes32"
+	}],
+	"name": "exchange",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "",
+		"type": "uint256"
+	}],
+	"payable": false,
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"constant": true,
+	"inputs": [{
+		"internalType": "bytes32",
+		"name": "currencyKey",
+		"type": "bytes32"
+	}],
+	"name": "isWaitingPeriod",
+	"outputs": [{
+		"internalType": "bool",
+		"name": "",
+		"type": "bool"
+	}],
+	"payable": false,
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"constant": false,
+	"inputs": [{
+		"internalType": "bytes32",
+		"name": "stake",
+		"type": "bytes32"
+	}],
+	"name": "issueMaxSynths",
+	"outputs": [],
+	"payable": false,
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"constant": false,
+	"inputs": [{
+		"internalType": "bytes32",
+		"name": "stake",
+		"type": "bytes32"
+	}, {
+		"internalType": "address",
+		"name": "issueForAddress",
+		"type": "address"
+	}],
+	"name": "issueMaxSynthsOnBehalf",
+	"outputs": [],
+	"payable": false,
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"constant": false,
+	"inputs": [{
+		"internalType": "bytes32",
+		"name": "stake",
+		"type": "bytes32"
+	}, {
+		"internalType": "uint256",
+		"name": "amount",
+		"type": "uint256"
+	}],
+	"name": "issueSynths",
+	"outputs": [],
+	"payable": false,
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"constant": false,
+	"inputs": [{
+		"internalType": "bytes32",
+		"name": "stake",
+		"type": "bytes32"
+	}, {
+		"internalType": "address",
+		"name": "issueForAddress",
+		"type": "address"
+	}, {
+		"internalType": "uint256",
+		"name": "amount",
+		"type": "uint256"
+	}],
+	"name": "issueSynthsOnBehalf",
+	"outputs": [],
+	"payable": false,
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"constant": true,
+	"inputs": [{
+		"internalType": "address",
+		"name": "account",
+		"type": "address"
+	}],
+	"name": "maxIssuableSynths",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "maxIssuable",
+		"type": "uint256"
+	}],
+	"payable": false,
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"constant": false,
+	"inputs": [],
+	"name": "mint",
+	"outputs": [{
+		"internalType": "bool",
+		"name": "",
+		"type": "bool"
+	}],
+	"payable": false,
+	"stateMutability": "nonpayable",
+	"type": "function"
+}, {
+	"constant": true,
+	"inputs": [],
+	"name": "sUSD",
+	"outputs": [{
+		"internalType": "bytes32",
+		"name": "",
+		"type": "bytes32"
+	}],
+	"payable": false,
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"constant": true,
+	"inputs": [{
+		"internalType": "address",
+		"name": "synthAddress",
+		"type": "address"
+	}],
+	"name": "synthsByAddress",
+	"outputs": [{
+		"internalType": "bytes32",
+		"name": "",
+		"type": "bytes32"
+	}],
+	"payable": false,
+	"stateMutability": "view",
+	"type": "function"
+}, {
+	"constant": true,
+	"inputs": [{
+		"internalType": "bytes32",
+		"name": "currencyKey",
+		"type": "bytes32"
+	}],
+	"name": "totalIssuedSynths",
+	"outputs": [{
+		"internalType": "uint256",
+		"name": "",
+		"type": "uint256"
+	}],
+	"payable": false,
+	"stateMutability": "view",
+	"type": "function"
+}]

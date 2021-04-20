@@ -7,6 +7,7 @@ import "./Owned.sol";
 
 // Internal references
 import "./interfaces/IERC20.sol";
+import "./interfaces/IStakerStorage.sol";
 
 contract Staker is Owned {
 
@@ -14,9 +15,17 @@ contract Staker is Owned {
     mapping(bytes32 => address) public assets;
     mapping(address => bytes32) public assetsByAddress;
 
+    IStakerStorage public stakerStorage;
+
     bytes32 public constant CONTRACT_NAME = "Staker";
 
-    constructor(address _owner) public Owned(_owner){}
+    constructor(address _owner, IStakerStorage _storage) public Owned(_owner) {
+        stakerStorage = _storage;
+    }
+
+    function getStaked(bytes32 token, address account) external view reutrns (uint) {
+        return stakerStorage.getStaked(token, account);
+    }
 
     /* ========== VIEWS ========== */
     function resolverAddressesRequired() public view returns (bytes32[] memory addresses) {
@@ -30,7 +39,7 @@ contract Staker is Owned {
 
     function requireAsset(bytes32 name) external view returns (address) {
         address assetAddress = assets[name];
-        require(assetAddress != address(0), CONTRACT_NAME.concat(': Missing Asset Token ', name));
+        require(assetAddress != address(0), 'Staker: Missing Asset Token '));
         return assetAddress;
     }
 

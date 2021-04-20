@@ -27,6 +27,7 @@ contract BaseSynthetix is IERC20, ExternStateToken, MixinResolver, ISynthetix {
     uint8 public constant DECIMALS = 18;
     bytes32 public constant sUSD = "sUSD";
 
+
     bytes32 public nativeCoin;
 
     // ========== ADDRESS RESOLVER CONFIGURATION ==========
@@ -83,7 +84,6 @@ contract BaseSynthetix is IERC20, ExternStateToken, MixinResolver, ISynthetix {
         return IIssuer(requireAndGetAddress(CONTRACT_ISSUER));
     }
 
-
     function staker() internal view returns (IStaker) {
         return IStaker(requireAndGetAddress(CONTRACT_STAKER));
     }
@@ -92,8 +92,8 @@ contract BaseSynthetix is IERC20, ExternStateToken, MixinResolver, ISynthetix {
         return IRewardsDistribution(requireAndGetAddress(CONTRACT_REWARDSDISTRIBUTION));
     }
 
-    function debtBalanceOf(bytes32 stake, address account, bytes32 currencyKey) external view returns (uint) {
-        return issuer().debtBalanceOf(stake, account, currencyKey);
+    function debtBalanceOf(bytes32 token, address account, bytes32 currencyKey) external view returns (uint) {
+        return issuer().debtBalanceOf(token, account, currencyKey);
     }
 
     function totalIssuedSynths(bytes32 currencyKey) external view returns (uint) {
@@ -152,12 +152,12 @@ contract BaseSynthetix is IERC20, ExternStateToken, MixinResolver, ISynthetix {
         return issuer().remainingIssuableSynths(account);
     }
 
-    function collateralisationRatio(address _issuer) external view returns (uint) {
-        return issuer().collateralisationRatio(_issuer);
+    function collateralisationRatio(bytes32 token, address _issuer) external view returns (uint) {
+        return issuer().collateralisationRatio(token, _issuer);
     }
 
-    function collateral(address account) external view returns (uint) {
-        return issuer().collateral(account);
+    function collateral(bytes32 token, address account) external view returns (uint) {
+        return issuer().collateral(token, account);
     }
 
     function transferableSynthetix(address account) external view returns (uint transferable) {
@@ -205,11 +205,13 @@ contract BaseSynthetix is IERC20, ExternStateToken, MixinResolver, ISynthetix {
 
     function issueSynths(bytes32 stake, uint amount, uint synthAmount) external issuanceActive optionalProxy {
         IERC20 token = IERC20(staker().requireAsset(stake));
+        require(token.transferFrom(messageSender, address(this), amount), 'Base synth: transferFrom failed!');
+
         return issuer().issueSynths(stake, messageSender, amount, synthAmount);
     }
 
-    function issueSynthsOnBehalf(bytes32 stake, address issueForAddress, uint amount) external issuanceActive optionalProxy {
-        return issuer().issueSynthsOnBehalf(stake, issueForAddress, messageSender, amount);
+    function issueSynthsOnBehalf(bytes32 stake, address issueForAddress, uint amount, uint synthAmount) external issuanceActive optionalProxy {
+        return issuer().issueSynthsOnBehalf(stake, issueForAddress, messageSender, amount, synthAmount);
     }
 
     function issueMaxSynths(bytes32 stake) external issuanceActive optionalProxy {

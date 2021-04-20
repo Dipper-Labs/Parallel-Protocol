@@ -100,8 +100,8 @@ contract Liquidations is Owned, MixinSystemSettings, ILiquidations {
         return liquidation.deadline;
     }
 
-    function isOpenForLiquidation(address account) external view returns (bool) {
-        uint accountCollateralisationRatio = synthetix().collateralisationRatio(account);
+    function isOpenForLiquidation(bytes32 stake, address account) external view returns (bool) {
+        uint accountCollateralisationRatio = synthetix().collateralisationRatio(stake, account);
 
         // Liquidation closed if collateral ratio less than or equal target issuance Ratio
         // Account with no snx collateral will also not be open for liquidation (ratio is 0)
