@@ -6,7 +6,7 @@ import './lib/SafeMath.sol';
 import './lib/PreciseMath.sol';
 import './base/Importable.sol';
 import './interfaces/IStats.sol';
-import './interfaces/ISynbit.sol';
+import './interfaces/ISynthx.sol';
 import './interfaces/IEscrow.sol';
 import './interfaces/IStaker.sol';
 import './interfaces/IAssetPrice.sol';
@@ -33,7 +33,7 @@ contract Stats is Importable, IStats {
         setContractName(CONTRACT_STATS);
         imports = [
             CONTRACT_SUPPLY_SCHEDULE,
-            CONTRACT_SYNBIT,
+            CONTRACT_SYNTHX,
             CONTRACT_ESCROW,
             CONTRACT_STAKER,
             CONTRACT_ASSET_PRICE,
@@ -48,8 +48,8 @@ contract Stats is Importable, IStats {
         ];
     }
 
-    function Synbit() private view returns (ISynbit) {
-        return ISynbit(requireAddress(CONTRACT_SYNBIT));
+    function Synthx() private view returns (ISynthx) {
+        return ISynthx(requireAddress(CONTRACT_SYNTHX));
     }
 
     function Escrow() private view returns (IEscrow) {
@@ -97,7 +97,7 @@ contract Stats is Importable, IStats {
         address assetAddress,
         address account
     ) private view returns (uint256) {
-        if (assetName == Synbit().nativeCoin()) return account.balance;
+        if (assetName == Synthx().nativeCoin()) return account.balance;
 
         IERC20 token = IERC20(assetAddress);
         return token.balanceOf(account).decimalsTo(token.decimals(), PreciseMath.DECIMALS());

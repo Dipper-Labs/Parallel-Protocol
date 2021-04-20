@@ -1,6 +1,6 @@
 pragma solidity ^0.5.17;
 
-interface ISynbit {
+interface ISynthx {
     function nativeCoin() external view returns (bytes32);
 
     function stakeFromCoin() external payable returns (bool);

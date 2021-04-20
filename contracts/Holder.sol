@@ -15,7 +15,7 @@ contract Holder is Rewards, IHolder {
 
     constructor(IResolver _resolver) public Importable(_resolver) {
         setContractName(CONTRACT_HOLDER);
-        imports = [CONTRACT_SYNBIT, CONTRACT_SUPPLY_SCHEDULE, CONTRACT_SYNBIT_TOKEN];
+        imports = [CONTRACT_SYNTHX, CONTRACT_SUPPLY_SCHEDULE, CONTRACT_SYNTHX_TOKEN];
     }
 
     function Storage() private view returns (IHolderStorage) {
@@ -30,7 +30,7 @@ contract Holder is Rewards, IHolder {
         bytes32 asset,
         address account,
         uint256 amount
-    ) external onlyAddress(CONTRACT_SYNBIT) {
+    ) external onlyAddress(CONTRACT_SYNTHX) {
         Lockable(asset).lock(account, amount);
         _setLocked(asset, account);
     }
@@ -39,7 +39,7 @@ contract Holder is Rewards, IHolder {
         bytes32 asset,
         address account,
         uint256 amount
-    ) external onlyAddress(CONTRACT_SYNBIT) {
+    ) external onlyAddress(CONTRACT_SYNTHX) {
         Lockable(asset).unlock(account, amount);
         _setLocked(asset, account);
     }
@@ -67,7 +67,7 @@ contract Holder is Rewards, IHolder {
 
     function claim(bytes32 asset, address account)
         external
-        onlyAddress(CONTRACT_SYNBIT)
+        onlyAddress(CONTRACT_SYNTHX)
         returns (
             uint256 period,
             uint256 amount,
@@ -80,7 +80,7 @@ contract Holder is Rewards, IHolder {
         uint256 claimablePeriod = getClaimablePeriod();
         setClaimed(asset, account, claimablePeriod, claimable);
 
-        IERC20(requireAddress(CONTRACT_SYNBIT_TOKEN)).safeTransfer(account, claimable);
+        IERC20(requireAddress(CONTRACT_SYNTHX_TOKEN)).safeTransfer(account, claimable);
         return (claimablePeriod, claimable, 0);
     }
 

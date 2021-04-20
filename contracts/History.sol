@@ -18,7 +18,7 @@ contract History is Importable, IHistory {
 
     constructor(IResolver _resolver) public Importable(_resolver) {
         setContractName(CONTRACT_HISTORY);
-        imports = [CONTRACT_SYNBIT, CONTRACT_SUPPLY_SCHEDULE, CONTRACT_CROWDSALE];
+        imports = [CONTRACT_SYNTHX, CONTRACT_SUPPLY_SCHEDULE, CONTRACT_CROWDSALE];
     }
 
     function addAction(

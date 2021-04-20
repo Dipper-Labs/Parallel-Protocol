@@ -8,7 +8,7 @@ contract Constants {
     bytes32 internal constant CONTRACT_ASSET_PRICE = 'AssetPrice';
     bytes32 internal constant CONTRACT_SETTING = 'Setting';
 
-    bytes32 internal constant CONTRACT_SYNBIT = 'Synbit';
+    bytes32 internal constant CONTRACT_SYNTHX = 'Synthx';
     bytes32 internal constant CONTRACT_ESCROW = 'Escrow';
     bytes32 internal constant CONTRACT_ISSUER = 'Issuer';
 
@@ -19,9 +19,8 @@ contract Constants {
     bytes32 internal constant CONTRACT_TEAM = 'Team';
     bytes32 internal constant CONTRACT_SPECIAL = 'Special';
 
-    bytes32 internal constant CONTRACT_SYNBIT_TOKEN = 'SynbitToken';
+    bytes32 internal constant CONTRACT_SYNTHX_TOKEN = 'SynthxToken';
     bytes32 internal constant CONTRACT_SUPPLY_SCHEDULE = 'SupplySchedule';
-    bytes32 internal constant CONTRACT_CROWDSALE = 'Crowdsale';
 
     bytes32 internal constant CONTRACT_STATS = 'Stats';
     bytes32 internal constant CONTRACT_MARKET = 'Market';

@@ -15,7 +15,7 @@ contract Market is Importable, IMarket {
 
     constructor(IResolver _resolver) public Importable(_resolver) {
         setContractName(CONTRACT_MARKET);
-        imports = [CONTRACT_SYNBIT];
+        imports = [CONTRACT_SYNTHX];
     }
 
     function addTrade(

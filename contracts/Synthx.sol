@@ -7,7 +7,7 @@ import './lib/SafeERC20.sol';
 import './base/Proxyable.sol';
 import './base/Pausable.sol';
 import './base/Importable.sol';
-import './interfaces/ISynbit.sol';
+import './interfaces/ISynthx.sol';
 import './interfaces/IEscrow.sol';
 import './interfaces/IStaker.sol';
 import './interfaces/ITrader.sol';
@@ -17,13 +17,13 @@ import './interfaces/IIssuer.sol';
 import './interfaces/IHolder.sol';
 import './interfaces/IProvider.sol';
 import './interfaces/IRewards.sol';
-import './interfaces/ISynbitToken.sol';
+import './interfaces/ISynthxToken.sol';
 import './interfaces/IMarket.sol';
 import './interfaces/IHistory.sol';
 import './interfaces/ILiquidator.sol';
 import './interfaces/IERC20.sol';
 
-contract Synbit is Proxyable, Pausable, Importable, ISynbit {
+contract Synthx is Proxyable, Pausable, Importable, ISynthx {
     using SafeMath for uint256;
     using PreciseMath for uint256;
     using SafeERC20 for IERC20;
@@ -40,7 +40,7 @@ contract Synbit is Proxyable, Pausable, Importable, ISynbit {
         setInitialized();
         resolver = _resolver;
         nativeCoin = _nativeCoin;
-        setContractName(CONTRACT_SYNBIT);
+        setContractName(CONTRACT_SYNTHX);
         imports = [
             CONTRACT_ESCROW,
             CONTRACT_STAKER,
@@ -49,7 +49,7 @@ contract Synbit is Proxyable, Pausable, Importable, ISynbit {
             CONTRACT_ISSUER,
             CONTRACT_TRADER,
             CONTRACT_HOLDER,
-            CONTRACT_SYNBIT_TOKEN,
+            CONTRACT_SYNTHX_TOKEN,
             CONTRACT_PROVIDER,
             CONTRACT_MARKET,
             CONTRACT_HISTORY,
@@ -95,8 +95,8 @@ contract Synbit is Proxyable, Pausable, Importable, ISynbit {
         return IRewards(requireAddress(reward));
     }
 
-    function SynbitToken() private view returns (ISynbitToken) {
-        return ISynbitToken(requireAddress(CONTRACT_SYNBIT_TOKEN));
+    function SynthxToken() private view returns (ISynthxToken) {
+        return ISynthxToken(requireAddress(CONTRACT_SYNTHX_TOKEN));
     }
 
     function Market() private view returns (IMarket) {
@@ -112,35 +112,35 @@ contract Synbit is Proxyable, Pausable, Importable, ISynbit {
     }
 
     function stakeFromCoin() external payable returns (bool) {
-        require(Issuer().getDebt(nativeCoin, msg.sender) > 0, 'Synbit: Debt must be greater than zero');
+        require(Issuer().getDebt(nativeCoin, msg.sender) > 0, 'Synthx: Debt must be greater than zero');
 
         _stake(nativeCoin, msg.value, FROM_BALANCE);
         History().addAction('Stake', msg.sender, 'Stake', nativeCoin, msg.value, bytes32(0), 0);
         Liquidator().watchAccount(nativeCoin, msg.sender);
-        SynbitToken().mint();
+        SynthxToken().mint();
         emit Staked(msg.sender, FROM_BALANCE, nativeCoin, msg.value);
         return true;
     }
 
     function stakeFromEscrow(uint256 amount) external returns (bool) {
-        require(Issuer().getDebt(SYN, msg.sender) > 0, 'Synbit: Debt must be greater than zero');
+        require(Issuer().getDebt(SYN, msg.sender) > 0, 'Synthx: Debt must be greater than zero');
 
         _stake(SYN, amount, FROM_ESCROW);
         History().addAction('Stake', msg.sender, 'Stake', SYN, amount, bytes32(0), 0);
         Liquidator().watchAccount(SYN, msg.sender);
-        SynbitToken().mint();
+        SynthxToken().mint();
         emit Staked(msg.sender, FROM_ESCROW, SYN, amount);
         return true;
     }
 
     function stakeFromToken(bytes32 stake, uint256 amount) external returns (bool) {
-        require(stake != nativeCoin, 'Synbit: Native Coin use "mintFromCoin" function');
-        require(Issuer().getDebt(stake, msg.sender) > 0, 'Synbit: Debt must be greater than zero');
+        require(stake != nativeCoin, 'Synthx: Native Coin use "mintFromCoin" function');
+        require(Issuer().getDebt(stake, msg.sender) > 0, 'Synthx: Debt must be greater than zero');
 
         _stake(stake, amount, FROM_BALANCE);
         History().addAction('Stake', msg.sender, 'Stake', stake, amount, bytes32(0), 0);
         Liquidator().watchAccount(stake, msg.sender);
-        SynbitToken().mint();
+        SynthxToken().mint();
         emit Staked(msg.sender, FROM_BALANCE, stake, amount);
         return true;
     }
@@ -150,12 +150,12 @@ contract Synbit is Proxyable, Pausable, Importable, ISynbit {
         uint256 amount,
         bytes32 from
     ) private onlyInitialized notPaused {
-        require(amount > 0, 'Synbit: amount must be greater than zero');
+        require(amount > 0, 'Synthx: amount must be greater than zero');
         address stakeAddress = requireAsset('Stake', stake);
 
         if (from == FROM_TRANSFERABLE) {
             (uint256 transferable, ) = Staker().getTransferable(stake, msg.sender);
-            transferable.sub(amount, 'Synbit: transfer amount exceeds transferable');
+            transferable.sub(amount, 'Synthx: transfer amount exceeds transferable');
             return;
         }
 
@@ -187,7 +187,7 @@ contract Synbit is Proxyable, Pausable, Importable, ISynbit {
     }
 
     function mintFromToken(bytes32 stake, uint256 amount) external returns (bool) {
-        require(stake != nativeCoin, 'Synbit: Native Coin use "mintFromCoin" function');
+        require(stake != nativeCoin, 'Synthx: Native Coin use "mintFromCoin" function');
 
         _mint(stake, amount, FROM_BALANCE);
         return true;
@@ -206,14 +206,14 @@ contract Synbit is Proxyable, Pausable, Importable, ISynbit {
         _stake(stake, amount, from);
         uint256 value = amount.decimalMultiply(AssetPrice().getPrice(stake));
         uint256 collateralRate = Setting().getCollateralRate(stake);
-        require(collateralRate > 0, 'Synbit: Missing Collateral Rate');
+        require(collateralRate > 0, 'Synthx: Missing Collateral Rate');
 
         uint256 issueAmount = value.decimalDivide(collateralRate);
         Issuer().issueDebt(stake, msg.sender, issueAmount);
 
         History().addAction('Stake', msg.sender, 'Mint', stake, amount, USD, issueAmount);
         Liquidator().watchAccount(stake, msg.sender);
-        SynbitToken().mint();
+        SynthxToken().mint();
         emit Minted(msg.sender, from, stake, amount, issueAmount);
     }
 
@@ -226,7 +226,7 @@ contract Synbit is Proxyable, Pausable, Importable, ISynbit {
 
         History().addAction('Stake', msg.sender, 'Burn', stake, 0, USD, amount);
         Liquidator().watchAccount(stake, msg.sender);
-        SynbitToken().mint();
+        SynthxToken().mint();
         emit Burned(msg.sender, stake, burnAmount);
         return true;
     }
@@ -237,7 +237,7 @@ contract Synbit is Proxyable, Pausable, Importable, ISynbit {
         uint256 amount
     ) public onlyInitialized notPaused returns (bool) {
         (uint256 transferable, ) = Staker().getTransferable(stake, msg.sender);
-        transferable.sub(amount, 'Synbit: transfer amount exceeds transferable');
+        transferable.sub(amount, 'Synthx: transfer amount exceeds transferable');
 
         Staker().unstake(stake, msg.sender, amount);
 
@@ -250,7 +250,7 @@ contract Synbit is Proxyable, Pausable, Importable, ISynbit {
 
         History().addAction('Stake', msg.sender, 'Transfer', stake, amount, bytes32(0), 0);
         Liquidator().watchAccount(stake, msg.sender);
-        SynbitToken().mint();
+        SynthxToken().mint();
         emit Transfered(msg.sender, stake, recipient, amount);
         return true;
     }
@@ -266,7 +266,7 @@ contract Synbit is Proxyable, Pausable, Importable, ISynbit {
         Market().addTrade(fromSynth, fromAmount, fromSynthPrice, toSynth, tradingAmount, toSynthPirce);
         History().addTrade(msg.sender, fromSynth, fromAmount, fromSynthPrice, toSynth, tradingAmount, toSynthPirce);
 
-        SynbitToken().mint();
+        SynthxToken().mint();
         emit Traded(
             msg.sender,
             fromSynth,
@@ -297,7 +297,7 @@ contract Synbit is Proxyable, Pausable, Importable, ISynbit {
             Holder().lock(asset, msg.sender, amount);
         }
 
-        SynbitToken().mint();
+        SynthxToken().mint();
         emit Locked(msg.sender, asset, amount, isPool);
         return true;
     }
@@ -315,7 +315,7 @@ contract Synbit is Proxyable, Pausable, Importable, ISynbit {
             Holder().unlock(asset, msg.sender, amount);
         }
 
-        SynbitToken().mint();
+        SynthxToken().mint();
         emit Unlocked(msg.sender, asset, amount, isPool);
         return true;
     }
@@ -323,7 +323,7 @@ contract Synbit is Proxyable, Pausable, Importable, ISynbit {
     function claim(bytes32 reward, bytes32 asset) external onlyInitialized notPaused returns (bool) {
         (uint256 period, uint256 amount, uint256 vestTime) = Rewards(reward).claim(asset, msg.sender);
         History().addAction('Claim', msg.sender, reward, asset, vestTime, (asset == USD) ? USD : SYN, amount);
-        SynbitToken().mint();
+        SynthxToken().mint();
         emit Claimed(msg.sender, reward, asset, period, amount, vestTime);
         return true;
     }
@@ -331,7 +331,7 @@ contract Synbit is Proxyable, Pausable, Importable, ISynbit {
     function vest(uint256 amount) external onlyInitialized notPaused returns (bool) {
         Escrow().withdraw(msg.sender, amount);
         History().addAction('Vest', msg.sender, 'Escrow', SYN, amount, bytes32(0), 0);
-        SynbitToken().mint();
+        SynthxToken().mint();
         emit Vested(msg.sender, amount);
         return true;
     }
@@ -342,7 +342,7 @@ contract Synbit is Proxyable, Pausable, Importable, ISynbit {
         uint256 amount
     ) external onlyInitialized notPaused returns (bool) {
         uint256 liquidable = Liquidator().getLiquidable(stake, account);
-        liquidable.sub(amount, 'Synbit: liquidate amount exceeds liquidable');
+        liquidable.sub(amount, 'Synthx: liquidate amount exceeds liquidable');
 
         uint256 unstakable = Liquidator().getUnstakable(stake, amount);
         Issuer().burnDebt(stake, account, amount, msg.sender);
@@ -355,7 +355,7 @@ contract Synbit is Proxyable, Pausable, Importable, ISynbit {
             token.safeTransfer(msg.sender, unstakable.decimalsTo(PreciseMath.DECIMALS(), token.decimals()));
         }
 
-        SynbitToken().mint();
+        SynthxToken().mint();
         emit Liquidated(msg.sender, stake, account, unstakable, amount);
         return true;
     }

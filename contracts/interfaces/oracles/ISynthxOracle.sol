@@ -1,6 +1,6 @@
 pragma solidity ^0.5.17;
 
-interface ISynbitOracle {
+interface ISynthxOracle {
     function setPrice(bytes32 asset, uint256 price) external;
 
     function setPrices(bytes32[] calldata assets, uint256[] calldata prices) external;

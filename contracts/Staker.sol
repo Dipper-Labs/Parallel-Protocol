@@ -14,7 +14,7 @@ contract Staker is Rewards, IStaker {
     constructor(IResolver _resolver) public Importable(_resolver) {
         setContractName(CONTRACT_STAKER);
         imports = [
-            CONTRACT_SYNBIT,
+            CONTRACT_SYNTHX,
             CONTRACT_SUPPLY_SCHEDULE,
             CONTRACT_ISSUER,
             CONTRACT_SETTING,
@@ -52,7 +52,7 @@ contract Staker is Rewards, IStaker {
         bytes32 token,
         address account,
         uint256 amount
-    ) external onlyAddress(CONTRACT_SYNBIT) {
+    ) external onlyAddress(CONTRACT_SYNTHX) {
         Storage().incrementStaked(token, account, amount);
     }
 
@@ -60,7 +60,7 @@ contract Staker is Rewards, IStaker {
         bytes32 token,
         address account,
         uint256 amount
-    ) external onlyAddress(CONTRACT_SYNBIT) {
+    ) external onlyAddress(CONTRACT_SYNTHX) {
         Storage().decrementStaked(token, account, amount, 'Staker: unstake amount exceeds staked');
     }
 
@@ -94,7 +94,7 @@ contract Staker is Rewards, IStaker {
 
     function claim(bytes32 asset, address account)
         external
-        onlyAddress(CONTRACT_SYNBIT)
+        onlyAddress(CONTRACT_SYNTHX)
         returns (
             uint256 period,
             uint256 amount,

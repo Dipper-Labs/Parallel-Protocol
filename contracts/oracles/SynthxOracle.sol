@@ -3,14 +3,14 @@ pragma solidity ^0.5.17;
 import '../lib/SafeMath.sol';
 import '../base/ExternalStorable.sol';
 import '../interfaces/IOracle.sol';
-import '../interfaces/oracles/ISynbitOracle.sol';
+import '../interfaces/oracles/ISynthxOracle.sol';
 import '../interfaces/storages/IOracleStorage.sol';
 
-contract SynbitOracle is ExternalStorable, IOracle, ISynbitOracle {
+contract SynthxOracle is ExternalStorable, IOracle, ISynthxOracle {
     using SafeMath for uint256;
 
     constructor() public {
-        contractName = 'SynbitOracle';
+        contractName = 'SynthxOracle';
     }
 
     function Storage() internal view returns (IOracleStorage) {
@@ -25,7 +25,7 @@ contract SynbitOracle is ExternalStorable, IOracle, ISynbitOracle {
     }
 
     function setPrices(bytes32[] calldata assets, uint256[] calldata prices) external allManager {
-        require(assets.length == prices.length, 'SynbitOracle: asset and price length mismatch');
+        require(assets.length == prices.length, 'SynthxOracle: asset and price length mismatch');
         for (uint256 i = 0; i < assets.length; i++) {
             setPrice(assets[i], prices[i]);
         }

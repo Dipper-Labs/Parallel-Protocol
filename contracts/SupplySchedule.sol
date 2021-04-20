@@ -25,7 +25,7 @@ contract SupplySchedule is Importable, ISupplySchedule {
     ) public Importable(_resolver) {
         setContractName(CONTRACT_SUPPLY_SCHEDULE);
         imports = [
-            CONTRACT_SYNBIT_TOKEN,
+            CONTRACT_SYNTHX_TOKEN,
             CONTRACT_SETTING,
             CONTRACT_ESCROW,
             CONTRACT_TRADER,
@@ -91,7 +91,7 @@ contract SupplySchedule is Importable, ISupplySchedule {
 
     function distributeSupply()
         external
-        onlyAddress(CONTRACT_SYNBIT_TOKEN)
+        onlyAddress(CONTRACT_SYNTHX_TOKEN)
         returns (address[] memory recipients, uint256[] memory amounts)
     {
         if (now < nextMintTime()) return (recipients, amounts);

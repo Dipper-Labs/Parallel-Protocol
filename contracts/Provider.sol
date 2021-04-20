@@ -10,7 +10,7 @@ import './interfaces/IEscrow.sol';
 contract Provider is Rewards, IProvider {
     constructor(IResolver _resolver) public Importable(_resolver) {
         setContractName(CONTRACT_PROVIDER);
-        imports = [CONTRACT_SYNBIT, CONTRACT_SUPPLY_SCHEDULE, CONTRACT_ESCROW];
+        imports = [CONTRACT_SYNTHX, CONTRACT_SUPPLY_SCHEDULE, CONTRACT_ESCROW];
     }
 
     function Storage() private view returns (IProviderStorage) {
@@ -25,7 +25,7 @@ contract Provider is Rewards, IProvider {
         bytes32 asset,
         address account,
         uint256 amount
-    ) external onlyAddress(CONTRACT_SYNBIT) {
+    ) external onlyAddress(CONTRACT_SYNTHX) {
         Storage().incrementLocked(asset, account, getCurrentPeriod(), amount);
     }
 
@@ -33,7 +33,7 @@ contract Provider is Rewards, IProvider {
         bytes32 asset,
         address account,
         uint256 amount
-    ) external onlyAddress(CONTRACT_SYNBIT) {
+    ) external onlyAddress(CONTRACT_SYNTHX) {
         Storage().decrementLocked(asset, account, getCurrentPeriod(), amount, 'Provider: unlock amount exceeds locked');
     }
 
@@ -55,7 +55,7 @@ contract Provider is Rewards, IProvider {
 
     function claim(bytes32 asset, address account)
         external
-        onlyAddress(CONTRACT_SYNBIT)
+        onlyAddress(CONTRACT_SYNTHX)
         returns (
             uint256 period,
             uint256 amount,

@@ -4,7 +4,7 @@ pragma solidity ^0.5.17;
 import './lib/Arrays.sol';
 import './storages/AddressStorage.sol';
 import './interfaces/IResolver.sol';
-import './interfaces/ISynbitToken.sol';
+import './interfaces/ISynthxToken.sol';
 
 contract Resolver is AddressStorage, IResolver {
     mapping(bytes32 => bytes32[]) _assets;
@@ -48,7 +48,7 @@ contract Resolver is AddressStorage, IResolver {
     function setAddress(bytes32 name, address value) public onlyOwner {
         address previousValue = getAddressValue(name);
         emit AddressChanged(name, previousValue, value);
-        _migrateSynbitToken(name, previousValue, value);
+        _migrateSynthxToken(name, previousValue, value);
         setAddressValue(name, value);
     }
 
@@ -56,19 +56,19 @@ contract Resolver is AddressStorage, IResolver {
         return getAddressValue(name);
     }
 
-    function _migrateSynbitToken(
+    function _migrateSynthxToken(
         bytes32 name,
         address previousAddress,
         address newAddress
     ) private {
         bytes32[3] memory contracts = [CONTRACT_ESCROW, CONTRACT_HOLDER, CONTRACT_TRADER];
         if (previousAddress == address(0)) return;
-        address synbitToken = getAddressValue(CONTRACT_SYNBIT_TOKEN);
-        if (synbitToken == address(0)) return;
+        address synthxToken = getAddressValue(CONTRACT_SYNTHX_TOKEN);
+        if (synthxToken == address(0)) return;
         for (uint256 i = 0; i < contracts.length; i++) {
             if (name != contracts[i]) continue;
-            ISynbitToken(synbitToken).migrate(previousAddress, newAddress);
-            emit SynbitTokenMigrated(name, previousAddress, newAddress);
+            ISynthxToken(synthxToken).migrate(previousAddress, newAddress);
+            emit SynthxTokenMigrated(name, previousAddress, newAddress);
         }
     }
 }

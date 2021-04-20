@@ -27,7 +27,7 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
     constructor(IResolver _resolver) public Importable(_resolver) {
         setContractName(CONTRACT_ISSUER);
         imports = [
-            CONTRACT_SYNBIT,
+            CONTRACT_SYNTHX,
             CONTRACT_SUPPLY_SCHEDULE,
             CONTRACT_ASSET_PRICE,
             CONTRACT_SETTING,
@@ -61,7 +61,7 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
         bytes32 stake,
         address account,
         uint256 amount
-    ) external onlyAddress(CONTRACT_SYNBIT) {
+    ) external onlyAddress(CONTRACT_SYNTHX) {
         uint256 currentPeriod = getCurrentPeriod();
         uint256 totalDebt = getTotalDebt();
         uint256 lastDebt = Storage().getLastDebt(currentPeriod);
@@ -96,7 +96,7 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
         address account,
         uint256 amount,
         address payer
-    ) external onlyAddress(CONTRACT_SYNBIT) returns (uint256) {
+    ) external onlyAddress(CONTRACT_SYNTHX) returns (uint256) {
         uint256 currentPeriod = getCurrentPeriod();
         uint256 totalDebt = getTotalDebt();
         uint256 lastDebt = Storage().getLastDebt(currentPeriod);

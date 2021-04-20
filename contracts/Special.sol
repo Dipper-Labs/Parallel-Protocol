@@ -13,7 +13,7 @@ contract Special is Rewards, ISpecial {
     constructor(IResolver _resolver) public Importable(_resolver) {
         setContractName(CONTRACT_SPECIAL);
         imports = [
-            CONTRACT_SYNBIT,
+            CONTRACT_SYNTHX,
             CONTRACT_SUPPLY_SCHEDULE,
             CONTRACT_ISSUER,
             CONTRACT_SETTING,
@@ -40,7 +40,7 @@ contract Special is Rewards, ISpecial {
 
     function claim(bytes32 asset, address account)
         external
-        onlyAddress(CONTRACT_SYNBIT)
+        onlyAddress(CONTRACT_SYNTHX)
         returns (
             uint256 period,
             uint256 amount,
