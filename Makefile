@@ -3,3 +3,6 @@ all:
 
 compile:
 	truffle compile
+
+migrate:
+	truffle migrate --network ganache 
