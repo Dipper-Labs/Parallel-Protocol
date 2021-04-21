@@ -15,7 +15,6 @@ import './interfaces/IIssuer.sol';
 import './interfaces/IHolder.sol';
 import './interfaces/ITrader.sol';
 import './interfaces/IRewards.sol';
-import './interfaces/IProvider.sol';
 import './interfaces/ISynth.sol';
 import './interfaces/IMarket.sol';
 import './interfaces/IERC20.sol';
@@ -42,7 +41,6 @@ contract Stats is Importable, IStats {
             CONTRACT_HOLDER,
             CONTRACT_TRADER,
             CONTRACT_HOLDER,
-            CONTRACT_PROVIDER,
             CONTRACT_MARKET,
             CONTRACT_SPECIAL
         ];
@@ -82,10 +80,6 @@ contract Stats is Importable, IStats {
 
     function Rewards(bytes32 reward) private view returns (IRewards) {
         return IRewards(requireAddress(reward));
-    }
-
-    function Provider() private view returns (IProvider) {
-        return IProvider(requireAddress(CONTRACT_PROVIDER));
     }
 
     function Market() private view returns (IMarket) {
@@ -237,7 +231,6 @@ contract Stats is Importable, IStats {
         address account,
         bool isPool
     ) external view returns (uint256) {
-        return (isPool) ? Provider().getLocked(asset, account) : Holder().getLocked(asset, account);
     }
 
     function getAvailable(bytes32 stake, address account)

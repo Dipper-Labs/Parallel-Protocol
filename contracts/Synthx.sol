@@ -15,7 +15,6 @@ import './interfaces/IAssetPrice.sol';
 import './interfaces/ISetting.sol';
 import './interfaces/IIssuer.sol';
 import './interfaces/IHolder.sol';
-import './interfaces/IProvider.sol';
 import './interfaces/IRewards.sol';
 import './interfaces/ISynthxToken.sol';
 import './interfaces/IMarket.sol';
@@ -49,7 +48,6 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
             CONTRACT_TRADER,
             CONTRACT_HOLDER,
             CONTRACT_SYNTHX_TOKEN,
-            CONTRACT_PROVIDER,
             CONTRACT_MARKET,
             CONTRACT_HISTORY,
             CONTRACT_LIQUIDATOR,
@@ -86,9 +84,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         return IHolder(requireAddress(CONTRACT_HOLDER));
     }
 
-    function Provider() private view returns (IProvider) {
-        return IProvider(requireAddress(CONTRACT_PROVIDER));
-    }
+
 
     function Rewards(bytes32 reward) private view returns (IRewards) {
         return IRewards(requireAddress(reward));
@@ -254,46 +250,6 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
             fromSynthPrice,
             toSynthPirce
         );
-        return true;
-    }
-
-    function lock(
-        bytes32 asset,
-        uint256 amount,
-        bool isPool
-    ) external onlyInitialized notPaused returns (bool) {
-        if (isPool) {
-            IERC20 token = IERC20(requireAsset('Pool', asset));
-            token.safeTransferFrom(
-                msg.sender,
-                address(this),
-                amount.decimalsTo(PreciseMath.DECIMALS(), token.decimals())
-            );
-            Provider().lock(asset, msg.sender, amount);
-        } else {
-            Holder().lock(asset, msg.sender, amount);
-        }
-
-        SynthxToken().mint();
-        emit Locked(msg.sender, asset, amount, isPool);
-        return true;
-    }
-
-    function unlock(
-        bytes32 asset,
-        uint256 amount,
-        bool isPool
-    ) external onlyInitialized notPaused returns (bool) {
-        if (isPool) {
-            Provider().unlock(asset, msg.sender, amount);
-            IERC20 token = IERC20(requireAsset('Pool', asset));
-            token.safeTransfer(msg.sender, amount.decimalsTo(PreciseMath.DECIMALS(), token.decimals()));
-        } else {
-            Holder().unlock(asset, msg.sender, amount);
-        }
-
-        SynthxToken().mint();
-        emit Unlocked(msg.sender, asset, amount, isPool);
         return true;
     }
 

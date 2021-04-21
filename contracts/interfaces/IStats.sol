@@ -71,11 +71,6 @@ interface IStats {
             uint256 totalDebt
         );
 
-    function getLocked(
-        bytes32 asset,
-        address account,
-        bool isPool
-    ) external view returns (uint256);
 
     function getAvailable(bytes32 stake, address account)
         external
