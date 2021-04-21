@@ -17,16 +17,12 @@ contract Escrow is Importable, ExternalStorable, IEscrow {
     using SafeERC20 for IERC20;
 
     bytes32 private constant BALANCE = 'Balance';
-    bytes32 private constant STAKED = 'Staked';
     bytes32 private constant WITHDRAWN = 'Withdrawn';
     bytes32[] private ESCROW_CONTRACTS = [
         CONTRACT_SUPPLY_SCHEDULE,
-        CONTRACT_STAKER,
         CONTRACT_PROVIDER,
         CONTRACT_SPECIAL
     ];
-
-    uint256 public escrowDuration = 90 days;
 
     constructor(IResolver _resolver) public Importable(_resolver) {
         setContractName(CONTRACT_ESCROW);
@@ -34,7 +30,6 @@ contract Escrow is Importable, ExternalStorable, IEscrow {
             CONTRACT_SYNTHX,
             CONTRACT_SYNTHX_TOKEN,
             CONTRACT_SUPPLY_SCHEDULE,
-            CONTRACT_STAKER,
             CONTRACT_PROVIDER,
             CONTRACT_SPECIAL
         ];
@@ -44,19 +39,13 @@ contract Escrow is Importable, ExternalStorable, IEscrow {
         return IEscrowStorage(getStorage());
     }
 
-    function setEscrowDuration(uint256 duration) external onlyOwner {
-        emit EscrowDurationChanged(escrowDuration, duration);
-        escrowDuration = duration;
-    }
-
     function deposit(
         uint256 period,
         address account,
         uint256 amount
-    ) external containAddressOrOwner(ESCROW_CONTRACTS) returns (uint256 vestTime) {
-        vestTime = now.add(escrowDuration);
+    ) external containAddressOrOwner(ESCROW_CONTRACTS) {
         Storage().incrementUint(BALANCE, account, amount);
-        Storage().setEscrow(account, period, amount, vestTime);
+        Storage().setEscrow(account, period, amount, now);
     }
 
     function withdraw(address account, uint256 amount) external onlyAddress(CONTRACT_SYNTHX) {
@@ -68,41 +57,20 @@ contract Escrow is Importable, ExternalStorable, IEscrow {
         IERC20(requireAddress(CONTRACT_SYNTHX_TOKEN)).safeTransfer(account, amount);
     }
 
-    function stake(address account, uint256 amount) external onlyAddress(CONTRACT_SYNTHX) {
-        getAvailable(account).sub(amount, 'Escrow: stake amount exceeds available');
-        Storage().incrementUint(STAKED, account, amount);
-    }
-
-    function unstake(address account, uint256 amount) external onlyAddress(CONTRACT_SYNTHX) {
-        Storage().decrementUint(STAKED, account, amount, 'Escrow: unstake amount exceeds staked');
-    }
-
     function getWithdrawable(address account) public view returns (uint256) {
         uint256 currentPeriod = SupplySchedule().currentPeriod();
         uint256 withdrawn = Storage().getUint(WITHDRAWN, account);
-        uint256 available = getAvailable(account);
+        uint256 available = getBalance(account);
         uint256 withdrawable = 0;
         for (uint256 i = 0; i < currentPeriod; i++) {
-            (uint256 amount, uint256 vestTime) = Storage().getEscrow(account, i);
-            if (vestTime > now || vestTime == 0) continue;
+            (uint256 amount, ) = Storage().getEscrow(account, i);
             withdrawable = withdrawable.add(amount);
         }
         if (withdrawable <= withdrawn) return 0;
         return withdrawable.sub(withdrawn).min(available);
     }
 
-    function getAvailable(address account) public view returns (uint256) {
-        uint256 balance = getBalance(account);
-        uint256 staked = getStaked(account);
-        if (staked >= balance) return 0;
-        return balance.sub(staked);
-    }
-
     function getBalance(address account) public view returns (uint256) {
         return Storage().getUint(BALANCE, account);
-    }
-
-    function getStaked(address account) public view returns (uint256) {
-        return Storage().getUint(STAKED, account);
     }
 }

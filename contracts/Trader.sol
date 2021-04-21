@@ -145,7 +145,7 @@ contract Trader is Rewards, ITrader {
     }
 
     function getClaimable(bytes32 asset, address account) public view returns (uint256) {
-        require(asset == SYN, 'Trader: only supports SYN');
+        require(asset == SYNX, 'Trader: only supports SYN');
 
         uint256 rewards = getRewardSupply(CONTRACT_TRADER);
         if (rewards == 0) return 0;

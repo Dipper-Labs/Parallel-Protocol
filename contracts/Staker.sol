@@ -66,23 +66,22 @@ contract Staker is Rewards, IStaker {
 
     function getStaked(bytes32 token, address account) public view returns (uint256) {
         uint256 staked = Storage().getStaked(token, account);
-        if (token == SYN) staked = staked.add(Escrow().getStaked(account));
         return staked;
     }
 
-    function getTransferable(bytes32 token, address account) external view returns (uint256 staker, uint256 escrow) {
+    function getTransferable(bytes32 token, address account) external view returns (uint256 staker) {
         uint256 debt = Issuer().getDebt(token, account);
         uint256 price = AssetPrice().getPrice(token);
         uint256 staked = getStaked(token, account);
         uint256 collateralRate = Setting().getCollateralRate(token);
         uint256 stakeAmount = debt.decimalMultiply(collateralRate).decimalDivide(price);
-        if (stakeAmount >= staked) return (0, 0);
+        if (stakeAmount >= staked) return (0);
 
         uint256 transferable = staked.sub(stakeAmount);
         uint256 _staked = Storage().getStaked(token, account);
-        if (transferable <= _staked) return (transferable, 0);
+        if (transferable <= _staked) return transferable;
 
-        return (_staked, transferable.sub(_staked));
+        return _staked;
     }
 
     function getCollateralRate(bytes32 token, address account) public view returns (uint256) {
@@ -111,14 +110,14 @@ contract Staker is Rewards, IStaker {
             Issuer().burnSynth(USD, Trader().FEE_ADDRESS(), claimable);
             Issuer().issueSynth(USD, account, claimable);
         } else {
-            vestTime = Escrow().deposit(claimablePeriod, account, claimable);
+            Escrow().deposit(claimablePeriod, account, claimable);
         }
 
-        return (claimablePeriod, claimable, vestTime);
+        return (claimablePeriod, claimable, 0);
     }
 
     function getClaimable(bytes32 asset, address account) public view returns (uint256) {
-        require(asset == SYN || asset == USD, 'Staker: only supports SYN & yUSD');
+        require(asset == SYNX || asset == USD, 'Staker: only supports SYN & yUSD');
 
         uint256 rewards = getRewardSupply(CONTRACT_STAKER);
         if (rewards == 0) return 0;

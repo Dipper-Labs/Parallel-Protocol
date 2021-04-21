@@ -175,7 +175,7 @@ contract Stats is Importable, IStats {
         uint256 liquidationFeeRate = Setting().getLiquidationFeeRate(stakeName);
         uint256 staked = Staker().getStaked(stakeName, account);
         uint256 debt = Issuer().getDebt(stakeName, account);
-        (uint256 transferable, ) = Staker().getTransferable(stakeName, account);
+        (uint256 transferable) = Staker().getTransferable(stakeName, account);
         uint256 balance = _getBalance(stakeName, stakeAddress, account);
         return
             Vault(
@@ -228,8 +228,8 @@ contract Stats is Importable, IStats {
         totalCollateralRatio = totalCollateralValue.decimalDivide(totalDebt);
     }
 
-    function getEscrowed(address account) external view returns (uint256 total, uint256 staked) {
-        return (Escrow().getBalance(account), Escrow().getStaked(account));
+    function getEscrowed(address account) external view returns (uint256 total) {
+        return Escrow().getBalance(account);
     }
 
     function getLocked(
@@ -252,8 +252,8 @@ contract Stats is Importable, IStats {
         bytes32 assetName = stake;
         address assetAddress = requireAsset(STAKE, assetName);
         balance = _getBalance(assetName, assetAddress, account);
-        escrowed = (assetName == SYN) ? Escrow().getAvailable(account) : 0;
-        (transferable, ) = Staker().getTransferable(assetName, account);
+        escrowed = (assetName == SYNX) ? Escrow().getBalance(account) : 0;
+        (transferable) = Staker().getTransferable(assetName, account);
     }
 
     function getSynthValue(address account) external view returns (uint256) {
@@ -296,24 +296,24 @@ contract Stats is Importable, IStats {
         Reward[] memory items = new Reward[](holds.length.add(pools.length).add(4));
         uint256 nextTime = SupplySchedule().nextMintTime();
         bytes32 reward = 'Staker';
-        items[0] = Reward(reward, SYN, SYN, Rewards(reward).getClaimable(SYN, account), nextTime);
+        items[0] = Reward(reward, SYNX, SYNX, Rewards(reward).getClaimable(SYNX, account), nextTime);
         items[1] = Reward(reward, USD, USD, Rewards(reward).getClaimable(USD, account), nextTime);
 
         reward = 'Special';
-        items[2] = Reward(reward, SYN, SYN, Rewards(reward).getClaimable(SYN, account), nextTime);
+        items[2] = Reward(reward, SYNX, SYNX, Rewards(reward).getClaimable(SYNX, account), nextTime);
 
         reward = 'Trader';
-        items[3] = Reward(reward, SYN, SYN, Rewards(reward).getClaimable(SYN, account), nextTime);
+        items[3] = Reward(reward, SYNX, SYNX, Rewards(reward).getClaimable(SYNX, account), nextTime);
 
         reward = 'Holder';
         for (uint256 i = 0; i < holds.length; i++) {
-            items[i.add(4)] = Reward(reward, holds[i], SYN, Rewards(reward).getClaimable(holds[i], account), nextTime);
+            items[i.add(4)] = Reward(reward, holds[i], SYNX, Rewards(reward).getClaimable(holds[i], account), nextTime);
         }
 
         reward = 'Provider';
         for (uint256 i = 0; i < pools.length; i++) {
             uint256 index = i.add(4).add(holds.length);
-            items[index] = Reward(reward, pools[i], SYN, Rewards(reward).getClaimable(pools[i], account), nextTime);
+            items[index] = Reward(reward, pools[i], SYNX, Rewards(reward).getClaimable(pools[i], account), nextTime);
         }
 
         return items;
@@ -330,7 +330,7 @@ contract Stats is Importable, IStats {
             items[i] = Reward(
                 reward,
                 assetName,
-                SYN,
+                SYNX,
                 periodSupply.decimalMultiply(Rewards(reward).getRewardPercentage(assetName)),
                 0
             );

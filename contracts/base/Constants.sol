@@ -1,8 +1,8 @@
 pragma solidity ^0.5.17;
 
 contract Constants {
-    bytes32 internal constant SYN = 'SYN';
-    bytes32 internal constant USD = 'yUSD';
+    bytes32 internal constant SYNX = 'SYNX';
+    bytes32 internal constant USD = 'dUSD';
 
     bytes32 internal constant CONTRACT_RESOLVER = 'Resolver';
     bytes32 internal constant CONTRACT_ASSET_PRICE = 'AssetPrice';

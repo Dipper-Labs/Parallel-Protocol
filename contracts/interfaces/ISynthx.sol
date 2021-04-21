@@ -5,13 +5,9 @@ interface ISynthx {
 
     function stakeFromCoin() external payable returns (bool);
 
-    function stakeFromEscrow(uint256 amount) external returns (bool);
-
     function stakeFromToken(bytes32 stake, uint256 amount) external returns (bool);
 
     function mintFromCoin() external payable returns (bool);
-
-    function mintFromEscrow(uint256 amount) external returns (bool);
 
     function mintFromToken(bytes32 stake, uint256 amount) external returns (bool);
 

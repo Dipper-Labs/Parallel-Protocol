@@ -15,7 +15,7 @@ interface IStaker {
 
     function getStaked(bytes32 token, address account) external view returns (uint256);
 
-    function getTransferable(bytes32 token, address account) external view returns (uint256 staker, uint256 escrow);
+    function getTransferable(bytes32 token, address account) external view returns (uint256 staker);
 
     function getCollateralRate(bytes32 token, address account) external view returns (uint256);
 }
