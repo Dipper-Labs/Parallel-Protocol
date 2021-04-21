@@ -96,7 +96,6 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
         uint256 lastDebt = Storage().getLastDebt(currentPeriod);
 
         (uint256 accountDebt, uint256 lastTime) = _getDebt(stake, account, currentPeriod, lastDebt, totalDebt);
-        require(_canBurn(lastTime), 'Issuer: Minimum stake time not reached');
         (uint256 stakeDebt, ) = _getDebt(stake, address(0), currentPeriod, lastDebt, totalDebt);
 
         uint256 burnableAmount = accountDebt.min(amount);
@@ -166,10 +165,6 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
     ) external view returns (uint256) {
         (uint256 debtPercentage, ) = _getDebtPercentage(stake, account, period, Storage().getLastDebt(period));
         return debtPercentage;
-    }
-
-    function _canBurn(uint256 time) private view returns (bool) {
-        return now >= time.add(Setting().getMinStakeTime());
     }
 
     function _getDebt(

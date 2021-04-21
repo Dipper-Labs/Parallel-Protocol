@@ -11,8 +11,6 @@ interface ISetting {
 
     function getTradingFeeRate(bytes32 asset) external view returns (uint256);
 
-    function getMinStakeTime() external view returns (uint256);
-
     function getMintPeriodDuration() external view returns (uint256);
 
     event SettingChanged(bytes32 indexed name, bytes32 indexed field, uint256 previousValue, uint256 newValue);
