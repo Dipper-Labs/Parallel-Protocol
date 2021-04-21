@@ -14,8 +14,6 @@ import './interfaces/ITrader.sol';
 import './interfaces/IAssetPrice.sol';
 import './interfaces/ISetting.sol';
 import './interfaces/IIssuer.sol';
-import './interfaces/IHolder.sol';
-import './interfaces/IProvider.sol';
 import './interfaces/IRewards.sol';
 import './interfaces/ISynthxToken.sol';
 import './interfaces/IMarket.sol';
@@ -47,13 +45,10 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
             CONTRACT_SETTING,
             CONTRACT_ISSUER,
             CONTRACT_TRADER,
-            CONTRACT_HOLDER,
             CONTRACT_SYNTHX_TOKEN,
-            CONTRACT_PROVIDER,
             CONTRACT_MARKET,
             CONTRACT_HISTORY,
-            CONTRACT_LIQUIDATOR,
-            CONTRACT_SPECIAL
+            CONTRACT_LIQUIDATOR
         ];
         return true;
     }
@@ -80,14 +75,6 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
 
     function Trader() private view returns (ITrader) {
         return ITrader(requireAddress(CONTRACT_TRADER));
-    }
-
-    function Holder() private view returns (IHolder) {
-        return IHolder(requireAddress(CONTRACT_HOLDER));
-    }
-
-    function Provider() private view returns (IProvider) {
-        return IProvider(requireAddress(CONTRACT_PROVIDER));
     }
 
     function Rewards(bytes32 reward) private view returns (IRewards) {
@@ -159,6 +146,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         Staker().stake(stake, msg.sender, amount);
     }
 
+    // 0xf82d43e5
     function mintFromCoin() external payable returns (bool) {
         _mint(nativeCoin, msg.value, FROM_BALANCE);
         return true;
@@ -257,59 +245,19 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         return true;
     }
 
-    function lock(
-        bytes32 asset,
-        uint256 amount,
-        bool isPool
-    ) external onlyInitialized notPaused returns (bool) {
-        if (isPool) {
-            IERC20 token = IERC20(requireAsset('Pool', asset));
-            token.safeTransferFrom(
-                msg.sender,
-                address(this),
-                amount.decimalsTo(PreciseMath.DECIMALS(), token.decimals())
-            );
-            Provider().lock(asset, msg.sender, amount);
-        } else {
-            Holder().lock(asset, msg.sender, amount);
-        }
-
-        SynthxToken().mint();
-        emit Locked(msg.sender, asset, amount, isPool);
-        return true;
-    }
-
-    function unlock(
-        bytes32 asset,
-        uint256 amount,
-        bool isPool
-    ) external onlyInitialized notPaused returns (bool) {
-        if (isPool) {
-            Provider().unlock(asset, msg.sender, amount);
-            IERC20 token = IERC20(requireAsset('Pool', asset));
-            token.safeTransfer(msg.sender, amount.decimalsTo(PreciseMath.DECIMALS(), token.decimals()));
-        } else {
-            Holder().unlock(asset, msg.sender, amount);
-        }
-
-        SynthxToken().mint();
-        emit Unlocked(msg.sender, asset, amount, isPool);
-        return true;
-    }
-
-    function claim(bytes32 reward, bytes32 asset) external onlyInitialized notPaused returns (bool) {
+    function claimReward(bytes32 reward, bytes32 asset) external onlyInitialized notPaused returns (bool) {
         (uint256 period, uint256 amount) = Rewards(reward).claim(asset, msg.sender);
         History().addAction('Claim', msg.sender, reward, asset, 0, (asset == USD) ? USD : SYNX, amount);
         SynthxToken().mint();
-        emit Claimed(msg.sender, reward, asset, period, amount);
+        emit ClaimReward(msg.sender, reward, asset, period, amount);
         return true;
     }
 
-    function vest(uint256 amount) external onlyInitialized notPaused returns (bool) {
+    function withdrawReward(uint256 amount) external onlyInitialized notPaused returns (bool) {
         Escrow().withdraw(msg.sender, amount);
         History().addAction('Vest', msg.sender, 'Escrow', SYNX, amount, bytes32(0), 0);
         SynthxToken().mint();
-        emit Vested(msg.sender, amount);
+        emit WithdrawReward(msg.sender, amount);
         return true;
     }
 

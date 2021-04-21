@@ -29,7 +29,6 @@ contract SupplySchedule is Importable, ISupplySchedule {
             CONTRACT_SETTING,
             CONTRACT_ESCROW,
             CONTRACT_TRADER,
-            CONTRACT_HOLDER,
             CONTRACT_TEAM,
             CONTRACT_HISTORY
         ];
@@ -37,12 +36,11 @@ contract SupplySchedule is Importable, ISupplySchedule {
         startMintTime = (_startMintTime == 0) ? now : _startMintTime;
         lastMintTime = (_lastMintTime < startMintTime) ? startMintTime : _lastMintTime;
 
-        percentages[CONTRACT_STAKER] = 0.5 ether; // 50%
-        percentages[CONTRACT_SPECIAL] = 0.12 ether; // 12%
-        percentages[CONTRACT_PROVIDER] = 0.16 ether; // 16%
-        percentages[CONTRACT_TRADER] = 0.1 ether; // 10%
-        percentages[CONTRACT_HOLDER] = 0.02 ether; // 2%
-        percentages[CONTRACT_TEAM] = 0.1 ether; // 10%
+        percentages[CONTRACT_STAKER] = 0.8 ether; // 80%
+        percentages[CONTRACT_TEAM] = 0.15 ether; // 15%
+        percentages[CONTRACT_SPECIAL] = 0.03 ether; // 3%
+        percentages[CONTRACT_TRADER] = 0.01 ether; // 1%
+
     }
 
     function Setting() private view returns (ISetting) {
@@ -73,9 +71,7 @@ contract SupplySchedule is Importable, ISupplySchedule {
 
     function _isRecipient(bytes32 recipient) private pure returns (bool) {
         return (recipient == CONTRACT_TRADER ||
-            recipient == CONTRACT_HOLDER ||
             recipient == CONTRACT_TEAM ||
-            recipient == CONTRACT_PROVIDER ||
             recipient == CONTRACT_SPECIAL ||
             recipient == CONTRACT_STAKER);
     }
@@ -83,9 +79,7 @@ contract SupplySchedule is Importable, ISupplySchedule {
     function _getTotalPercentageWithoutStaker() private view returns (uint256) {
         return
             percentages[CONTRACT_TRADER]
-                .add(percentages[CONTRACT_HOLDER])
                 .add(percentages[CONTRACT_TEAM])
-                .add(percentages[CONTRACT_PROVIDER])
                 .add(percentages[CONTRACT_SPECIAL]);
     }
 
@@ -101,7 +95,6 @@ contract SupplySchedule is Importable, ISupplySchedule {
 
         uint256 totalSupply = 0;
         uint256 traderSupply = 0;
-        uint256 holderSupply = 0;
         uint256 teamSupply = 0;
         uint256 escrowSupply = 0;
 
@@ -109,26 +102,22 @@ contract SupplySchedule is Importable, ISupplySchedule {
             uint256 supply = periodSupply(i);
 
             uint256 traderPeriodSupply = supply.decimalMultiply(percentages[CONTRACT_TRADER]);
-            uint256 holderPeriodSupply = supply.decimalMultiply(percentages[CONTRACT_HOLDER]);
-            uint256 escrowPeriodSupply = supply.sub(traderSupply).sub(holderSupply);
+            uint256 escrowPeriodSupply = supply.sub(traderSupply);
 
             traderSupply = traderSupply.add(traderPeriodSupply);
-            holderSupply = holderSupply.add(holderPeriodSupply);
             escrowSupply = escrowSupply.add(escrowPeriodSupply);
             teamSupply = teamSupply.add(supply.decimalMultiply(percentages[CONTRACT_TEAM]));
-            totalSupply = totalSupply.add(traderSupply).add(holderSupply).add(escrowSupply);
+            totalSupply = totalSupply.add(traderSupply).add(escrowSupply);
         }
 
         if (totalSupply == 0) return (recipients, amounts);
 
-        recipients = new address[](3);
+        recipients = new address[](2);
         recipients[0] = requireAddress(CONTRACT_TRADER);
-        recipients[1] = requireAddress(CONTRACT_HOLDER);
-        recipients[2] = requireAddress(CONTRACT_ESCROW);
-        amounts = new uint256[](3);
+        recipients[1] = requireAddress(CONTRACT_ESCROW);
+        amounts = new uint256[](2);
         amounts[0] = traderSupply;
-        amounts[1] = holderSupply;
-        amounts[2] = escrowSupply;
+        amounts[1] = escrowSupply;
 
         address teamAddress = requireAddress(CONTRACT_TEAM);
 
