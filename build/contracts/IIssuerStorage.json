@@ -1,0 +1,1381 @@
+{
+  "contractName": "IIssuerStorage",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "stake",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "period",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "accountDebt",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "totalDebt",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "time",
+          "type": "uint256"
+        }
+      ],
+      "name": "setDebt",
+      "outputs": [],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "stake",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "period",
+          "type": "uint256"
+        }
+      ],
+      "name": "getDebt",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "accountDebt",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "totalDebt",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "time",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "period",
+          "type": "uint256"
+        }
+      ],
+      "name": "getLastDebt",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.17+commit.d19bba13\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"stake\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"period\",\"type\":\"uint256\"}],\"name\":\"getDebt\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"accountDebt\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalDebt\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"time\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"period\",\"type\":\"uint256\"}],\"name\":\"getLastDebt\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"stake\",\"type\":\"bytes32\"},{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"period\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"accountDebt\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"totalDebt\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"time\",\"type\":\"uint256\"}],\"name\":\"setDebt\",\"outputs\":[],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/sun/go/src/github.com/Dipper-Labs/DIPSYN/contracts/interfaces/storages/IIssuerStorage.sol\":\"IIssuerStorage\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":2},\"remappings\":[]},\"sources\":{\"/Users/sun/go/src/github.com/Dipper-Labs/DIPSYN/contracts/interfaces/storages/IIssuerStorage.sol\":{\"keccak256\":\"0x432da08bd606f296749893446958aa37bb617e519cafa68dc42e1c94face7d36\",\"urls\":[\"bzz-raw://915d1baaab0aba6f13dda3ab54760876f86083a22c4a4b87d0433abc32e0d6cf\",\"dweb:/ipfs/QmNnwbTof2fPFZtAK26TJNcvVTYijDnz2n92GvwBGTgkHM\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.5.17;\n\ninterface IIssuerStorage {\n    struct Debt {\n        uint256 period;\n        uint256 account;\n        uint256 total;\n        uint256 time;\n    }\n\n    function setDebt(\n        bytes32 stake,\n        address account,\n        uint256 period,\n        uint256 accountDebt,\n        uint256 totalDebt,\n        uint256 time\n    ) external;\n\n    function getDebt(\n        bytes32 stake,\n        address account,\n        uint256 period\n    )\n        external\n        view\n        returns (\n            uint256 accountDebt,\n            uint256 totalDebt,\n            uint256 time\n        );\n\n    function getLastDebt(uint256 period) external view returns (uint256);\n}\n",
+  "sourcePath": "/Users/sun/go/src/github.com/Dipper-Labs/DIPSYN/contracts/interfaces/storages/IIssuerStorage.sol",
+  "ast": {
+    "absolutePath": "/Users/sun/go/src/github.com/Dipper-Labs/DIPSYN/contracts/interfaces/storages/IIssuerStorage.sol",
+    "exportedSymbols": {
+      "IIssuerStorage": [
+        13120
+      ]
+    },
+    "id": 13121,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 13073,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".17"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:58"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 13120,
+        "linearizedBaseContracts": [
+          13120
+        ],
+        "name": "IIssuerStorage",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "canonicalName": "IIssuerStorage.Debt",
+            "id": 13082,
+            "members": [
+              {
+                "constant": false,
+                "id": 13075,
+                "name": "period",
+                "nodeType": "VariableDeclaration",
+                "scope": 13082,
+                "src": "79:14:58",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 13074,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "79:7:58",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 13077,
+                "name": "account",
+                "nodeType": "VariableDeclaration",
+                "scope": 13082,
+                "src": "103:15:58",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 13076,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "103:7:58",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 13079,
+                "name": "total",
+                "nodeType": "VariableDeclaration",
+                "scope": 13082,
+                "src": "128:13:58",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 13078,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "128:7:58",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              },
+              {
+                "constant": false,
+                "id": 13081,
+                "name": "time",
+                "nodeType": "VariableDeclaration",
+                "scope": 13082,
+                "src": "151:12:58",
+                "stateVariable": false,
+                "storageLocation": "default",
+                "typeDescriptions": {
+                  "typeIdentifier": "t_uint256",
+                  "typeString": "uint256"
+                },
+                "typeName": {
+                  "id": 13080,
+                  "name": "uint256",
+                  "nodeType": "ElementaryTypeName",
+                  "src": "151:7:58",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  }
+                },
+                "value": null,
+                "visibility": "internal"
+              }
+            ],
+            "name": "Debt",
+            "nodeType": "StructDefinition",
+            "scope": 13120,
+            "src": "57:113:58",
+            "visibility": "public"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 13097,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "setDebt",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 13095,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 13084,
+                  "name": "stake",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13097,
+                  "src": "202:13:58",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 13083,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "202:7:58",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 13086,
+                  "name": "account",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13097,
+                  "src": "225:15:58",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 13085,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "225:7:58",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 13088,
+                  "name": "period",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13097,
+                  "src": "250:14:58",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 13087,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "250:7:58",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 13090,
+                  "name": "accountDebt",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13097,
+                  "src": "274:19:58",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 13089,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "274:7:58",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 13092,
+                  "name": "totalDebt",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13097,
+                  "src": "303:17:58",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 13091,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "303:7:58",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 13094,
+                  "name": "time",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13097,
+                  "src": "330:12:58",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 13093,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "330:7:58",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "192:156:58"
+            },
+            "returnParameters": {
+              "id": 13096,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "357:0:58"
+            },
+            "scope": 13120,
+            "src": "176:182:58",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 13112,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getDebt",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 13104,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 13099,
+                  "name": "stake",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13112,
+                  "src": "390:13:58",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 13098,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "390:7:58",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 13101,
+                  "name": "account",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13112,
+                  "src": "413:15:58",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 13100,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "413:7:58",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 13103,
+                  "name": "period",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13112,
+                  "src": "438:14:58",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 13102,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "438:7:58",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "380:78:58"
+            },
+            "returnParameters": {
+              "id": 13111,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 13106,
+                  "name": "accountDebt",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13112,
+                  "src": "519:19:58",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 13105,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "519:7:58",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 13108,
+                  "name": "totalDebt",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13112,
+                  "src": "552:17:58",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 13107,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "552:7:58",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 13110,
+                  "name": "time",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13112,
+                  "src": "583:12:58",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 13109,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "583:7:58",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "505:100:58"
+            },
+            "scope": 13120,
+            "src": "364:242:58",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 13119,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getLastDebt",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 13115,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 13114,
+                  "name": "period",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13119,
+                  "src": "633:14:58",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 13113,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "633:7:58",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "632:16:58"
+            },
+            "returnParameters": {
+              "id": 13118,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 13117,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13119,
+                  "src": "672:7:58",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 13116,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "672:7:58",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "671:9:58"
+            },
+            "scope": 13120,
+            "src": "612:69:58",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          }
+        ],
+        "scope": 13121,
+        "src": "26:657:58"
+      }
+    ],
+    "src": "0:684:58"
+  },
+  "legacyAST": {
+    "attributes": {
+      "absolutePath": "/Users/sun/go/src/github.com/Dipper-Labs/DIPSYN/contracts/interfaces/storages/IIssuerStorage.sol",
+      "exportedSymbols": {
+        "IIssuerStorage": [
+          13120
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.5",
+            ".17"
+          ]
+        },
+        "id": 13073,
+        "name": "PragmaDirective",
+        "src": "0:24:58"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "interface",
+          "documentation": null,
+          "fullyImplemented": false,
+          "linearizedBaseContracts": [
+            13120
+          ],
+          "name": "IIssuerStorage",
+          "scope": 13121
+        },
+        "children": [
+          {
+            "attributes": {
+              "canonicalName": "IIssuerStorage.Debt",
+              "name": "Debt",
+              "scope": 13120,
+              "visibility": "public"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "period",
+                  "scope": 13082,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "uint256",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "uint256",
+                      "type": "uint256"
+                    },
+                    "id": 13074,
+                    "name": "ElementaryTypeName",
+                    "src": "79:7:58"
+                  }
+                ],
+                "id": 13075,
+                "name": "VariableDeclaration",
+                "src": "79:14:58"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "account",
+                  "scope": 13082,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "uint256",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "uint256",
+                      "type": "uint256"
+                    },
+                    "id": 13076,
+                    "name": "ElementaryTypeName",
+                    "src": "103:7:58"
+                  }
+                ],
+                "id": 13077,
+                "name": "VariableDeclaration",
+                "src": "103:15:58"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "total",
+                  "scope": 13082,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "uint256",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "uint256",
+                      "type": "uint256"
+                    },
+                    "id": 13078,
+                    "name": "ElementaryTypeName",
+                    "src": "128:7:58"
+                  }
+                ],
+                "id": 13079,
+                "name": "VariableDeclaration",
+                "src": "128:13:58"
+              },
+              {
+                "attributes": {
+                  "constant": false,
+                  "name": "time",
+                  "scope": 13082,
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "type": "uint256",
+                  "value": null,
+                  "visibility": "internal"
+                },
+                "children": [
+                  {
+                    "attributes": {
+                      "name": "uint256",
+                      "type": "uint256"
+                    },
+                    "id": 13080,
+                    "name": "ElementaryTypeName",
+                    "src": "151:7:58"
+                  }
+                ],
+                "id": 13081,
+                "name": "VariableDeclaration",
+                "src": "151:12:58"
+              }
+            ],
+            "id": 13082,
+            "name": "StructDefinition",
+            "src": "57:113:58"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "setDebt",
+              "scope": 13120,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "stake",
+                      "scope": 13097,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bytes32",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bytes32",
+                          "type": "bytes32"
+                        },
+                        "id": 13083,
+                        "name": "ElementaryTypeName",
+                        "src": "202:7:58"
+                      }
+                    ],
+                    "id": 13084,
+                    "name": "VariableDeclaration",
+                    "src": "202:13:58"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "account",
+                      "scope": 13097,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 13085,
+                        "name": "ElementaryTypeName",
+                        "src": "225:7:58"
+                      }
+                    ],
+                    "id": 13086,
+                    "name": "VariableDeclaration",
+                    "src": "225:15:58"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "period",
+                      "scope": 13097,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 13087,
+                        "name": "ElementaryTypeName",
+                        "src": "250:7:58"
+                      }
+                    ],
+                    "id": 13088,
+                    "name": "VariableDeclaration",
+                    "src": "250:14:58"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "accountDebt",
+                      "scope": 13097,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 13089,
+                        "name": "ElementaryTypeName",
+                        "src": "274:7:58"
+                      }
+                    ],
+                    "id": 13090,
+                    "name": "VariableDeclaration",
+                    "src": "274:19:58"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "totalDebt",
+                      "scope": 13097,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 13091,
+                        "name": "ElementaryTypeName",
+                        "src": "303:7:58"
+                      }
+                    ],
+                    "id": 13092,
+                    "name": "VariableDeclaration",
+                    "src": "303:17:58"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "time",
+                      "scope": 13097,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 13093,
+                        "name": "ElementaryTypeName",
+                        "src": "330:7:58"
+                      }
+                    ],
+                    "id": 13094,
+                    "name": "VariableDeclaration",
+                    "src": "330:12:58"
+                  }
+                ],
+                "id": 13095,
+                "name": "ParameterList",
+                "src": "192:156:58"
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 13096,
+                "name": "ParameterList",
+                "src": "357:0:58"
+              }
+            ],
+            "id": 13097,
+            "name": "FunctionDefinition",
+            "src": "176:182:58"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "getDebt",
+              "scope": 13120,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "stake",
+                      "scope": 13112,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bytes32",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bytes32",
+                          "type": "bytes32"
+                        },
+                        "id": 13098,
+                        "name": "ElementaryTypeName",
+                        "src": "390:7:58"
+                      }
+                    ],
+                    "id": 13099,
+                    "name": "VariableDeclaration",
+                    "src": "390:13:58"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "account",
+                      "scope": 13112,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 13100,
+                        "name": "ElementaryTypeName",
+                        "src": "413:7:58"
+                      }
+                    ],
+                    "id": 13101,
+                    "name": "VariableDeclaration",
+                    "src": "413:15:58"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "period",
+                      "scope": 13112,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 13102,
+                        "name": "ElementaryTypeName",
+                        "src": "438:7:58"
+                      }
+                    ],
+                    "id": 13103,
+                    "name": "VariableDeclaration",
+                    "src": "438:14:58"
+                  }
+                ],
+                "id": 13104,
+                "name": "ParameterList",
+                "src": "380:78:58"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "accountDebt",
+                      "scope": 13112,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 13105,
+                        "name": "ElementaryTypeName",
+                        "src": "519:7:58"
+                      }
+                    ],
+                    "id": 13106,
+                    "name": "VariableDeclaration",
+                    "src": "519:19:58"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "totalDebt",
+                      "scope": 13112,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 13107,
+                        "name": "ElementaryTypeName",
+                        "src": "552:7:58"
+                      }
+                    ],
+                    "id": 13108,
+                    "name": "VariableDeclaration",
+                    "src": "552:17:58"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "time",
+                      "scope": 13112,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 13109,
+                        "name": "ElementaryTypeName",
+                        "src": "583:7:58"
+                      }
+                    ],
+                    "id": 13110,
+                    "name": "VariableDeclaration",
+                    "src": "583:12:58"
+                  }
+                ],
+                "id": 13111,
+                "name": "ParameterList",
+                "src": "505:100:58"
+              }
+            ],
+            "id": 13112,
+            "name": "FunctionDefinition",
+            "src": "364:242:58"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "getLastDebt",
+              "scope": 13120,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "period",
+                      "scope": 13119,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 13113,
+                        "name": "ElementaryTypeName",
+                        "src": "633:7:58"
+                      }
+                    ],
+                    "id": 13114,
+                    "name": "VariableDeclaration",
+                    "src": "633:14:58"
+                  }
+                ],
+                "id": 13115,
+                "name": "ParameterList",
+                "src": "632:16:58"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 13119,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 13116,
+                        "name": "ElementaryTypeName",
+                        "src": "672:7:58"
+                      }
+                    ],
+                    "id": 13117,
+                    "name": "VariableDeclaration",
+                    "src": "672:7:58"
+                  }
+                ],
+                "id": 13118,
+                "name": "ParameterList",
+                "src": "671:9:58"
+              }
+            ],
+            "id": 13119,
+            "name": "FunctionDefinition",
+            "src": "612:69:58"
+          }
+        ],
+        "id": 13120,
+        "name": "ContractDefinition",
+        "src": "26:657:58"
+      }
+    ],
+    "id": 13121,
+    "name": "SourceUnit",
+    "src": "0:684:58"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.17+commit.d19bba13.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.3.4",
+  "updatedAt": "2021-04-21T04:08:14.072Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

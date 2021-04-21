@@ -1,0 +1,1933 @@
+{
+  "contractName": "ISupplySchedule",
+  "abi": [
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "bytes32",
+          "name": "recipient",
+          "type": "bytes32"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "previousValue",
+          "type": "uint256"
+        },
+        {
+          "indexed": true,
+          "internalType": "uint256",
+          "name": "newValue",
+          "type": "uint256"
+        }
+      ],
+      "name": "SupplyPercentageChanged",
+      "type": "event"
+    },
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "distributeSupply",
+      "outputs": [
+        {
+          "internalType": "address[]",
+          "name": "recipients",
+          "type": "address[]"
+        },
+        {
+          "internalType": "uint256[]",
+          "name": "amounts",
+          "type": "uint256[]"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "recipient",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "period",
+          "type": "uint256"
+        }
+      ],
+      "name": "mintableSupply",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "recipient",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "period",
+          "type": "uint256"
+        }
+      ],
+      "name": "periodSupply",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "period",
+          "type": "uint256"
+        }
+      ],
+      "name": "periodSupply",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "currentPeriod",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "lastMintPeriod",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "nextMintTime",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "lastMintTime",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "startMintTime",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.17+commit.d19bba13\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"bytes32\",\"name\":\"recipient\",\"type\":\"bytes32\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"previousValue\",\"type\":\"uint256\"},{\"indexed\":true,\"internalType\":\"uint256\",\"name\":\"newValue\",\"type\":\"uint256\"}],\"name\":\"SupplyPercentageChanged\",\"type\":\"event\"},{\"constant\":true,\"inputs\":[],\"name\":\"currentPeriod\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[],\"name\":\"distributeSupply\",\"outputs\":[{\"internalType\":\"address[]\",\"name\":\"recipients\",\"type\":\"address[]\"},{\"internalType\":\"uint256[]\",\"name\":\"amounts\",\"type\":\"uint256[]\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"lastMintPeriod\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"lastMintTime\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"recipient\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"period\",\"type\":\"uint256\"}],\"name\":\"mintableSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"nextMintTime\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"recipient\",\"type\":\"bytes32\"},{\"internalType\":\"uint256\",\"name\":\"period\",\"type\":\"uint256\"}],\"name\":\"periodSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"period\",\"type\":\"uint256\"}],\"name\":\"periodSupply\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":true,\"inputs\":[],\"name\":\"startMintTime\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/sun/go/src/github.com/Dipper-Labs/DIPSYN/contracts/interfaces/ISupplySchedule.sol\":\"ISupplySchedule\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":2},\"remappings\":[]},\"sources\":{\"/Users/sun/go/src/github.com/Dipper-Labs/DIPSYN/contracts/interfaces/ISupplySchedule.sol\":{\"keccak256\":\"0x0e1c7003fe0da02c8555914c575fb779fd06cea47286b42bd3a78be067cfb2f8\",\"urls\":[\"bzz-raw://a4da9f9118c118d5767d9e3e6393e165bbf8a906db887cf1326b751042da001b\",\"dweb:/ipfs/QmV22E91usFYFpYy6JaV4vUCeubpPAgHsQ6K1AG9w9maFx\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.5.17;\n\ninterface ISupplySchedule {\n    function distributeSupply() external returns (address[] memory recipients, uint256[] memory amounts);\n\n    function mintableSupply(bytes32 recipient, uint256 period) external view returns (uint256);\n\n    function periodSupply(bytes32 recipient, uint256 period) external view returns (uint256);\n\n    function periodSupply(uint256 period) external view returns (uint256);\n\n    function currentPeriod() external view returns (uint256);\n\n    function lastMintPeriod() external view returns (uint256);\n\n    function nextMintTime() external view returns (uint256);\n\n    function lastMintTime() external view returns (uint256);\n\n    function startMintTime() external view returns (uint256);\n\n    event SupplyPercentageChanged(bytes32 indexed recipient, uint256 indexed previousValue, uint256 indexed newValue);\n}\n",
+  "sourcePath": "/Users/sun/go/src/github.com/Dipper-Labs/DIPSYN/contracts/interfaces/ISupplySchedule.sol",
+  "ast": {
+    "absolutePath": "/Users/sun/go/src/github.com/Dipper-Labs/DIPSYN/contracts/interfaces/ISupplySchedule.sol",
+    "exportedSymbols": {
+      "ISupplySchedule": [
+        12533
+      ]
+    },
+    "id": 12534,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 12465,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".17"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:49"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 12533,
+        "linearizedBaseContracts": [
+          12533
+        ],
+        "name": "ISupplySchedule",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": null,
+            "id": 12474,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "distributeSupply",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 12466,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "83:2:49"
+            },
+            "returnParameters": {
+              "id": 12473,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12469,
+                  "name": "recipients",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12474,
+                  "src": "104:27:49",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_address_$dyn_memory_ptr",
+                    "typeString": "address[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 12467,
+                      "name": "address",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "104:7:49",
+                      "stateMutability": "nonpayable",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_address",
+                        "typeString": "address"
+                      }
+                    },
+                    "id": 12468,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "104:9:49",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_address_$dyn_storage_ptr",
+                      "typeString": "address[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 12472,
+                  "name": "amounts",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12474,
+                  "src": "133:24:49",
+                  "stateVariable": false,
+                  "storageLocation": "memory",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_array$_t_uint256_$dyn_memory_ptr",
+                    "typeString": "uint256[]"
+                  },
+                  "typeName": {
+                    "baseType": {
+                      "id": 12470,
+                      "name": "uint256",
+                      "nodeType": "ElementaryTypeName",
+                      "src": "133:7:49",
+                      "typeDescriptions": {
+                        "typeIdentifier": "t_uint256",
+                        "typeString": "uint256"
+                      }
+                    },
+                    "id": 12471,
+                    "length": null,
+                    "nodeType": "ArrayTypeName",
+                    "src": "133:9:49",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_array$_t_uint256_$dyn_storage_ptr",
+                      "typeString": "uint256[]"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "103:55:49"
+            },
+            "scope": 12533,
+            "src": "58:101:49",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 12483,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "mintableSupply",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 12479,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12476,
+                  "name": "recipient",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12483,
+                  "src": "189:17:49",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 12475,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "189:7:49",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 12478,
+                  "name": "period",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12483,
+                  "src": "208:14:49",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 12477,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "208:7:49",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "188:35:49"
+            },
+            "returnParameters": {
+              "id": 12482,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12481,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12483,
+                  "src": "247:7:49",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 12480,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "247:7:49",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "246:9:49"
+            },
+            "scope": 12533,
+            "src": "165:91:49",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 12492,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "periodSupply",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 12488,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12485,
+                  "name": "recipient",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12492,
+                  "src": "284:17:49",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 12484,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "284:7:49",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 12487,
+                  "name": "period",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12492,
+                  "src": "303:14:49",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 12486,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "303:7:49",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "283:35:49"
+            },
+            "returnParameters": {
+              "id": 12491,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12490,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12492,
+                  "src": "342:7:49",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 12489,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "342:7:49",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "341:9:49"
+            },
+            "scope": 12533,
+            "src": "262:89:49",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 12499,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "periodSupply",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 12495,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12494,
+                  "name": "period",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12499,
+                  "src": "379:14:49",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 12493,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "379:7:49",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "378:16:49"
+            },
+            "returnParameters": {
+              "id": 12498,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12497,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12499,
+                  "src": "418:7:49",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 12496,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "418:7:49",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "417:9:49"
+            },
+            "scope": 12533,
+            "src": "357:70:49",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 12504,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "currentPeriod",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 12500,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "455:2:49"
+            },
+            "returnParameters": {
+              "id": 12503,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12502,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12504,
+                  "src": "481:7:49",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 12501,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "481:7:49",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "480:9:49"
+            },
+            "scope": 12533,
+            "src": "433:57:49",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 12509,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "lastMintPeriod",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 12505,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "519:2:49"
+            },
+            "returnParameters": {
+              "id": 12508,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12507,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12509,
+                  "src": "545:7:49",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 12506,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "545:7:49",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "544:9:49"
+            },
+            "scope": 12533,
+            "src": "496:58:49",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 12514,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "nextMintTime",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 12510,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "581:2:49"
+            },
+            "returnParameters": {
+              "id": 12513,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12512,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12514,
+                  "src": "607:7:49",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 12511,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "607:7:49",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "606:9:49"
+            },
+            "scope": 12533,
+            "src": "560:56:49",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 12519,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "lastMintTime",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 12515,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "643:2:49"
+            },
+            "returnParameters": {
+              "id": 12518,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12517,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12519,
+                  "src": "669:7:49",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 12516,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "669:7:49",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "668:9:49"
+            },
+            "scope": 12533,
+            "src": "622:56:49",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 12524,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "startMintTime",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 12520,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "706:2:49"
+            },
+            "returnParameters": {
+              "id": 12523,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12522,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12524,
+                  "src": "732:7:49",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 12521,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "732:7:49",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "731:9:49"
+            },
+            "scope": 12533,
+            "src": "684:57:49",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "anonymous": false,
+            "documentation": null,
+            "id": 12532,
+            "name": "SupplyPercentageChanged",
+            "nodeType": "EventDefinition",
+            "parameters": {
+              "id": 12531,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 12526,
+                  "indexed": true,
+                  "name": "recipient",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12532,
+                  "src": "777:25:49",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_bytes32",
+                    "typeString": "bytes32"
+                  },
+                  "typeName": {
+                    "id": 12525,
+                    "name": "bytes32",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "777:7:49",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_bytes32",
+                      "typeString": "bytes32"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 12528,
+                  "indexed": true,
+                  "name": "previousValue",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12532,
+                  "src": "804:29:49",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 12527,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "804:7:49",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 12530,
+                  "indexed": true,
+                  "name": "newValue",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 12532,
+                  "src": "835:24:49",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 12529,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "835:7:49",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "776:84:49"
+            },
+            "src": "747:114:49"
+          }
+        ],
+        "scope": 12534,
+        "src": "26:837:49"
+      }
+    ],
+    "src": "0:864:49"
+  },
+  "legacyAST": {
+    "attributes": {
+      "absolutePath": "/Users/sun/go/src/github.com/Dipper-Labs/DIPSYN/contracts/interfaces/ISupplySchedule.sol",
+      "exportedSymbols": {
+        "ISupplySchedule": [
+          12533
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.5",
+            ".17"
+          ]
+        },
+        "id": 12465,
+        "name": "PragmaDirective",
+        "src": "0:24:49"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "interface",
+          "documentation": null,
+          "fullyImplemented": false,
+          "linearizedBaseContracts": [
+            12533
+          ],
+          "name": "ISupplySchedule",
+          "scope": 12534
+        },
+        "children": [
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "distributeSupply",
+              "scope": 12533,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 12466,
+                "name": "ParameterList",
+                "src": "83:2:49"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "recipients",
+                      "scope": 12474,
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "type": "address[]",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "length": null,
+                          "type": "address[]"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "name": "address",
+                              "stateMutability": "nonpayable",
+                              "type": "address"
+                            },
+                            "id": 12467,
+                            "name": "ElementaryTypeName",
+                            "src": "104:7:49"
+                          }
+                        ],
+                        "id": 12468,
+                        "name": "ArrayTypeName",
+                        "src": "104:9:49"
+                      }
+                    ],
+                    "id": 12469,
+                    "name": "VariableDeclaration",
+                    "src": "104:27:49"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "amounts",
+                      "scope": 12474,
+                      "stateVariable": false,
+                      "storageLocation": "memory",
+                      "type": "uint256[]",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "length": null,
+                          "type": "uint256[]"
+                        },
+                        "children": [
+                          {
+                            "attributes": {
+                              "name": "uint256",
+                              "type": "uint256"
+                            },
+                            "id": 12470,
+                            "name": "ElementaryTypeName",
+                            "src": "133:7:49"
+                          }
+                        ],
+                        "id": 12471,
+                        "name": "ArrayTypeName",
+                        "src": "133:9:49"
+                      }
+                    ],
+                    "id": 12472,
+                    "name": "VariableDeclaration",
+                    "src": "133:24:49"
+                  }
+                ],
+                "id": 12473,
+                "name": "ParameterList",
+                "src": "103:55:49"
+              }
+            ],
+            "id": 12474,
+            "name": "FunctionDefinition",
+            "src": "58:101:49"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "mintableSupply",
+              "scope": 12533,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "recipient",
+                      "scope": 12483,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bytes32",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bytes32",
+                          "type": "bytes32"
+                        },
+                        "id": 12475,
+                        "name": "ElementaryTypeName",
+                        "src": "189:7:49"
+                      }
+                    ],
+                    "id": 12476,
+                    "name": "VariableDeclaration",
+                    "src": "189:17:49"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "period",
+                      "scope": 12483,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 12477,
+                        "name": "ElementaryTypeName",
+                        "src": "208:7:49"
+                      }
+                    ],
+                    "id": 12478,
+                    "name": "VariableDeclaration",
+                    "src": "208:14:49"
+                  }
+                ],
+                "id": 12479,
+                "name": "ParameterList",
+                "src": "188:35:49"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 12483,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 12480,
+                        "name": "ElementaryTypeName",
+                        "src": "247:7:49"
+                      }
+                    ],
+                    "id": 12481,
+                    "name": "VariableDeclaration",
+                    "src": "247:7:49"
+                  }
+                ],
+                "id": 12482,
+                "name": "ParameterList",
+                "src": "246:9:49"
+              }
+            ],
+            "id": 12483,
+            "name": "FunctionDefinition",
+            "src": "165:91:49"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "periodSupply",
+              "scope": 12533,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "recipient",
+                      "scope": 12492,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bytes32",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bytes32",
+                          "type": "bytes32"
+                        },
+                        "id": 12484,
+                        "name": "ElementaryTypeName",
+                        "src": "284:7:49"
+                      }
+                    ],
+                    "id": 12485,
+                    "name": "VariableDeclaration",
+                    "src": "284:17:49"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "period",
+                      "scope": 12492,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 12486,
+                        "name": "ElementaryTypeName",
+                        "src": "303:7:49"
+                      }
+                    ],
+                    "id": 12487,
+                    "name": "VariableDeclaration",
+                    "src": "303:14:49"
+                  }
+                ],
+                "id": 12488,
+                "name": "ParameterList",
+                "src": "283:35:49"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 12492,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 12489,
+                        "name": "ElementaryTypeName",
+                        "src": "342:7:49"
+                      }
+                    ],
+                    "id": 12490,
+                    "name": "VariableDeclaration",
+                    "src": "342:7:49"
+                  }
+                ],
+                "id": 12491,
+                "name": "ParameterList",
+                "src": "341:9:49"
+              }
+            ],
+            "id": 12492,
+            "name": "FunctionDefinition",
+            "src": "262:89:49"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "periodSupply",
+              "scope": 12533,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "period",
+                      "scope": 12499,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 12493,
+                        "name": "ElementaryTypeName",
+                        "src": "379:7:49"
+                      }
+                    ],
+                    "id": 12494,
+                    "name": "VariableDeclaration",
+                    "src": "379:14:49"
+                  }
+                ],
+                "id": 12495,
+                "name": "ParameterList",
+                "src": "378:16:49"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 12499,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 12496,
+                        "name": "ElementaryTypeName",
+                        "src": "418:7:49"
+                      }
+                    ],
+                    "id": 12497,
+                    "name": "VariableDeclaration",
+                    "src": "418:7:49"
+                  }
+                ],
+                "id": 12498,
+                "name": "ParameterList",
+                "src": "417:9:49"
+              }
+            ],
+            "id": 12499,
+            "name": "FunctionDefinition",
+            "src": "357:70:49"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "currentPeriod",
+              "scope": 12533,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 12500,
+                "name": "ParameterList",
+                "src": "455:2:49"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 12504,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 12501,
+                        "name": "ElementaryTypeName",
+                        "src": "481:7:49"
+                      }
+                    ],
+                    "id": 12502,
+                    "name": "VariableDeclaration",
+                    "src": "481:7:49"
+                  }
+                ],
+                "id": 12503,
+                "name": "ParameterList",
+                "src": "480:9:49"
+              }
+            ],
+            "id": 12504,
+            "name": "FunctionDefinition",
+            "src": "433:57:49"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "lastMintPeriod",
+              "scope": 12533,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 12505,
+                "name": "ParameterList",
+                "src": "519:2:49"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 12509,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 12506,
+                        "name": "ElementaryTypeName",
+                        "src": "545:7:49"
+                      }
+                    ],
+                    "id": 12507,
+                    "name": "VariableDeclaration",
+                    "src": "545:7:49"
+                  }
+                ],
+                "id": 12508,
+                "name": "ParameterList",
+                "src": "544:9:49"
+              }
+            ],
+            "id": 12509,
+            "name": "FunctionDefinition",
+            "src": "496:58:49"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "nextMintTime",
+              "scope": 12533,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 12510,
+                "name": "ParameterList",
+                "src": "581:2:49"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 12514,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 12511,
+                        "name": "ElementaryTypeName",
+                        "src": "607:7:49"
+                      }
+                    ],
+                    "id": 12512,
+                    "name": "VariableDeclaration",
+                    "src": "607:7:49"
+                  }
+                ],
+                "id": 12513,
+                "name": "ParameterList",
+                "src": "606:9:49"
+              }
+            ],
+            "id": 12514,
+            "name": "FunctionDefinition",
+            "src": "560:56:49"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "lastMintTime",
+              "scope": 12533,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 12515,
+                "name": "ParameterList",
+                "src": "643:2:49"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 12519,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 12516,
+                        "name": "ElementaryTypeName",
+                        "src": "669:7:49"
+                      }
+                    ],
+                    "id": 12517,
+                    "name": "VariableDeclaration",
+                    "src": "669:7:49"
+                  }
+                ],
+                "id": 12518,
+                "name": "ParameterList",
+                "src": "668:9:49"
+              }
+            ],
+            "id": 12519,
+            "name": "FunctionDefinition",
+            "src": "622:56:49"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "startMintTime",
+              "scope": 12533,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 12520,
+                "name": "ParameterList",
+                "src": "706:2:49"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 12524,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 12521,
+                        "name": "ElementaryTypeName",
+                        "src": "732:7:49"
+                      }
+                    ],
+                    "id": 12522,
+                    "name": "VariableDeclaration",
+                    "src": "732:7:49"
+                  }
+                ],
+                "id": 12523,
+                "name": "ParameterList",
+                "src": "731:9:49"
+              }
+            ],
+            "id": 12524,
+            "name": "FunctionDefinition",
+            "src": "684:57:49"
+          },
+          {
+            "attributes": {
+              "anonymous": false,
+              "documentation": null,
+              "name": "SupplyPercentageChanged"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "recipient",
+                      "scope": 12532,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "bytes32",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "bytes32",
+                          "type": "bytes32"
+                        },
+                        "id": 12525,
+                        "name": "ElementaryTypeName",
+                        "src": "777:7:49"
+                      }
+                    ],
+                    "id": 12526,
+                    "name": "VariableDeclaration",
+                    "src": "777:25:49"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "previousValue",
+                      "scope": 12532,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 12527,
+                        "name": "ElementaryTypeName",
+                        "src": "804:7:49"
+                      }
+                    ],
+                    "id": 12528,
+                    "name": "VariableDeclaration",
+                    "src": "804:29:49"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "indexed": true,
+                      "name": "newValue",
+                      "scope": 12532,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 12529,
+                        "name": "ElementaryTypeName",
+                        "src": "835:7:49"
+                      }
+                    ],
+                    "id": 12530,
+                    "name": "VariableDeclaration",
+                    "src": "835:24:49"
+                  }
+                ],
+                "id": 12531,
+                "name": "ParameterList",
+                "src": "776:84:49"
+              }
+            ],
+            "id": 12532,
+            "name": "EventDefinition",
+            "src": "747:114:49"
+          }
+        ],
+        "id": 12533,
+        "name": "ContractDefinition",
+        "src": "26:837:49"
+      }
+    ],
+    "id": 12534,
+    "name": "SourceUnit",
+    "src": "0:864:49"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.17+commit.d19bba13.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.3.4",
+  "updatedAt": "2021-04-21T04:08:14.067Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}

@@ -1,0 +1,672 @@
+{
+  "contractName": "ITraderStorage",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "period",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "incrementTradingFee",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "period",
+          "type": "uint256"
+        }
+      ],
+      "name": "getTradingFee",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "metadata": "{\"compiler\":{\"version\":\"0.5.17+commit.d19bba13\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"constant\":true,\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"period\",\"type\":\"uint256\"}],\"name\":\"getTradingFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"view\",\"type\":\"function\"},{\"constant\":false,\"inputs\":[{\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"period\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"amount\",\"type\":\"uint256\"}],\"name\":\"incrementTradingFee\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"payable\":false,\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/sun/go/src/github.com/Dipper-Labs/DIPSYN/contracts/interfaces/storages/ITraderStorage.sol\":\"ITraderStorage\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"optimizer\":{\"enabled\":true,\"runs\":2},\"remappings\":[]},\"sources\":{\"/Users/sun/go/src/github.com/Dipper-Labs/DIPSYN/contracts/interfaces/storages/ITraderStorage.sol\":{\"keccak256\":\"0x03b659b55cc8880038280d11287e5fa67cfb22459026d4baaa45f698e3e1b811\",\"urls\":[\"bzz-raw://bdb83579ed5ddbfa02a3ec741f0d5834bc45e37944f8911800587047fc9d60e6\",\"dweb:/ipfs/QmaVnbkekaYKVMJvafJijip8s2mmVfZLJ2Cv7FAU6M1gof\"]}},\"version\":1}",
+  "bytecode": "0x",
+  "deployedBytecode": "0x",
+  "sourceMap": "",
+  "deployedSourceMap": "",
+  "source": "pragma solidity ^0.5.17;\n\ninterface ITraderStorage {\n    function incrementTradingFee(\n        address account,\n        uint256 period,\n        uint256 amount\n    ) external returns (uint256);\n\n    function getTradingFee(address account, uint256 period) external view returns (uint256);\n}\n",
+  "sourcePath": "/Users/sun/go/src/github.com/Dipper-Labs/DIPSYN/contracts/interfaces/storages/ITraderStorage.sol",
+  "ast": {
+    "absolutePath": "/Users/sun/go/src/github.com/Dipper-Labs/DIPSYN/contracts/interfaces/storages/ITraderStorage.sol",
+    "exportedSymbols": {
+      "ITraderStorage": [
+        13492
+      ]
+    },
+    "id": 13493,
+    "nodeType": "SourceUnit",
+    "nodes": [
+      {
+        "id": 13471,
+        "literals": [
+          "solidity",
+          "^",
+          "0.5",
+          ".17"
+        ],
+        "nodeType": "PragmaDirective",
+        "src": "0:24:66"
+      },
+      {
+        "baseContracts": [],
+        "contractDependencies": [],
+        "contractKind": "interface",
+        "documentation": null,
+        "fullyImplemented": false,
+        "id": 13492,
+        "linearizedBaseContracts": [
+          13492
+        ],
+        "name": "ITraderStorage",
+        "nodeType": "ContractDefinition",
+        "nodes": [
+          {
+            "body": null,
+            "documentation": null,
+            "id": 13482,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "incrementTradingFee",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 13478,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 13473,
+                  "name": "account",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13482,
+                  "src": "95:15:66",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 13472,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "95:7:66",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 13475,
+                  "name": "period",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13482,
+                  "src": "120:14:66",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 13474,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "120:7:66",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 13477,
+                  "name": "amount",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13482,
+                  "src": "144:14:66",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 13476,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "144:7:66",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "85:79:66"
+            },
+            "returnParameters": {
+              "id": 13481,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 13480,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13482,
+                  "src": "183:7:66",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 13479,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "183:7:66",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "182:9:66"
+            },
+            "scope": 13492,
+            "src": "57:135:66",
+            "stateMutability": "nonpayable",
+            "superFunction": null,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "id": 13491,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "getTradingFee",
+            "nodeType": "FunctionDefinition",
+            "parameters": {
+              "id": 13487,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 13484,
+                  "name": "account",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13491,
+                  "src": "221:15:66",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_address",
+                    "typeString": "address"
+                  },
+                  "typeName": {
+                    "id": 13483,
+                    "name": "address",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "221:7:66",
+                    "stateMutability": "nonpayable",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_address",
+                      "typeString": "address"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                },
+                {
+                  "constant": false,
+                  "id": 13486,
+                  "name": "period",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13491,
+                  "src": "238:14:66",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 13485,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "238:7:66",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "220:33:66"
+            },
+            "returnParameters": {
+              "id": 13490,
+              "nodeType": "ParameterList",
+              "parameters": [
+                {
+                  "constant": false,
+                  "id": 13489,
+                  "name": "",
+                  "nodeType": "VariableDeclaration",
+                  "scope": 13491,
+                  "src": "277:7:66",
+                  "stateVariable": false,
+                  "storageLocation": "default",
+                  "typeDescriptions": {
+                    "typeIdentifier": "t_uint256",
+                    "typeString": "uint256"
+                  },
+                  "typeName": {
+                    "id": 13488,
+                    "name": "uint256",
+                    "nodeType": "ElementaryTypeName",
+                    "src": "277:7:66",
+                    "typeDescriptions": {
+                      "typeIdentifier": "t_uint256",
+                      "typeString": "uint256"
+                    }
+                  },
+                  "value": null,
+                  "visibility": "internal"
+                }
+              ],
+              "src": "276:9:66"
+            },
+            "scope": 13492,
+            "src": "198:88:66",
+            "stateMutability": "view",
+            "superFunction": null,
+            "visibility": "external"
+          }
+        ],
+        "scope": 13493,
+        "src": "26:262:66"
+      }
+    ],
+    "src": "0:289:66"
+  },
+  "legacyAST": {
+    "attributes": {
+      "absolutePath": "/Users/sun/go/src/github.com/Dipper-Labs/DIPSYN/contracts/interfaces/storages/ITraderStorage.sol",
+      "exportedSymbols": {
+        "ITraderStorage": [
+          13492
+        ]
+      }
+    },
+    "children": [
+      {
+        "attributes": {
+          "literals": [
+            "solidity",
+            "^",
+            "0.5",
+            ".17"
+          ]
+        },
+        "id": 13471,
+        "name": "PragmaDirective",
+        "src": "0:24:66"
+      },
+      {
+        "attributes": {
+          "baseContracts": [
+            null
+          ],
+          "contractDependencies": [
+            null
+          ],
+          "contractKind": "interface",
+          "documentation": null,
+          "fullyImplemented": false,
+          "linearizedBaseContracts": [
+            13492
+          ],
+          "name": "ITraderStorage",
+          "scope": 13493
+        },
+        "children": [
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "incrementTradingFee",
+              "scope": 13492,
+              "stateMutability": "nonpayable",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "account",
+                      "scope": 13482,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 13472,
+                        "name": "ElementaryTypeName",
+                        "src": "95:7:66"
+                      }
+                    ],
+                    "id": 13473,
+                    "name": "VariableDeclaration",
+                    "src": "95:15:66"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "period",
+                      "scope": 13482,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 13474,
+                        "name": "ElementaryTypeName",
+                        "src": "120:7:66"
+                      }
+                    ],
+                    "id": 13475,
+                    "name": "VariableDeclaration",
+                    "src": "120:14:66"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "amount",
+                      "scope": 13482,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 13476,
+                        "name": "ElementaryTypeName",
+                        "src": "144:7:66"
+                      }
+                    ],
+                    "id": 13477,
+                    "name": "VariableDeclaration",
+                    "src": "144:14:66"
+                  }
+                ],
+                "id": 13478,
+                "name": "ParameterList",
+                "src": "85:79:66"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 13482,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 13479,
+                        "name": "ElementaryTypeName",
+                        "src": "183:7:66"
+                      }
+                    ],
+                    "id": 13480,
+                    "name": "VariableDeclaration",
+                    "src": "183:7:66"
+                  }
+                ],
+                "id": 13481,
+                "name": "ParameterList",
+                "src": "182:9:66"
+              }
+            ],
+            "id": 13482,
+            "name": "FunctionDefinition",
+            "src": "57:135:66"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "getTradingFee",
+              "scope": 13492,
+              "stateMutability": "view",
+              "superFunction": null,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "account",
+                      "scope": 13491,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "address",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "address",
+                          "stateMutability": "nonpayable",
+                          "type": "address"
+                        },
+                        "id": 13483,
+                        "name": "ElementaryTypeName",
+                        "src": "221:7:66"
+                      }
+                    ],
+                    "id": 13484,
+                    "name": "VariableDeclaration",
+                    "src": "221:15:66"
+                  },
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "period",
+                      "scope": 13491,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 13485,
+                        "name": "ElementaryTypeName",
+                        "src": "238:7:66"
+                      }
+                    ],
+                    "id": 13486,
+                    "name": "VariableDeclaration",
+                    "src": "238:14:66"
+                  }
+                ],
+                "id": 13487,
+                "name": "ParameterList",
+                "src": "220:33:66"
+              },
+              {
+                "children": [
+                  {
+                    "attributes": {
+                      "constant": false,
+                      "name": "",
+                      "scope": 13491,
+                      "stateVariable": false,
+                      "storageLocation": "default",
+                      "type": "uint256",
+                      "value": null,
+                      "visibility": "internal"
+                    },
+                    "children": [
+                      {
+                        "attributes": {
+                          "name": "uint256",
+                          "type": "uint256"
+                        },
+                        "id": 13488,
+                        "name": "ElementaryTypeName",
+                        "src": "277:7:66"
+                      }
+                    ],
+                    "id": 13489,
+                    "name": "VariableDeclaration",
+                    "src": "277:7:66"
+                  }
+                ],
+                "id": 13490,
+                "name": "ParameterList",
+                "src": "276:9:66"
+              }
+            ],
+            "id": 13491,
+            "name": "FunctionDefinition",
+            "src": "198:88:66"
+          }
+        ],
+        "id": 13492,
+        "name": "ContractDefinition",
+        "src": "26:262:66"
+      }
+    ],
+    "id": 13493,
+    "name": "SourceUnit",
+    "src": "0:289:66"
+  },
+  "compiler": {
+    "name": "solc",
+    "version": "0.5.17+commit.d19bba13.Emscripten.clang"
+  },
+  "networks": {},
+  "schemaVersion": "3.3.4",
+  "updatedAt": "2021-04-21T04:08:14.075Z",
+  "devdoc": {
+    "methods": {}
+  },
+  "userdoc": {
+    "methods": {}
+  }
+}
