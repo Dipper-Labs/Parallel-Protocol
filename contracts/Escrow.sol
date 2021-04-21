@@ -45,7 +45,7 @@ contract Escrow is Importable, ExternalStorable, IEscrow {
         uint256 amount
     ) external containAddressOrOwner(ESCROW_CONTRACTS) {
         Storage().incrementUint(BALANCE, account, amount);
-        Storage().setEscrow(account, period, amount, now);
+        Storage().setEscrow(account, period, amount);
     }
 
     function withdraw(address account, uint256 amount) external onlyAddress(CONTRACT_SYNTHX) {
@@ -63,7 +63,7 @@ contract Escrow is Importable, ExternalStorable, IEscrow {
         uint256 available = getBalance(account);
         uint256 withdrawable = 0;
         for (uint256 i = 0; i < currentPeriod; i++) {
-            (uint256 amount, ) = Storage().getEscrow(account, i);
+            uint256 amount = Storage().getEscrow(account, i);
             withdrawable = withdrawable.add(amount);
         }
         if (withdrawable <= withdrawn) return 0;

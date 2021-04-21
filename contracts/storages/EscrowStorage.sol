@@ -5,29 +5,22 @@ import '../interfaces/storages/IEscrowStorage.sol';
 
 contract EscrowStorage is ExternalStorage, IEscrowStorage {
     mapping(bytes32 => mapping(address => uint256)) private _storage;
-    mapping(address => mapping(uint256 => Escrow)) private _escrows;
+    mapping(address => mapping(uint256 => uint256)) private _escrows;
 
     constructor(address _manager) public ExternalStorage(_manager) {}
 
     function setEscrow(
         address account,
         uint256 period,
-        uint256 amount,
-        uint256 time
+        uint256 amount
     ) external onlyManager(managerName) returns (uint256) {
-        Escrow memory escrow = _escrows[account][period];
-        if (escrow.time == 0) {
-            escrow = Escrow(amount, time);
-        } else {
-            escrow.amount = escrow.amount.add(amount);
-        }
-        _escrows[account][period] = escrow;
-        return _escrows[account][period].amount;
+        _escrows[account][period] = _escrows[account][period].add(amount);
+        return _escrows[account][period];
     }
 
-    function getEscrow(address account, uint256 period) external view returns (uint256 amount, uint256 time) {
-        Escrow memory escrow = _escrows[account][period];
-        return (escrow.amount, escrow.time);
+    function getEscrow(address account, uint256 period) external view returns (uint256 amount) {
+        amount = _escrows[account][period];
+        return amount;
     }
 
     function incrementUint(
