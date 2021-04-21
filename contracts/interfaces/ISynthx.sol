@@ -27,18 +27,6 @@ interface ISynthx {
         bytes32 toSynth
     ) external returns (bool);
 
-    function lock(
-        bytes32 asset,
-        uint256 amount,
-        bool isPool
-    ) external returns (bool);
-
-    function unlock(
-        bytes32 asset,
-        uint256 amount,
-        bool isPool
-    ) external returns (bool);
-
     function claimReward(bytes32 reward, bytes32 asset) external returns (bool);
 
     function withdrawReward(uint256 amount) external returns (bool);
