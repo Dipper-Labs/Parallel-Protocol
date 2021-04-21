@@ -84,8 +84,6 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         return IHolder(requireAddress(CONTRACT_HOLDER));
     }
 
-
-
     function Rewards(bytes32 reward) private view returns (IRewards) {
         return IRewards(requireAddress(reward));
     }
@@ -253,19 +251,19 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         return true;
     }
 
-    function claim(bytes32 reward, bytes32 asset) external onlyInitialized notPaused returns (bool) {
+    function claimReward(bytes32 reward, bytes32 asset) external onlyInitialized notPaused returns (bool) {
         (uint256 period, uint256 amount) = Rewards(reward).claim(asset, msg.sender);
         History().addAction('Claim', msg.sender, reward, asset, 0, (asset == USD) ? USD : SYNX, amount);
         SynthxToken().mint();
-        emit Claimed(msg.sender, reward, asset, period, amount);
+        emit ClaimReward(msg.sender, reward, asset, period, amount);
         return true;
     }
 
-    function vest(uint256 amount) external onlyInitialized notPaused returns (bool) {
+    function withdrawReward(uint256 amount) external onlyInitialized notPaused returns (bool) {
         Escrow().withdraw(msg.sender, amount);
         History().addAction('Vest', msg.sender, 'Escrow', SYNX, amount, bytes32(0), 0);
         SynthxToken().mint();
-        emit Vested(msg.sender, amount);
+        emit WithdrawReward(msg.sender, amount);
         return true;
     }
 
