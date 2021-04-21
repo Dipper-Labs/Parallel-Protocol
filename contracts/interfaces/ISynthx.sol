@@ -76,8 +76,7 @@ interface ISynthx {
         bytes32 indexed reward,
         bytes32 indexed asset,
         uint256 period,
-        uint256 amount,
-        uint256 vestTime
+        uint256 amount
     );
     event Vested(address indexed account, uint256 amount);
     event Liquidated(

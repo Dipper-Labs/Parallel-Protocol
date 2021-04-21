@@ -43,8 +43,7 @@ contract Special is Rewards, ISpecial {
         onlyAddress(CONTRACT_SYNTHX)
         returns (
             uint256 period,
-            uint256 amount,
-            uint256 vestTime
+            uint256 amount
         )
     {
         uint256 claimable = getClaimable(asset, account);
@@ -54,7 +53,7 @@ contract Special is Rewards, ISpecial {
         setClaimed(asset, account, claimablePeriod, claimable);
 
         Escrow().deposit(claimablePeriod, account, claimable);
-        return (claimablePeriod, claimable, 0);
+        return (claimablePeriod, claimable);
     }
 
     function getClaimable(bytes32 asset, address account) public view returns (uint256) {

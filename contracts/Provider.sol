@@ -58,8 +58,7 @@ contract Provider is Rewards, IProvider {
         onlyAddress(CONTRACT_SYNTHX)
         returns (
             uint256 period,
-            uint256 amount,
-            uint256 vestTime
+            uint256 amount
         )
     {
         uint256 claimable = getClaimable(asset, account);
@@ -69,7 +68,7 @@ contract Provider is Rewards, IProvider {
         setClaimed(asset, account, claimablePeriod, claimable);
 
         Escrow().deposit(claimablePeriod, account, claimable);
-        return (claimablePeriod, claimable, 0);
+        return (claimablePeriod, claimable);
     }
 
     function getClaimable(bytes32 asset, address account) public view returns (uint256) {

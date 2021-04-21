@@ -298,10 +298,10 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
     }
 
     function claim(bytes32 reward, bytes32 asset) external onlyInitialized notPaused returns (bool) {
-        (uint256 period, uint256 amount, uint256 vestTime) = Rewards(reward).claim(asset, msg.sender);
-        History().addAction('Claim', msg.sender, reward, asset, vestTime, (asset == USD) ? USD : SYNX, amount);
+        (uint256 period, uint256 amount) = Rewards(reward).claim(asset, msg.sender);
+        History().addAction('Claim', msg.sender, reward, asset, 0, (asset == USD) ? USD : SYNX, amount);
         SynthxToken().mint();
-        emit Claimed(msg.sender, reward, asset, period, amount, vestTime);
+        emit Claimed(msg.sender, reward, asset, period, amount);
         return true;
     }
 
