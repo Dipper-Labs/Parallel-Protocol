@@ -22,6 +22,9 @@ const LiquidatorStorage = artifacts.require("LiquidatorStorage");
 const Staker = artifacts.require("Staker");
 const StakerStorage = artifacts.require("StakerStorage");
 
+const AssetPrice = artifacts.require("AssetPrice");
+
+
 const SynthxToken = artifacts.require("SynthxToken");
 
 const Synthx = artifacts.require("Synthx");
@@ -60,6 +63,9 @@ module.exports = async function(deployer, network, accounts) {
     await deployer.deploy(Staker, Resolver.address).then(async function() {
         await deployer.deploy(StakerStorage, Staker.address);
     });
+
+    await deployer.deploy(AssetPrice);
+
 
     const synthxInstance = await deployer.deploy(Synthx);
     synthxInstance.initialize(Resolver.address, synthxTokenInstance.address);
