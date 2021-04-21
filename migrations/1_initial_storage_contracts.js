@@ -16,6 +16,9 @@ const EscrowStorage = artifacts.require("EscrowStorage");
 
 const History = artifacts.require("History");
 
+const Liquidator = artifacts.require("Liquidator");
+const LiquidatorStorage = artifacts.require("LiquidatorStorage");
+
 const SynthxToken = artifacts.require("SynthxToken");
 
 const Synthx = artifacts.require("Synthx");
@@ -44,6 +47,12 @@ module.exports = async function(deployer, network, accounts) {
     await synthxTokenInstance.initialize(Resolver.address);
 
     await deployer.deploy(History, resolverInstance.address);
+
+    await deployer.deploy(History, resolverInstance.address);
+
+    await deployer.deploy(Liquidator, Resolver.address).then(async function() {
+        await deployer.deploy(LiquidatorStorage, Liquidator.address);
+    });
 
     const synthxInstance = await deployer.deploy(Synthx);
     synthxInstance.initialize(Resolver.address, synthxTokenInstance.address);
