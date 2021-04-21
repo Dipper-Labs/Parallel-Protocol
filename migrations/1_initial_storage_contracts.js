@@ -41,6 +41,6 @@ module.exports = async function(deployer, network, accounts) {
     const synthxTokenInstance = await deployer.deploy(SynthxToken);
     await synthxTokenInstance.initialize(Resolver.address);
 
-    // const synthxInstance = await deployer.deploy(Synthx);
-    // synthxInstance.initialize(Resolver.address, synthxTokenInstance.address);
+    const synthxInstance = await deployer.deploy(Synthx);
+    synthxInstance.initialize(Resolver.address, synthxTokenInstance.address);
 };
