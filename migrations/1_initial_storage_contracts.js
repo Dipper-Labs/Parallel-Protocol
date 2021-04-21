@@ -31,6 +31,8 @@ const Provider = artifacts.require("Provider");
 
 const Market = artifacts.require("Market");
 
+const Special = artifacts.require("Special");
+
 const SynthxToken = artifacts.require("SynthxToken");
 
 const Synthx = artifacts.require("Synthx");
@@ -79,6 +81,8 @@ module.exports = async function(deployer, network, accounts) {
     await deployer.deploy(Provider, Resolver.address);
 
     await deployer.deploy(Market, Resolver.address);
+
+    await deployer.deploy(Special, Resolver.address);
 
     const synthxInstance = await deployer.deploy(Synthx);
     synthxInstance.initialize(Resolver.address, synthxTokenInstance.address);
