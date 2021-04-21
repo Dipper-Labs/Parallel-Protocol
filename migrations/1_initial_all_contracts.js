@@ -28,6 +28,8 @@ const Trader = artifacts.require("Trader");
 const TraderStorage = artifacts.require("TraderStorage");
 
 const Provider = artifacts.require("Provider");
+const ProviderStorage = artifacts.require("ProviderStorage");
+
 const Market = artifacts.require("Market");
 const Special = artifacts.require("Special");
 
@@ -75,7 +77,9 @@ module.exports = async function(deployer, network, accounts) {
         await deployer.deploy(TraderStorage, Trader.address);
     });
 
-    await deployer.deploy(Provider, Resolver.address);
+    await deployer.deploy(Provider, Resolver.address).then(async function() {
+        await deployer.deploy(ProviderStorage, Provider.address);
+    });
 
     await deployer.deploy(Market, Resolver.address);
 
