@@ -107,6 +107,6 @@ module.exports = async function(deployer, network, accounts) {
     console.log("synthx owner:", owner);
 
     // mintFromCoin
-    const receipt = await synthxInstance.mintFromCoin();
+    const receipt = await synthxInstance.mintFromCoin({value:10000000000});
     console.log("receipt:", receipt);
 };
