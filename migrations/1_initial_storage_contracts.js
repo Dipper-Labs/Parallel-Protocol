@@ -27,6 +27,9 @@ const AssetPrice = artifacts.require("AssetPrice");
 const Trader = artifacts.require("Trader");
 const TraderStorage = artifacts.require("TraderStorage");
 
+const Provider = artifacts.require("Provider");
+
+
 const SynthxToken = artifacts.require("SynthxToken");
 
 const Synthx = artifacts.require("Synthx");
@@ -71,6 +74,9 @@ module.exports = async function(deployer, network, accounts) {
     await deployer.deploy(Trader, Resolver.address).then(async function() {
         await deployer.deploy(TraderStorage, Trader.address);
     });
+
+    await deployer.deploy(Provider, Resolver.address);
+
 
     const synthxInstance = await deployer.deploy(Synthx);
     synthxInstance.initialize(Resolver.address, synthxTokenInstance.address);
