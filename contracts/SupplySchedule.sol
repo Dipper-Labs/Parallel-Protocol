@@ -132,8 +132,8 @@ contract SupplySchedule is Importable, ISupplySchedule {
 
         address teamAddress = requireAddress(CONTRACT_TEAM);
 
-        uint256 vestTime = Escrow().deposit(lastMintPeriod, teamAddress, teamSupply);
-        History().addAction('Claim', teamAddress, CONTRACT_SUPPLY_SCHEDULE, SYN, vestTime, SYN, teamSupply);
+        Escrow().deposit(lastMintPeriod, teamAddress, teamSupply);
+        History().addAction('Claim', teamAddress, CONTRACT_SUPPLY_SCHEDULE, SYNX, 0, SYNX, teamSupply);
         lastMintTime = now;
     }
 

@@ -71,8 +71,6 @@ interface IStats {
             uint256 totalDebt
         );
 
-    function getEscrowed(address account) external view returns (uint256 total, uint256 staked);
-
     function getLocked(
         bytes32 asset,
         address account,

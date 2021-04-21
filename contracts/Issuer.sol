@@ -11,7 +11,6 @@ import './interfaces/storages/IIssuerStorage.sol';
 import './interfaces/IAssetPrice.sol';
 import './interfaces/ISetting.sol';
 import './interfaces/ISynth.sol';
-import './interfaces/IEscrow.sol';
 import './interfaces/IERC20.sol';
 
 contract Issuer is Importable, ExternalStorable, IIssuer {
@@ -31,7 +30,6 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
             CONTRACT_SUPPLY_SCHEDULE,
             CONTRACT_ASSET_PRICE,
             CONTRACT_SETTING,
-            CONTRACT_ESCROW,
             CONTRACT_TRADER,
             CONTRACT_STAKER
         ];
@@ -43,10 +41,6 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
 
     function AssetPrice() private view returns (IAssetPrice) {
         return IAssetPrice(requireAddress(CONTRACT_ASSET_PRICE));
-    }
-
-    function Escrow() private view returns (IEscrow) {
-        return IEscrow(requireAddress(CONTRACT_ESCROW));
     }
 
     function Synth(bytes32 synth) private view returns (ISynth) {
@@ -102,7 +96,6 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
         uint256 lastDebt = Storage().getLastDebt(currentPeriod);
 
         (uint256 accountDebt, uint256 lastTime) = _getDebt(stake, account, currentPeriod, lastDebt, totalDebt);
-        require(_canBurn(lastTime), 'Issuer: Minimum stake time not reached');
         (uint256 stakeDebt, ) = _getDebt(stake, address(0), currentPeriod, lastDebt, totalDebt);
 
         uint256 burnableAmount = accountDebt.min(amount);
@@ -172,10 +165,6 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
     ) external view returns (uint256) {
         (uint256 debtPercentage, ) = _getDebtPercentage(stake, account, period, Storage().getLastDebt(period));
         return debtPercentage;
-    }
-
-    function _canBurn(uint256 time) private view returns (bool) {
-        return now >= time.add(Setting().getMinStakeTime());
     }
 
     function _getDebt(

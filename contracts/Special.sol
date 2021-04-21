@@ -43,8 +43,7 @@ contract Special is Rewards, ISpecial {
         onlyAddress(CONTRACT_SYNTHX)
         returns (
             uint256 period,
-            uint256 amount,
-            uint256 vestTime
+            uint256 amount
         )
     {
         uint256 claimable = getClaimable(asset, account);
@@ -53,12 +52,12 @@ contract Special is Rewards, ISpecial {
         uint256 claimablePeriod = getClaimablePeriod();
         setClaimed(asset, account, claimablePeriod, claimable);
 
-        vestTime = Escrow().deposit(claimablePeriod, account, claimable);
-        return (claimablePeriod, claimable, vestTime);
+        Escrow().deposit(claimablePeriod, account, claimable);
+        return (claimablePeriod, claimable);
     }
 
     function getClaimable(bytes32 asset, address account) public view returns (uint256) {
-        require(asset == SYN, 'Special: only supports SYN');
+        require(asset == SYNX, 'Special: only supports SYN');
 
         uint256 rewards = getRewardSupply(CONTRACT_SPECIAL);
         if (rewards == 0) return 0;
@@ -66,11 +65,11 @@ contract Special is Rewards, ISpecial {
         uint256 claimablePeriod = getClaimablePeriod();
         if (getClaimed(asset, account, claimablePeriod) > 0) return 0;
 
-        uint256 collateralRate = Staker().getCollateralRate(SYN, account);
-        if (collateralRate < Setting().getCollateralRate(SYN)) return 0;
+        uint256 collateralRate = Staker().getCollateralRate(SYNX, account);
+        if (collateralRate < Setting().getCollateralRate(SYNX)) return 0;
 
-        uint256 accountPercentage = Issuer().getDebtPercentage(SYN, account, claimablePeriod);
-        uint256 stakePercentage = Issuer().getDebtPercentage(SYN, address(0), claimablePeriod);
+        uint256 accountPercentage = Issuer().getDebtPercentage(SYNX, account, claimablePeriod);
+        uint256 stakePercentage = Issuer().getDebtPercentage(SYNX, address(0), claimablePeriod);
         uint256 percentage = accountPercentage.preciseDivide(stakePercentage);
 
         return rewards.decimalMultiply(percentage.toDecimal());

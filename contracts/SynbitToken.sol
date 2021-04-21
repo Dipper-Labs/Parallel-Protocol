@@ -8,8 +8,6 @@ import './interfaces/IIssuer.sol';
 import './interfaces/IResolver.sol';
 
 contract SynthxToken is TokenLockable, ISynthxToken {
-    uint256 public constant CROWDSALE_SUPPLY = 1000E22;
-
     IResolver public resolver;
 
     modifier onlyResolver() {
@@ -38,7 +36,9 @@ contract SynthxToken is TokenLockable, ISynthxToken {
         (address[] memory recipients, uint256[] memory amounts) = ISupplySchedule(supplySchedule).distributeSupply();
         for (uint256 i = 0; i < recipients.length; i++) {
             uint256 amount = amounts[i];
-            if (amount > 0) _mint(recipients[i], amount);
+            if (amount > 0) {
+                _mint(recipients[i], amount);
+            }
         }
         return true;
     }

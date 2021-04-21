@@ -129,8 +129,7 @@ contract Trader is Rewards, ITrader {
         onlyAddress(CONTRACT_SYNTHX)
         returns (
             uint256 period,
-            uint256 amount,
-            uint256 vestTime
+            uint256 amount
         )
     {
         uint256 claimable = getClaimable(asset, account);
@@ -141,11 +140,11 @@ contract Trader is Rewards, ITrader {
 
         IERC20(requireAddress(CONTRACT_SYNTHX_TOKEN)).safeTransfer(account, claimable);
 
-        return (claimablePeriod, claimable, 0);
+        return (claimablePeriod, claimable);
     }
 
     function getClaimable(bytes32 asset, address account) public view returns (uint256) {
-        require(asset == SYN, 'Trader: only supports SYN');
+        require(asset == SYNX, 'Trader: only supports SYN');
 
         uint256 rewards = getRewardSupply(CONTRACT_TRADER);
         if (rewards == 0) return 0;

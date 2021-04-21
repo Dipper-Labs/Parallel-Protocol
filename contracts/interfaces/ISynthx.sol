@@ -5,13 +5,9 @@ interface ISynthx {
 
     function stakeFromCoin() external payable returns (bool);
 
-    function stakeFromEscrow(uint256 amount) external returns (bool);
-
     function stakeFromToken(bytes32 stake, uint256 amount) external returns (bool);
 
     function mintFromCoin() external payable returns (bool);
-
-    function mintFromEscrow(uint256 amount) external returns (bool);
 
     function mintFromToken(bytes32 stake, uint256 amount) external returns (bool);
 
@@ -80,8 +76,7 @@ interface ISynthx {
         bytes32 indexed reward,
         bytes32 indexed asset,
         uint256 period,
-        uint256 amount,
-        uint256 vestTime
+        uint256 amount
     );
     event Vested(address indexed account, uint256 amount);
     event Liquidated(

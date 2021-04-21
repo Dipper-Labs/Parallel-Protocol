@@ -13,8 +13,7 @@ interface IRewards {
         external
         returns (
             uint256 period,
-            uint256 amount,
-            uint256 vestTime
+            uint256 amount
         );
 
     function getClaimable(bytes32 asset, address account) external view returns (uint256);

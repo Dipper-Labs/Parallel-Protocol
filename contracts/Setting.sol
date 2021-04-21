@@ -11,7 +11,6 @@ contract Setting is ExternalStorable, ISetting {
     bytes32 private constant LIQUIDATION_FEE_RATE = 'LiquidationFeeRate';
     bytes32 private constant LIQUIDATION_DELAY = 'LiquidationDelay';
     bytes32 private constant TRADING_FEE_RATE = 'TradingFeeRate';
-    bytes32 private constant MIN_STAKE_TIME = 'MinStakeTime';
     bytes32 private constant MINT_PERIOD_DURATION = 'MintPeriodDuration';
 
     constructor() public {
@@ -65,15 +64,6 @@ contract Setting is ExternalStorable, ISetting {
 
     function getTradingFeeRate(bytes32 asset) external view returns (uint256) {
         return Storage().getUint(TRADING_FEE_RATE, asset);
-    }
-
-    function setMinStakeTime(uint256 time) external onlyOwner {
-        emit SettingChanged(MIN_STAKE_TIME, bytes32(0), Storage().getUint(MIN_STAKE_TIME), time);
-        Storage().setUint(MIN_STAKE_TIME, time);
-    }
-
-    function getMinStakeTime() external view returns (uint256) {
-        return Storage().getUint(MIN_STAKE_TIME);
     }
 
     function setMintPeriodDuration(uint256 time) external onlyOwner {

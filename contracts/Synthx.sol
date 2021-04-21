@@ -29,7 +29,6 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
     using SafeERC20 for IERC20;
 
     bytes32 private constant FROM_BALANCE = 'FromBalance';
-    bytes32 private constant FROM_ESCROW = 'FromEscrow';
     bytes32 private constant FROM_TRANSFERABLE = 'FromTransferable';
 
     bytes32 public nativeCoin;
@@ -122,17 +121,6 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         return true;
     }
 
-    function stakeFromEscrow(uint256 amount) external returns (bool) {
-        require(Issuer().getDebt(SYN, msg.sender) > 0, 'Synthx: Debt must be greater than zero');
-
-        _stake(SYN, amount, FROM_ESCROW);
-        History().addAction('Stake', msg.sender, 'Stake', SYN, amount, bytes32(0), 0);
-        Liquidator().watchAccount(SYN, msg.sender);
-        SynthxToken().mint();
-        emit Staked(msg.sender, FROM_ESCROW, SYN, amount);
-        return true;
-    }
-
     function stakeFromToken(bytes32 stake, uint256 amount) external returns (bool) {
         require(stake != nativeCoin, 'Synthx: Native Coin use "mintFromCoin" function');
         require(Issuer().getDebt(stake, msg.sender) > 0, 'Synthx: Debt must be greater than zero');
@@ -154,13 +142,8 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         address stakeAddress = requireAsset('Stake', stake);
 
         if (from == FROM_TRANSFERABLE) {
-            (uint256 transferable, ) = Staker().getTransferable(stake, msg.sender);
+            uint256 transferable = Staker().getTransferable(stake, msg.sender);
             transferable.sub(amount, 'Synthx: transfer amount exceeds transferable');
-            return;
-        }
-
-        if (stake == SYN && from == FROM_ESCROW) {
-            Escrow().stake(msg.sender, amount);
             return;
         }
 
@@ -178,11 +161,6 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
 
     function mintFromCoin() external payable returns (bool) {
         _mint(nativeCoin, msg.value, FROM_BALANCE);
-        return true;
-    }
-
-    function mintFromEscrow(uint256 amount) external returns (bool) {
-        _mint(SYN, amount, FROM_ESCROW);
         return true;
     }
 
@@ -220,8 +198,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
     function burn(bytes32 stake, uint256 amount) external onlyInitialized notPaused returns (bool) {
         uint256 burnAmount = Issuer().burnDebt(stake, msg.sender, amount, msg.sender);
 
-        (uint256 stakerTransferable, uint256 escrowTransferable) = Staker().getTransferable(stake, msg.sender);
-        if (escrowTransferable > 0) Escrow().unstake(msg.sender, escrowTransferable);
+        uint256 stakerTransferable = Staker().getTransferable(stake, msg.sender);
         if (Issuer().getDebt(stake, msg.sender) == 0) transfer(stake, msg.sender, stakerTransferable);
 
         History().addAction('Stake', msg.sender, 'Burn', stake, 0, USD, amount);
@@ -236,7 +213,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         address payable recipient,
         uint256 amount
     ) public onlyInitialized notPaused returns (bool) {
-        (uint256 transferable, ) = Staker().getTransferable(stake, msg.sender);
+        (uint256 transferable) = Staker().getTransferable(stake, msg.sender);
         transferable.sub(amount, 'Synthx: transfer amount exceeds transferable');
 
         Staker().unstake(stake, msg.sender, amount);
@@ -321,16 +298,16 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
     }
 
     function claim(bytes32 reward, bytes32 asset) external onlyInitialized notPaused returns (bool) {
-        (uint256 period, uint256 amount, uint256 vestTime) = Rewards(reward).claim(asset, msg.sender);
-        History().addAction('Claim', msg.sender, reward, asset, vestTime, (asset == USD) ? USD : SYN, amount);
+        (uint256 period, uint256 amount) = Rewards(reward).claim(asset, msg.sender);
+        History().addAction('Claim', msg.sender, reward, asset, 0, (asset == USD) ? USD : SYNX, amount);
         SynthxToken().mint();
-        emit Claimed(msg.sender, reward, asset, period, amount, vestTime);
+        emit Claimed(msg.sender, reward, asset, period, amount);
         return true;
     }
 
     function vest(uint256 amount) external onlyInitialized notPaused returns (bool) {
         Escrow().withdraw(msg.sender, amount);
-        History().addAction('Vest', msg.sender, 'Escrow', SYN, amount, bytes32(0), 0);
+        History().addAction('Vest', msg.sender, 'Escrow', SYNX, amount, bytes32(0), 0);
         SynthxToken().mint();
         emit Vested(msg.sender, amount);
         return true;
