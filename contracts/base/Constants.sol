@@ -18,6 +18,7 @@ contract Constants {
     bytes32 internal constant CONTRACT_SPECIAL = 'Special';
 
     bytes32 internal constant CONTRACT_SYNTHX_TOKEN = 'SynthxToken';
+    bytes32 internal constant CONTRACT_SYNTHX_DTOKEN = 'SynthxDToken';
     bytes32 internal constant CONTRACT_SUPPLY_SCHEDULE = 'SupplySchedule';
 
     bytes32 internal constant CONTRACT_STATS = 'Stats';
