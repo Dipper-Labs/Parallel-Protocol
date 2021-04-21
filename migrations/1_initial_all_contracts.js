@@ -28,9 +28,7 @@ const Trader = artifacts.require("Trader");
 const TraderStorage = artifacts.require("TraderStorage");
 
 const Provider = artifacts.require("Provider");
-
 const Market = artifacts.require("Market");
-
 const Special = artifacts.require("Special");
 
 const SynthxToken = artifacts.require("SynthxToken");
@@ -49,8 +47,7 @@ module.exports = async function(deployer, network, accounts) {
     await deployer.deploy(Escrow, Resolver.address).then(async function() {
         await deployer.deploy(EscrowStorage, Escrow.address);
     });
-
-
+    
     await deployer.deploy(Issuer, Resolver.address);
     await deployer.deploy(Holder, Resolver.address);
 
