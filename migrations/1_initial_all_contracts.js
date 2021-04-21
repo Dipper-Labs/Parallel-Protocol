@@ -34,6 +34,7 @@ const ProviderStorage = artifacts.require("ProviderStorage");
 
 const Market = artifacts.require("Market");
 const Special = artifacts.require("Special");
+const SupplySchedule = artifacts.require("SupplySchedule");
 
 const SynthxToken = artifacts.require("SynthxToken");
 
@@ -41,7 +42,7 @@ const Synthx = artifacts.require("Synthx");
 
 module.exports = async function(deployer, network, accounts) {
     await deployer.deploy(Migrations);
-    
+
     await deployer.deploy(Storage);
     await deployer.deploy(AddressStorage);
     await deployer.deploy(Setting).then(async function() {
@@ -86,8 +87,8 @@ module.exports = async function(deployer, network, accounts) {
     });
 
     await deployer.deploy(Market, Resolver.address);
-
     await deployer.deploy(Special, Resolver.address);
+    await deployer.deploy(SupplySchedule, Resolver.address, 0, 0);
 
     const synthxInstance = await deployer.deploy(Synthx);
     synthxInstance.initialize(Resolver.address, synthxTokenInstance.address);
