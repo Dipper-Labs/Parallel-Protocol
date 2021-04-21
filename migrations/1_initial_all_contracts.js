@@ -1,5 +1,7 @@
 const Web3Utils = require('web3-utils');
 
+const Migrations = artifacts.require("Migrations");
+
 const Storage = artifacts.require("Storage");
 const AddressStorage = artifacts.require("AddressStorage");
 
@@ -38,6 +40,8 @@ const SynthxToken = artifacts.require("SynthxToken");
 const Synthx = artifacts.require("Synthx");
 
 module.exports = async function(deployer, network, accounts) {
+    await deployer.deploy(Migrations);
+    
     await deployer.deploy(Storage);
     await deployer.deploy(AddressStorage);
     await deployer.deploy(Setting).then(async function() {
