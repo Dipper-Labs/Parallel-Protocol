@@ -37,12 +37,12 @@ contract SupplySchedule is Importable, ISupplySchedule {
         startMintTime = (_startMintTime == 0) ? now : _startMintTime;
         lastMintTime = (_lastMintTime < startMintTime) ? startMintTime : _lastMintTime;
 
-        percentages[CONTRACT_STAKER] = 0.5 ether; // 50%
-        percentages[CONTRACT_SPECIAL] = 0.12 ether; // 12%
-        percentages[CONTRACT_PROVIDER] = 0.16 ether; // 16%
-        percentages[CONTRACT_TRADER] = 0.1 ether; // 10%
-        percentages[CONTRACT_HOLDER] = 0.02 ether; // 2%
-        percentages[CONTRACT_TEAM] = 0.1 ether; // 10%
+        percentages[CONTRACT_STAKER] = 0.8 ether; // 80%
+        percentages[CONTRACT_TEAM] = 0.15 ether; // 15%
+        percentages[CONTRACT_SPECIAL] = 0.03 ether; // 3%
+        percentages[CONTRACT_TRADER] = 0.01 ether; // 1%
+        percentages[CONTRACT_HOLDER] = 0.01 ether; // 1%
+
     }
 
     function Setting() private view returns (ISetting) {
@@ -75,7 +75,6 @@ contract SupplySchedule is Importable, ISupplySchedule {
         return (recipient == CONTRACT_TRADER ||
             recipient == CONTRACT_HOLDER ||
             recipient == CONTRACT_TEAM ||
-            recipient == CONTRACT_PROVIDER ||
             recipient == CONTRACT_SPECIAL ||
             recipient == CONTRACT_STAKER);
     }
@@ -85,7 +84,6 @@ contract SupplySchedule is Importable, ISupplySchedule {
             percentages[CONTRACT_TRADER]
                 .add(percentages[CONTRACT_HOLDER])
                 .add(percentages[CONTRACT_TEAM])
-                .add(percentages[CONTRACT_PROVIDER])
                 .add(percentages[CONTRACT_SPECIAL]);
     }
 

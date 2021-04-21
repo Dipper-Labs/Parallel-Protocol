@@ -99,7 +99,6 @@ interface IStats {
 
     function getRewards(address account) external view returns (Reward[] memory);
 
-    function getRewardTokens(bytes32 assetType) external view returns (Reward[] memory);
 
     function getAssetMarket(bytes32 asset)
         external
@@ -125,12 +124,5 @@ interface IStats {
         bytes32 stake,
         address account,
         uint256 period
-    ) external view returns (uint256);
-
-    function getPeriodLocked(
-        bytes32 asset,
-        address account,
-        uint256 period,
-        bool isPool
     ) external view returns (uint256);
 }

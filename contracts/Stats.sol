@@ -12,7 +12,6 @@ import './interfaces/IStaker.sol';
 import './interfaces/IAssetPrice.sol';
 import './interfaces/ISetting.sol';
 import './interfaces/IIssuer.sol';
-import './interfaces/IHolder.sol';
 import './interfaces/ITrader.sol';
 import './interfaces/IRewards.sol';
 import './interfaces/ISynth.sol';
@@ -22,8 +21,6 @@ import './interfaces/IERC20.sol';
 contract Stats is Importable, IStats {
     bytes32 private constant STAKE = 'Stake';
     bytes32 private constant SYNTH = 'Synth';
-    bytes32 private constant HOLD = 'Hold';
-    bytes32 private constant POOL = 'Pool';
 
     using SafeMath for uint256;
     using PreciseMath for uint256;
@@ -38,11 +35,8 @@ contract Stats is Importable, IStats {
             CONTRACT_ASSET_PRICE,
             CONTRACT_SETTING,
             CONTRACT_ISSUER,
-            CONTRACT_HOLDER,
             CONTRACT_TRADER,
-            CONTRACT_HOLDER,
-            CONTRACT_MARKET,
-            CONTRACT_SPECIAL
+            CONTRACT_MARKET
         ];
     }
 
@@ -68,10 +62,6 @@ contract Stats is Importable, IStats {
 
     function Issuer() private view returns (IIssuer) {
         return IIssuer(requireAddress(CONTRACT_ISSUER));
-    }
-
-    function Holder() private view returns (IHolder) {
-        return IHolder(requireAddress(CONTRACT_HOLDER));
     }
 
     function Trader() private view returns (ITrader) {
@@ -226,13 +216,6 @@ contract Stats is Importable, IStats {
         return Escrow().getBalance(account);
     }
 
-    function getLocked(
-        bytes32 asset,
-        address account,
-        bool isPool
-    ) external view returns (uint256) {
-    }
-
     function getAvailable(bytes32 stake, address account)
         external
         view
@@ -284,50 +267,11 @@ contract Stats is Importable, IStats {
     }
 
     function getRewards(address account) external view returns (Reward[] memory) {
-        bytes32[] memory holds = assets(HOLD);
-        bytes32[] memory pools = assets(POOL);
-        Reward[] memory items = new Reward[](holds.length.add(pools.length).add(4));
+        Reward[] memory items = new Reward[](2);
         uint256 nextTime = SupplySchedule().nextMintTime();
         bytes32 reward = 'Staker';
         items[0] = Reward(reward, SYNX, SYNX, Rewards(reward).getClaimable(SYNX, account), nextTime);
         items[1] = Reward(reward, USD, USD, Rewards(reward).getClaimable(USD, account), nextTime);
-
-        reward = 'Special';
-        items[2] = Reward(reward, SYNX, SYNX, Rewards(reward).getClaimable(SYNX, account), nextTime);
-
-        reward = 'Trader';
-        items[3] = Reward(reward, SYNX, SYNX, Rewards(reward).getClaimable(SYNX, account), nextTime);
-
-        reward = 'Holder';
-        for (uint256 i = 0; i < holds.length; i++) {
-            items[i.add(4)] = Reward(reward, holds[i], SYNX, Rewards(reward).getClaimable(holds[i], account), nextTime);
-        }
-
-        reward = 'Provider';
-        for (uint256 i = 0; i < pools.length; i++) {
-            uint256 index = i.add(4).add(holds.length);
-            items[index] = Reward(reward, pools[i], SYNX, Rewards(reward).getClaimable(pools[i], account), nextTime);
-        }
-
-        return items;
-    }
-
-    function getRewardTokens(bytes32 assetType) external view returns (Reward[] memory) {
-        bytes32 reward = (assetType == HOLD) ? CONTRACT_HOLDER : (assetType == POOL) ? CONTRACT_PROVIDER : assetType;
-        bytes32[] memory assets = assets(assetType);
-        uint256 periodSupply = SupplySchedule().periodSupply(reward, SupplySchedule().currentPeriod());
-
-        Reward[] memory items = new Reward[](assets.length);
-        for (uint256 i = 0; i < assets.length; i++) {
-            bytes32 assetName = assets[i];
-            items[i] = Reward(
-                reward,
-                assetName,
-                SYNX,
-                periodSupply.decimalMultiply(Rewards(reward).getRewardPercentage(assetName)),
-                0
-            );
-        }
 
         return items;
     }
@@ -442,17 +386,5 @@ contract Stats is Importable, IStats {
         uint256 period
     ) external view returns (uint256) {
         return Issuer().getDebtPercentage(stake, account, period);
-    }
-
-    function getPeriodLocked(
-        bytes32 asset,
-        address account,
-        uint256 period,
-        bool isPool
-    ) external view returns (uint256) {
-        return
-            (isPool)
-                ? Provider().getPeriodLocked(asset, account, period)
-                : Holder().getPeriodLocked(asset, account, period);
     }
 }
