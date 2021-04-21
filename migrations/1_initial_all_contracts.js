@@ -1,5 +1,7 @@
 const Web3Utils = require('web3-utils');
 
+const Migrations = artifacts.require("Migrations");
+
 const Storage = artifacts.require("Storage");
 const AddressStorage = artifacts.require("AddressStorage");
 
@@ -18,11 +20,28 @@ const History = artifacts.require("History");
 const Liquidator = artifacts.require("Liquidator");
 const LiquidatorStorage = artifacts.require("LiquidatorStorage");
 
+const Staker = artifacts.require("Staker");
+const StakerStorage = artifacts.require("StakerStorage");
+
+const AssetPrice = artifacts.require("AssetPrice");
+
+const Trader = artifacts.require("Trader");
+const TraderStorage = artifacts.require("TraderStorage");
+
+const Provider = artifacts.require("Provider");
+const ProviderStorage = artifacts.require("ProviderStorage");
+
+const Market = artifacts.require("Market");
+const Special = artifacts.require("Special");
+const SupplySchedule = artifacts.require("SupplySchedule");
+
 const SynthxToken = artifacts.require("SynthxToken");
 
 const Synthx = artifacts.require("Synthx");
 
 module.exports = async function(deployer, network, accounts) {
+    await deployer.deploy(Migrations);
+
     await deployer.deploy(Storage);
     await deployer.deploy(AddressStorage);
     await deployer.deploy(Setting).then(async function() {
@@ -34,8 +53,7 @@ module.exports = async function(deployer, network, accounts) {
     await deployer.deploy(Escrow, Resolver.address).then(async function() {
         await deployer.deploy(EscrowStorage, Escrow.address);
     });
-
-
+    
     await deployer.deploy(Issuer, Resolver.address);
     /*
         CONTRACT_ESCROW,
@@ -68,6 +86,24 @@ module.exports = async function(deployer, network, accounts) {
     await deployer.deploy(Liquidator, Resolver.address).then(async function() {
         await deployer.deploy(LiquidatorStorage, Liquidator.address);
     });
+
+    await deployer.deploy(Staker, Resolver.address).then(async function() {
+        await deployer.deploy(StakerStorage, Staker.address);
+    });
+
+    await deployer.deploy(AssetPrice);
+
+    await deployer.deploy(Trader, Resolver.address).then(async function() {
+        await deployer.deploy(TraderStorage, Trader.address);
+    });
+
+    await deployer.deploy(Provider, Resolver.address).then(async function() {
+        await deployer.deploy(ProviderStorage, Provider.address);
+    });
+
+    await deployer.deploy(Market, Resolver.address);
+    await deployer.deploy(Special, Resolver.address);
+    await deployer.deploy(SupplySchedule, Resolver.address, 0, 0);
 
     const synthxInstance = await deployer.deploy(Synthx);
     synthxInstance.initialize(Resolver.address, Web3Utils.fromAscii('ETH'));
