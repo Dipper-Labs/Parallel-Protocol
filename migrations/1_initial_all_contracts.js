@@ -28,9 +28,6 @@ const AssetPrice = artifacts.require("AssetPrice");
 const Trader = artifacts.require("Trader");
 const TraderStorage = artifacts.require("TraderStorage");
 
-const Provider = artifacts.require("Provider");
-const ProviderStorage = artifacts.require("ProviderStorage");
-
 const Market = artifacts.require("Market");
 const Special = artifacts.require("Special");
 const SupplySchedule = artifacts.require("SupplySchedule");
@@ -55,33 +52,13 @@ module.exports = async function(deployer, network, accounts) {
     });
     
     await deployer.deploy(Issuer, Resolver.address);
-    /*
-        CONTRACT_ESCROW,
-        CONTRACT_STAKER,
-        CONTRACT_ASSET_PRICE,
-        CONTRACT_SETTING,
-        CONTRACT_ISSUER,
-        CONTRACT_TRADER,
-        CONTRACT_SYNTHX_TOKEN,
-        CONTRACT_MARKET,
-        CONTRACT_HISTORY,
-        CONTRACT_LIQUIDATOR
-     */
-    await resolverInstance.setAddress(Web3Utils.fromAscii('Escrow'), Escrow.address);
-    await resolverInstance.setAddress(Web3Utils.fromAscii('Staker'), Staker.address);
-    await resolverInstance.setAddress(Web3Utils.fromAscii('AssetPrice'), AssetPrice.address);
-    await resolverInstance.setAddress(Web3Utils.fromAscii('Setting'), Setting.address);
-    await resolverInstance.setAddress(Web3Utils.fromAscii('Issuer'), Issuer.address);
-    await resolverInstance.setAddress(Web3Utils.fromAscii('Trader'), Trader.address);
-    await resolverInstance.setAddress(Web3Utils.fromAscii('SynthxToken'), SynthxToken.address);
-    await resolverInstance.setAddress(Web3Utils.fromAscii('Market'), Market.address);
-    await resolverInstance.setAddress(Web3Utils.fromAscii('History'), History.address);
-    await resolverInstance.setAddress(Web3Utils.fromAscii('Liquidator'), Liquidator.address);
 
+    // must done before 'synthxTokenInstance.initialize(Resolver.address);'
+    await resolverInstance.setAddress(Web3Utils.fromAscii('Issuer'), Issuer.address);
     const synthxTokenInstance = await deployer.deploy(SynthxToken);
     await synthxTokenInstance.initialize(Resolver.address);
 
-    await deployer.deploy(History, resolverInstance.address);
+    await deployer.deploy(History, Resolver.address);
 
     await deployer.deploy(Liquidator, Resolver.address).then(async function() {
         await deployer.deploy(LiquidatorStorage, Liquidator.address);
@@ -97,13 +74,32 @@ module.exports = async function(deployer, network, accounts) {
         await deployer.deploy(TraderStorage, Trader.address);
     });
 
-    await deployer.deploy(Provider, Resolver.address).then(async function() {
-        await deployer.deploy(ProviderStorage, Provider.address);
-    });
-
     await deployer.deploy(Market, Resolver.address);
     await deployer.deploy(Special, Resolver.address);
     await deployer.deploy(SupplySchedule, Resolver.address, 0, 0);
+
+    /*
+    CONTRACT_ESCROW,
+    CONTRACT_STAKER,
+    CONTRACT_ASSET_PRICE,
+    CONTRACT_SETTING,
+    CONTRACT_ISSUER,
+    CONTRACT_TRADER,
+    CONTRACT_SYNTHX_TOKEN,
+    CONTRACT_MARKET,
+    CONTRACT_HISTORY,
+    CONTRACT_LIQUIDATOR
+ */
+    await resolverInstance.setAddress(Web3Utils.fromAscii('Escrow'), Escrow.address);
+    await resolverInstance.setAddress(Web3Utils.fromAscii('Staker'), Staker.address);
+    await resolverInstance.setAddress(Web3Utils.fromAscii('AssetPrice'), AssetPrice.address);
+    await resolverInstance.setAddress(Web3Utils.fromAscii('Setting'), Setting.address);
+
+    await resolverInstance.setAddress(Web3Utils.fromAscii('Trader'), Trader.address);
+    await resolverInstance.setAddress(Web3Utils.fromAscii('SynthxToken'), SynthxToken.address);
+    await resolverInstance.setAddress(Web3Utils.fromAscii('Market'), Market.address);
+    await resolverInstance.setAddress(Web3Utils.fromAscii('History'), History.address);
+    await resolverInstance.setAddress(Web3Utils.fromAscii('Liquidator'), Liquidator.address);
 
     const synthxInstance = await deployer.deploy(Synthx);
     synthxInstance.initialize(Resolver.address, Web3Utils.fromAscii('ETH'));
