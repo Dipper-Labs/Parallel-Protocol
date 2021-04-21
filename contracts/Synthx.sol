@@ -14,7 +14,6 @@ import './interfaces/ITrader.sol';
 import './interfaces/IAssetPrice.sol';
 import './interfaces/ISetting.sol';
 import './interfaces/IIssuer.sol';
-import './interfaces/IHolder.sol';
 import './interfaces/IRewards.sol';
 import './interfaces/ISynthxToken.sol';
 import './interfaces/IMarket.sol';
@@ -46,12 +45,10 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
             CONTRACT_SETTING,
             CONTRACT_ISSUER,
             CONTRACT_TRADER,
-            CONTRACT_HOLDER,
             CONTRACT_SYNTHX_TOKEN,
             CONTRACT_MARKET,
             CONTRACT_HISTORY,
-            CONTRACT_LIQUIDATOR,
-            CONTRACT_SPECIAL
+            CONTRACT_LIQUIDATOR
         ];
         return true;
     }
@@ -78,10 +75,6 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
 
     function Trader() private view returns (ITrader) {
         return ITrader(requireAddress(CONTRACT_TRADER));
-    }
-
-    function Holder() private view returns (IHolder) {
-        return IHolder(requireAddress(CONTRACT_HOLDER));
     }
 
     function Rewards(bytes32 reward) private view returns (IRewards) {
@@ -153,6 +146,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         Staker().stake(stake, msg.sender, amount);
     }
 
+    // 0xf82d43e5
     function mintFromCoin() external payable returns (bool) {
         _mint(nativeCoin, msg.value, FROM_BALANCE);
         return true;

@@ -1,13 +1,14 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.5.17;
 
-import './base/TokenLockable.sol';
+import './base/Token.sol';
+
 import './interfaces/ISynthxToken.sol';
 import './interfaces/ISupplySchedule.sol';
 import './interfaces/IIssuer.sol';
 import './interfaces/IResolver.sol';
 
-contract SynthxToken is TokenLockable, ISynthxToken {
+contract SynthxToken is Token, ISynthxToken {
     IResolver public resolver;
 
     modifier onlyResolver() {
@@ -27,7 +28,6 @@ contract SynthxToken is TokenLockable, ISynthxToken {
 
     function resetManager() public onlyOwner {
         setManager(resolver.getAddress(CONTRACT_ISSUER));
-        setHolder(resolver.getAddress(CONTRACT_HOLDER));
     }
 
     function mint() external onlyInitialized returns (bool) {
