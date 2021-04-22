@@ -92,18 +92,17 @@ module.exports = async function(deployer, network, accounts) {
 
     // setting
 
-    console.log(Setting.address);
-    console.log(settingInstance);
-    const res = await settingInstance.getCollateralRate(Web3Utils.fromAscii('ETH'));
+    let res = await settingInstance.getCollateralRate(Web3Utils.fromAscii('ETH'));
     console.log("CollateralRate:", res);
 
-    settingInstance.setCollateralRate(); // x 10**18
-    settingInstance.setLiquidationRate();
-    settingInstance.setLiquidationRate();
-    settingInstance.setLiquidationDelay();
-    settingInstance.setTradingFeeRate();
-    settingInstance.setMintPeriodDuration(); // second
+    settingInstance.setCollateralRate(Web3Utils.fromAscii('ETH'), 1);
+    settingInstance.setLiquidationRate(Web3Utils.fromAscii('ETH'), 1);
+    settingInstance.setLiquidationDelay(36000);
+    settingInstance.setTradingFeeRate(Web3Utils.fromAscii('ETH'), 1);
+    settingInstance.setMintPeriodDuration(36000); // second
 
+    res = await settingInstance.getCollateralRate(Web3Utils.fromAscii('ETH'));
+    console.log("CollateralRate:", res);
 
     const synthxInstance = await deployer.deploy(Synthx);
     synthxInstance.initialize(Resolver.address, Web3Utils.fromAscii('ETH'));
@@ -115,10 +114,7 @@ module.exports = async function(deployer, network, accounts) {
     await synthxInstance.refreshCache();
     await escrowInstance.refreshCache();
     await stakerInstal.refreshCache();
-    await assetPriceInstance.refreshCache();
-    await settingInstance.refreshCache();
     await traderInstance.refreshCache();
-    await synthxTokenInstance.refreshCache();
     await marketInstance.refreshCache();
     await hitoryInstance.refreshCache();
     await liquidatorInstance.refreshCache();
