@@ -2,14 +2,13 @@
 pragma solidity ^0.5.17;
 
 import './base/Token.sol';
-import './base/Importable.sol';
 
 import './interfaces/ISynthxDToken.sol';
 import './interfaces/ISupplySchedule.sol';
 import './interfaces/IIssuer.sol';
 import './interfaces/IResolver.sol';
 
-contract SynthxDToken is Token, Importable, ISynthxDToken {
+contract SynthxDToken is Token, ISynthxDToken {
     IResolver public resolver;
 
     bytes32[] private MINTABLE_CONTRACTS = [CONTRACT_ISSUER, CONTRACT_SYNTHX];
@@ -33,7 +32,7 @@ contract SynthxDToken is Token, Importable, ISynthxDToken {
         setManager(resolver.getAddress(CONTRACT_ISSUER));
     }
 
-    function mint(address account, uint256 amount) external containAddress(MINTABLE_CONTRACTS) returns (bool) {
+    function mint(address account, uint256 amount) external onlyInitialized returns (bool) {
         _mint(account, amount);
         return true;
     }

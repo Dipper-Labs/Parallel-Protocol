@@ -156,6 +156,8 @@ module.exports = async function(deployer, network, accounts) {
     const statsInstance = await deployer.deploy(Stats, Resolver.address);
     await statsInstance.refreshCache();
 
+    console.log("call mintFromCoin")
+
     // mintFromCoin
     const receipt = await synthxInstance.mintFromCoin({value:Web3Utils.toWei('2', 'ether')});
     console.log("receipt:", receipt);

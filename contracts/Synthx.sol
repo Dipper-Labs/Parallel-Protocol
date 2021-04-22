@@ -47,6 +47,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
             CONTRACT_ISSUER,
             CONTRACT_TRADER,
             CONTRACT_SYNTHX_TOKEN,
+            CONTRACT_SYNTHX_DTOKEN,
             CONTRACT_MARKET,
             CONTRACT_HISTORY,
             CONTRACT_LIQUIDATOR

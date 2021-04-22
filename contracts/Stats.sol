@@ -97,7 +97,7 @@ contract Stats is Importable, IStats {
             bytes32 assetName = stakes[i];
             address assetAddress = requireAsset(STAKE, assetName);
             uint256 balance = _getBalance(assetName, assetAddress, account);
-            items[i] = Asset(assetName, assetAddress, '', balance, prices[i], 0);
+            items[i] = Asset(assetName, assetAddress, STAKE, balance, prices[i], 0);
         }
 
         prices = AssetPrice().getPrices(synths);
@@ -105,7 +105,7 @@ contract Stats is Importable, IStats {
             bytes32 assetName = synths[i];
             address assetAddress = requireAsset(SYNTH, assetName);
             uint256 balance = _getBalance(assetName, assetAddress, account);
-            items[i.add(stakes.length)] = Asset(assetName, assetAddress, '', balance, prices[i], 0);
+            items[i.add(stakes.length)] = Asset(assetName, assetAddress, SYNTH, balance, prices[i], 0);
         }
 
         return items;
