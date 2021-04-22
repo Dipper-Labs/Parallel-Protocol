@@ -50,6 +50,7 @@ module.exports = async function(deployer, network, accounts) {
 
     const escrowInstance = await deployer.deploy(Escrow, Resolver.address);
     await deployer.deploy(EscrowStorage, Escrow.address);
+    await escrowInstance.setStorage(EscrowStorage.address);
     
     await deployer.deploy(Issuer, Resolver.address);
 
@@ -62,15 +63,17 @@ module.exports = async function(deployer, network, accounts) {
 
     const liquidatorInstance = await deployer.deploy(Liquidator, Resolver.address);
     await deployer.deploy(LiquidatorStorage, Liquidator.address);
+    await liquidatorInstance.setStorage(LiquidatorStorage.address)
 
     const stakerInstance = await deployer.deploy(Staker, Resolver.address);
     await deployer.deploy(StakerStorage, Staker.address);
-    stakerInstance.setStorage(StakerStorage.address);
+    await stakerInstance.setStorage(StakerStorage.address);
 
-    const assetPriceInstance = await deployer.deploy(AssetPrice);
+    await deployer.deploy(AssetPrice);
 
     const traderInstance = await deployer.deploy(Trader, Resolver.address);
     await deployer.deploy(TraderStorage, Trader.address);
+    await traderInstance.setStorage(TraderStorage.address);
 
     const marketInstance = await deployer.deploy(Market, Resolver.address);
     await deployer.deploy(Special, Resolver.address);
