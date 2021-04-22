@@ -25,6 +25,9 @@ const StakerStorage = artifacts.require("StakerStorage");
 
 const AssetPrice = artifacts.require("AssetPrice");
 
+const SynthxOracle = artifacts.require("SynthxOracle");
+const OracleStorage = artifacts.require("OracleStorage");
+
 const Trader = artifacts.require("Trader");
 const TraderStorage = artifacts.require("TraderStorage");
 
@@ -69,7 +72,14 @@ module.exports = async function(deployer, network, accounts) {
     await deployer.deploy(StakerStorage, Staker.address);
     await stakerInstance.setStorage(StakerStorage.address);
 
-    await deployer.deploy(AssetPrice);
+    const assetPriceInstace = await deployer.deploy(AssetPrice);
+
+    const SynthxOracleInstance = await deployer.deploy(SynthxOracle);
+    await deployer.deploy(OracleStorage, SynthxOracle.address);
+    await SynthxOracleInstance.setStorage(OracleStorage.address);
+
+    assetPriceInstace.setOracle(Web3Utils.fromAscii('ETH'), SynthxOracle.address);
+    SynthxOracleInstance.setPrice(Web3Utils.fromAscii('ETH'), 10000);
 
     const traderInstance = await deployer.deploy(Trader, Resolver.address);
     await deployer.deploy(TraderStorage, Trader.address);
@@ -83,7 +93,7 @@ module.exports = async function(deployer, network, accounts) {
     await resolverInstance.setAddress(Web3Utils.fromAscii('Staker'), Staker.address);
     await resolverInstance.setAddress(Web3Utils.fromAscii('AssetPrice'), AssetPrice.address);
     await resolverInstance.setAddress(Web3Utils.fromAscii('Setting'), Setting.address);
-
+    await resolverInstance.setAddress(Web3Utils.fromAscii('Oracle'), SynthxOracle.address);
     await resolverInstance.setAddress(Web3Utils.fromAscii('Trader'), Trader.address);
     await resolverInstance.setAddress(Web3Utils.fromAscii('SynthxToken'), SynthxToken.address);
     await resolverInstance.setAddress(Web3Utils.fromAscii('Market'), Market.address);
