@@ -72,8 +72,8 @@ module.exports = async function(deployer, network, accounts) {
     const synthxTokenInstance = await deployer.deploy(SynthxToken);
     await synthxTokenInstance.initialize(Resolver.address);
 
-    const synthxDTokenInstance = await deployer.deploy(SynthxDToken);
-    await synthxDTokenInstance.initialize(Resolver.address);
+    const synthxDTokenInstance = await deployer.deploy(SynthxDToken,Resolver.address);
+    await synthxDTokenInstance.initialize();
 
     const hitoryInstance = await deployer.deploy(History, Resolver.address);
 
@@ -150,6 +150,7 @@ module.exports = async function(deployer, network, accounts) {
     await liquidatorInstance.refreshCache();
     await issuerInstance.refreshCache();
     await supplyScheduleInstance.refreshCache();
+    await synthxDTokenInstance.refreshCache();
 
 
     // Stats
