@@ -37,6 +37,7 @@ const Special = artifacts.require("Special");
 const SupplySchedule = artifacts.require("SupplySchedule");
 
 const SynthxToken = artifacts.require("SynthxToken");
+const SynthxDToken = artifacts.require("SynthxDToken");
 
 const Synthx = artifacts.require("Synthx");
 
@@ -70,6 +71,9 @@ module.exports = async function(deployer, network, accounts) {
     await resolverInstance.setAddress(Web3Utils.fromAscii('Issuer'), Issuer.address);
     const synthxTokenInstance = await deployer.deploy(SynthxToken);
     await synthxTokenInstance.initialize(Resolver.address);
+
+    const synthxDTokenInstance = await deployer.deploy(SynthxDToken);
+    await synthxDTokenInstance.initialize(Resolver.address);
 
     const hitoryInstance = await deployer.deploy(History, Resolver.address);
 
@@ -111,6 +115,7 @@ module.exports = async function(deployer, network, accounts) {
     await resolverInstance.setAddress(Web3Utils.fromAscii('Oracle'), SynthxOracle.address);
     await resolverInstance.setAddress(Web3Utils.fromAscii('Trader'), Trader.address);
     await resolverInstance.setAddress(Web3Utils.fromAscii('SynthxToken'), SynthxToken.address);
+    await resolverInstance.setAddress(Web3Utils.fromAscii('SynthxDToken'), SynthxDToken.address);
     await resolverInstance.setAddress(Web3Utils.fromAscii('Market'), Market.address);
     await resolverInstance.setAddress(Web3Utils.fromAscii('History'), History.address);
     await resolverInstance.setAddress(Web3Utils.fromAscii('Liquidator'), Liquidator.address);
@@ -157,6 +162,9 @@ module.exports = async function(deployer, network, accounts) {
 
     bal = await dUSDInstance.balanceOf(accounts[0]);
     console.log("dUSD balance:", Web3Utils.fromWei(bal, 'ether'));
+
+    dTokenBal = await synthxDTokenInstance.balanceOf(accounts[0]);
+    console.log("dToken balance:", Web3Utils.fromWei(dTokenBal, 'ether'));
 
     // getTotalCollateral
     col = await statsInstance.getTotalCollateral(accounts[0])

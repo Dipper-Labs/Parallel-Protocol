@@ -16,6 +16,7 @@ import './interfaces/ISetting.sol';
 import './interfaces/IIssuer.sol';
 import './interfaces/IRewards.sol';
 import './interfaces/ISynthxToken.sol';
+import './interfaces/ISynthxDToken.sol';
 import './interfaces/IMarket.sol';
 import './interfaces/IHistory.sol';
 import './interfaces/ILiquidator.sol';
@@ -83,6 +84,10 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
 
     function SynthxToken() private view returns (ISynthxToken) {
         return ISynthxToken(requireAddress(CONTRACT_SYNTHX_TOKEN));
+    }
+
+    function SynthxDToken() private view returns (ISynthxDToken) {
+        return ISynthxDToken(requireAddress(CONTRACT_SYNTHX_DTOKEN));
     }
 
     function Market() private view returns (IMarket) {
@@ -176,6 +181,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
 
         uint256 issueAmount = value.decimalDivide(collateralRate);
         Issuer().issueDebt(stake, msg.sender, issueAmount);
+        SynthxDToken().mint(msg.sender, issueAmount);
 
         History().addAction('Stake', msg.sender, 'Mint', stake, amount, USD, issueAmount);
         Liquidator().watchAccount(stake, msg.sender);

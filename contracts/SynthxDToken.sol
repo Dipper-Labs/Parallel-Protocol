@@ -12,7 +12,7 @@ import './interfaces/IResolver.sol';
 contract SynthxDToken is Token, Importable, ISynthxDToken {
     IResolver public resolver;
 
-    bytes32[] private MINTABLE_CONTRACTS = [CONTRACT_ISSUER];
+    bytes32[] private MINTABLE_CONTRACTS = [CONTRACT_ISSUER, CONTRACT_SYNTHX];
 
     modifier onlyResolver() {
         require(msg.sender == address(resolver), 'SynthxDToken: caller is not the Resolver');
@@ -33,7 +33,8 @@ contract SynthxDToken is Token, Importable, ISynthxDToken {
         setManager(resolver.getAddress(CONTRACT_ISSUER));
     }
 
-    function mint() external containAddress(MINTABLE_CONTRACTS) returns (bool) {
+    function mint(address account, uint256 amount) external containAddress(MINTABLE_CONTRACTS) returns (bool) {
+        _mint(account, amount);
         return true;
     }
 
