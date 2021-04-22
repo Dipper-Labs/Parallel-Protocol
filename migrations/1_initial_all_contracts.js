@@ -78,18 +78,6 @@ module.exports = async function(deployer, network, accounts) {
     await deployer.deploy(Special, Resolver.address);
     await deployer.deploy(SupplySchedule, Resolver.address, 0, 0);
 
-    /*
-    CONTRACT_ESCROW,
-    CONTRACT_STAKER,
-    CONTRACT_ASSET_PRICE,
-    CONTRACT_SETTING,
-    CONTRACT_ISSUER,
-    CONTRACT_TRADER,
-    CONTRACT_SYNTHX_TOKEN,
-    CONTRACT_MARKET,
-    CONTRACT_HISTORY,
-    CONTRACT_LIQUIDATOR
- */
     await resolverInstance.setAddress(Web3Utils.fromAscii('Escrow'), Escrow.address);
     await resolverInstance.setAddress(Web3Utils.fromAscii('Staker'), Staker.address);
     await resolverInstance.setAddress(Web3Utils.fromAscii('AssetPrice'), AssetPrice.address);
@@ -101,10 +89,29 @@ module.exports = async function(deployer, network, accounts) {
     await resolverInstance.setAddress(Web3Utils.fromAscii('History'), History.address);
     await resolverInstance.setAddress(Web3Utils.fromAscii('Liquidator'), Liquidator.address);
 
+    // resolver, add stake asset
+    await resolverInstance.addAsset(Web3Utils.fromAscii('Stake'), Web3Utils.fromAscii('ETH'), accounts[0]);
+
+
+
     const synthxInstance = await deployer.deploy(Synthx);
     synthxInstance.initialize(Resolver.address, Web3Utils.fromAscii('ETH'));
-    const owner = await synthxInstance.owner();
-    console.log("synthx owner:", owner);
+    const nativeCoin = await synthxInstance.nativeCoin();
+    console.log("synthx nativeCoin:", Web3Utils.toAscii(nativeCoin));
+
+
+    // refresh DNS
+    await synthxInstance.refreshCache();
+    await Escrow.refreshCache();
+    await Staker.refreshCache();
+    await AssetPrice.refreshCache();
+    await Setting.refreshCache();
+    await Trader.refreshCache();
+    await SynthxToken.refreshCache();
+    await Market.refreshCache();
+    await History.refreshCache();
+    await Liquidator.refreshCache();
+
 
     // mintFromCoin
     const receipt = await synthxInstance.mintFromCoin({value:10000000000});
