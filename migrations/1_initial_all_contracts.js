@@ -63,8 +63,9 @@ module.exports = async function(deployer, network, accounts) {
     const liquidatorInstance = await deployer.deploy(Liquidator, Resolver.address);
     await deployer.deploy(LiquidatorStorage, Liquidator.address);
 
-    const stakerInstal = await deployer.deploy(Staker, Resolver.address);
+    const stakerInstance = await deployer.deploy(Staker, Resolver.address);
     await deployer.deploy(StakerStorage, Staker.address);
+    stakerInstance.setStorage(StakerStorage.address);
 
     const assetPriceInstance = await deployer.deploy(AssetPrice);
 
@@ -105,13 +106,13 @@ module.exports = async function(deployer, network, accounts) {
 
     const synthxInstance = await deployer.deploy(Synthx);
     synthxInstance.initialize(Resolver.address, Web3Utils.fromAscii('ETH'));
-    const nativeCoin = await synthxInstance.nativeCoin();
 
+    await resolverInstance.setAddress(Web3Utils.fromAscii('Synthx'), Synthx.address);
 
     // refresh DNS
     await synthxInstance.refreshCache();
     await escrowInstance.refreshCache();
-    await stakerInstal.refreshCache();
+    await stakerInstance.refreshCache();
     await traderInstance.refreshCache();
     await marketInstance.refreshCache();
     await hitoryInstance.refreshCache();
