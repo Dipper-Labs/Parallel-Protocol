@@ -44,6 +44,7 @@ module.exports = async function(deployer, network, accounts) {
 
     const settingInstance = await deployer.deploy(Setting);
     await deployer.deploy(SettingStorage, Setting.address);
+    await settingInstance.setStorage(SettingStorage.address);
 
     const resolverInstance = await deployer.deploy(Resolver);
 
