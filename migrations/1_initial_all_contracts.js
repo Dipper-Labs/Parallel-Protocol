@@ -41,15 +41,14 @@ module.exports = async function(deployer, network, accounts) {
 
     await deployer.deploy(Storage);
     await deployer.deploy(AddressStorage);
-    await deployer.deploy(Setting).then(async function() {
-        await deployer.deploy(SettingStorage, Setting.address);
-    });
+
+    const settingInstance = await deployer.deploy(Setting);
+    await deployer.deploy(SettingStorage, Setting.address);
 
     const resolverInstance = await deployer.deploy(Resolver);
 
-    await deployer.deploy(Escrow, Resolver.address).then(async function() {
-        await deployer.deploy(EscrowStorage, Escrow.address);
-    });
+    const escrowInstance = await deployer.deploy(Escrow, Resolver.address);
+    await deployer.deploy(EscrowStorage, Escrow.address);
     
     await deployer.deploy(Issuer, Resolver.address);
 
@@ -58,23 +57,20 @@ module.exports = async function(deployer, network, accounts) {
     const synthxTokenInstance = await deployer.deploy(SynthxToken);
     await synthxTokenInstance.initialize(Resolver.address);
 
-    await deployer.deploy(History, Resolver.address);
+    const hitoryInstance = await deployer.deploy(History, Resolver.address);
 
-    await deployer.deploy(Liquidator, Resolver.address).then(async function() {
-        await deployer.deploy(LiquidatorStorage, Liquidator.address);
-    });
+    const liquidatorInstance = await deployer.deploy(Liquidator, Resolver.address);
+    await deployer.deploy(LiquidatorStorage, Liquidator.address);
 
-    await deployer.deploy(Staker, Resolver.address).then(async function() {
-        await deployer.deploy(StakerStorage, Staker.address);
-    });
+    const stakerInstal = await deployer.deploy(Staker, Resolver.address);
+    await deployer.deploy(StakerStorage, Staker.address);
 
-    await deployer.deploy(AssetPrice);
+    const assetPriceInstance = await deployer.deploy(AssetPrice);
 
-    await deployer.deploy(Trader, Resolver.address).then(async function() {
-        await deployer.deploy(TraderStorage, Trader.address);
-    });
+    const traderInstance = await deployer.deploy(Trader, Resolver.address);
+    await deployer.deploy(TraderStorage, Trader.address);
 
-    await deployer.deploy(Market, Resolver.address);
+    const marketInstance = await deployer.deploy(Market, Resolver.address);
     await deployer.deploy(Special, Resolver.address);
     await deployer.deploy(SupplySchedule, Resolver.address, 0, 0);
 
@@ -94,15 +90,18 @@ module.exports = async function(deployer, network, accounts) {
 
 
     // setting
-    const res = await Setting.getCollateralRate();
+
+    console.log(Setting.address);
+    console.log(settingInstance);
+    const res = await settingInstance.getCollateralRate(Web3Utils.fromAscii('ETH'));
     console.log("CollateralRate:", res);
 
-    Setting.setCollateralRate(); // x 10**18
-    Setting.setLiquidationRate();
-    Setting.setLiquidationRate();
-    Setting.setLiquidationDelay();
-    Setting.setTradingFeeRate();
-    Setting.setMintPeriodDuration(); // second
+    settingInstance.setCollateralRate(); // x 10**18
+    settingInstance.setLiquidationRate();
+    settingInstance.setLiquidationRate();
+    settingInstance.setLiquidationDelay();
+    settingInstance.setTradingFeeRate();
+    settingInstance.setMintPeriodDuration(); // second
 
 
     const synthxInstance = await deployer.deploy(Synthx);
@@ -113,15 +112,15 @@ module.exports = async function(deployer, network, accounts) {
 
     // refresh DNS
     await synthxInstance.refreshCache();
-    await Escrow.refreshCache();
-    await Staker.refreshCache();
-    await AssetPrice.refreshCache();
-    await Setting.refreshCache();
-    await Trader.refreshCache();
-    await SynthxToken.refreshCache();
-    await Market.refreshCache();
-    await History.refreshCache();
-    await Liquidator.refreshCache();
+    await escrowInstance.refreshCache();
+    await stakerInstal.refreshCache();
+    await assetPriceInstance.refreshCache();
+    await settingInstance.refreshCache();
+    await traderInstance.refreshCache();
+    await synthxTokenInstance.refreshCache();
+    await marketInstance.refreshCache();
+    await hitoryInstance.refreshCache();
+    await liquidatorInstance.refreshCache();
 
 
     // mintFromCoin
