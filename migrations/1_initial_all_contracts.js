@@ -99,6 +99,7 @@ module.exports = async function(deployer, network, accounts) {
     await resolverInstance.setAddress(Web3Utils.fromAscii('Market'), Market.address);
     await resolverInstance.setAddress(Web3Utils.fromAscii('History'), History.address);
     await resolverInstance.setAddress(Web3Utils.fromAscii('Liquidator'), Liquidator.address);
+    await resolverInstance.setAddress(Web3Utils.fromAscii('SupplySchedule'), SupplySchedule.address);
 
     // resolver, add stake asset
     await resolverInstance.addAsset(Web3Utils.fromAscii('Stake'), Web3Utils.fromAscii('ETH'), accounts[0]);
