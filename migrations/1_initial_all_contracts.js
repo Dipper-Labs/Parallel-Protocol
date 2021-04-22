@@ -38,11 +38,13 @@ const SupplySchedule = artifacts.require("SupplySchedule");
 
 const SynthxToken = artifacts.require("SynthxToken");
 const SynthxDToken = artifacts.require("SynthxDToken");
-
-const Synthx = artifacts.require("Synthx");
+const SynthxTokenStorage = artifacts.require("TokenStorage");
+const SynthxDTokenStorage = artifacts.require("TokenStorage");
 
 const DUSD = artifacts.require("Synth");
 const TokenStorage = artifacts.require("TokenStorage");
+
+const Synthx = artifacts.require("Synthx");
 
 const Stats = artifacts.require("Stats");
 
@@ -71,9 +73,19 @@ module.exports = async function(deployer, network, accounts) {
     await resolverInstance.setAddress(Web3Utils.fromAscii('Issuer'), Issuer.address);
     const synthxTokenInstance = await deployer.deploy(SynthxToken);
     await synthxTokenInstance.initialize(Resolver.address);
+    const synthxTokenStorageInstance = await deployer.deploy(SynthxTokenStorage, synthxTokenInstance.address);
+    await synthxTokenInstance.setStorage(synthxTokenStorageInstance.address);
+    console.log("after SynthxToken deployed====");
+    console.log(TokenStorage.address);
+    console.log(synthxTokenStorageInstance.address);
 
     const synthxDTokenInstance = await deployer.deploy(SynthxDToken,Resolver.address);
     await synthxDTokenInstance.initialize();
+    const synthxDTokenStorageInstance = await deployer.deploy(SynthxDTokenStorage, synthxDTokenInstance.address);
+    await synthxDTokenInstance.setStorage(synthxDTokenStorageInstance.address);
+    console.log("after SynthxDToken deployed====");
+    console.log(TokenStorage.address);
+    console.log(synthxDTokenStorageInstance.address);
 
     const hitoryInstance = await deployer.deploy(History, Resolver.address);
 
@@ -87,9 +99,12 @@ module.exports = async function(deployer, network, accounts) {
     await stakerInstance.setStorage(StakerStorage.address);
 
     const dUSDInstance = await deployer.deploy(DUSD);
-    await deployer.deploy(TokenStorage, DUSD.address);
-    await dUSDInstance.setStorage(TokenStorage.address);
+    const dUSDStorageInstance = await deployer.deploy(TokenStorage, DUSD.address);
+    await dUSDInstance.setStorage(dUSDStorageInstance.address);
     await dUSDInstance.initialize(Issuer.address, "dUSD", "dUSD", Web3Utils.fromAscii('erc20'));
+    console.log("after DUSD deployed====");
+    console.log(TokenStorage.address);
+    console.log(dUSDStorageInstance.address);
 
     const assetPriceInstace = await deployer.deploy(AssetPrice);
 
