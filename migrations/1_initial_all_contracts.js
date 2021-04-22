@@ -43,7 +43,10 @@ const Synthx = artifacts.require("Synthx");
 const DUSD = artifacts.require("Synth");
 const TokenStorage = artifacts.require("TokenStorage");
 
+const Stats = artifacts.require("Stats");
+
 module.exports = async function(deployer, network, accounts) {
+
     await deployer.deploy(Migrations);
 
     await deployer.deploy(Storage);
@@ -91,7 +94,7 @@ module.exports = async function(deployer, network, accounts) {
     await SynthxOracleInstance.setStorage(OracleStorage.address);
 
     assetPriceInstace.setOracle(Web3Utils.fromAscii('ETH'), SynthxOracle.address);
-    SynthxOracleInstance.setPrice(Web3Utils.fromAscii('ETH'), 10000);
+    SynthxOracleInstance.setPrice(Web3Utils.fromAscii('ETH'), Web3Utils.toWei('2000', 'ether'));
 
     const traderInstance = await deployer.deploy(Trader, Resolver.address);
     await deployer.deploy(TraderStorage, Trader.address);
@@ -100,7 +103,6 @@ module.exports = async function(deployer, network, accounts) {
     const marketInstance = await deployer.deploy(Market, Resolver.address);
     await deployer.deploy(Special, Resolver.address);
     const supplyScheduleInstance = await deployer.deploy(SupplySchedule, Resolver.address, 0, 0);
-
 
     await resolverInstance.setAddress(Web3Utils.fromAscii('Escrow'), Escrow.address);
     await resolverInstance.setAddress(Web3Utils.fromAscii('Staker'), Staker.address);
@@ -119,17 +121,14 @@ module.exports = async function(deployer, network, accounts) {
     await resolverInstance.addAsset(Web3Utils.fromAscii('Synth'), Web3Utils.fromAscii('dUSD'), DUSD.address);
 
     // setting
+    settingInstance.setCollateralRate(Web3Utils.fromAscii('ETH'), Web3Utils.toWei('2', 'ether'));
+    settingInstance.setLiquidationRate(Web3Utils.fromAscii('ETH'), Web3Utils.toWei('1', 'ether'));
+    settingInstance.setLiquidationDelay(36000);
+    settingInstance.setTradingFeeRate(Web3Utils.fromAscii('ETH'), Web3Utils.toWei('2', 'milliether'));
+    settingInstance.setMintPeriodDuration(36000); // second
 
     let res = await settingInstance.getCollateralRate(Web3Utils.fromAscii('ETH'));
     console.log("CollateralRate:", res.toString());
-
-    settingInstance.setCollateralRate(Web3Utils.fromAscii('ETH'), 1);
-    settingInstance.setLiquidationRate(Web3Utils.fromAscii('ETH'), 1);
-    settingInstance.setLiquidationDelay(36000);
-    settingInstance.setTradingFeeRate(Web3Utils.fromAscii('ETH'), 1);
-    settingInstance.setMintPeriodDuration(36000); // second
-
-    await settingInstance.getCollateralRate(Web3Utils.fromAscii('ETH'));
 
     const synthxInstance = await deployer.deploy(Synthx);
     synthxInstance.initialize(Resolver.address, Web3Utils.fromAscii('ETH'));
@@ -148,10 +147,19 @@ module.exports = async function(deployer, network, accounts) {
     await supplyScheduleInstance.refreshCache();
 
 
+    // Stats
+    const statsInstance = await deployer.deploy(Stats, Resolver.address);
+    await statsInstance.refreshCache();
+
     // mintFromCoin
-    const receipt = await synthxInstance.mintFromCoin({value:10000000000});
+    const receipt = await synthxInstance.mintFromCoin({value:Web3Utils.toWei('2', 'ether')});
     console.log("receipt:", receipt);
 
-    res = await dUSDInstance.balanceOf(accounts[0]);
-    console.log(res.toString());
+    bal = await dUSDInstance.balanceOf(accounts[0]);
+    console.log("dUSD balance:", bal.toString());
+
+
+    // getTotalCollateral
+    col = await statsInstance.getTotalCollateral(accounts[0])
+    console.log("getTotalCollateral:", col.totalDebt.toString());
 };
