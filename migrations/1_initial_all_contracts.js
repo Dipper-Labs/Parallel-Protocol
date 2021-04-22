@@ -151,4 +151,7 @@ module.exports = async function(deployer, network, accounts) {
     // mintFromCoin
     const receipt = await synthxInstance.mintFromCoin({value:10000000000});
     console.log("receipt:", receipt);
+
+    res = await dUSDInstance.balanceOf(accounts[0]);
+    console.log(res.toString());
 };
