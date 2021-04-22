@@ -156,10 +156,9 @@ module.exports = async function(deployer, network, accounts) {
     console.log("receipt:", receipt);
 
     bal = await dUSDInstance.balanceOf(accounts[0]);
-    console.log("dUSD balance:", bal.toString());
-
+    console.log("dUSD balance:", Web3Utils.fromWei(bal, 'ether'));
 
     // getTotalCollateral
     col = await statsInstance.getTotalCollateral(accounts[0])
-    console.log("getTotalCollateral:", col.totalDebt.toString());
+    console.log("totalDebt:", Web3Utils.fromWei(col.totalDebt, 'ether'));
 };
