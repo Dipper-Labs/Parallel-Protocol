@@ -55,7 +55,7 @@ module.exports = async function(deployer, network, accounts) {
     await deployer.deploy(EscrowStorage, Escrow.address);
     await escrowInstance.setStorage(EscrowStorage.address);
     
-    await deployer.deploy(Issuer, Resolver.address);
+    const issuerInstance = await deployer.deploy(Issuer, Resolver.address);
 
     // must done before 'synthxTokenInstance.initialize(Resolver.address);'
     await resolverInstance.setAddress(Web3Utils.fromAscii('Issuer'), Issuer.address);
@@ -130,6 +130,7 @@ module.exports = async function(deployer, network, accounts) {
     await marketInstance.refreshCache();
     await hitoryInstance.refreshCache();
     await liquidatorInstance.refreshCache();
+    await issuerInstance.refreshCache();
 
 
     // mintFromCoin
