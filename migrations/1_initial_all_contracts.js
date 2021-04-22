@@ -39,6 +39,9 @@ const SynthxToken = artifacts.require("SynthxToken");
 
 const Synthx = artifacts.require("Synthx");
 
+const DUSD = artifacts.require("Synth");
+const TokenStorage = artifacts.require("TokenStorage");
+
 module.exports = async function(deployer, network, accounts) {
     await deployer.deploy(Migrations);
 
@@ -68,9 +71,15 @@ module.exports = async function(deployer, network, accounts) {
     await deployer.deploy(LiquidatorStorage, Liquidator.address);
     await liquidatorInstance.setStorage(LiquidatorStorage.address)
 
+
     const stakerInstance = await deployer.deploy(Staker, Resolver.address);
     await deployer.deploy(StakerStorage, Staker.address);
     await stakerInstance.setStorage(StakerStorage.address);
+
+    const dUSDInstance = await deployer.deploy(DUSD);
+    await deployer.deploy(TokenStorage, DUSD.address);
+    await dUSDInstance.setStorage(TokenStorage.address);
+    await dUSDInstance.initialize(Issuer.address, "dUSD", "dUSD", Web3Utils.fromAscii('erc20'));
 
     const assetPriceInstace = await deployer.deploy(AssetPrice);
 
@@ -81,13 +90,19 @@ module.exports = async function(deployer, network, accounts) {
     assetPriceInstace.setOracle(Web3Utils.fromAscii('ETH'), SynthxOracle.address);
     SynthxOracleInstance.setPrice(Web3Utils.fromAscii('ETH'), 10000);
 
+    // DUSD
+    const liquidatorInstance = await deployer.deploy(Liquidator, Resolver.address);
+    await deployer.deploy(LiquidatorStorage, Liquidator.address);
+    await liquidatorInstance.setStorage(LiquidatorStorage.address)
+
     const traderInstance = await deployer.deploy(Trader, Resolver.address);
     await deployer.deploy(TraderStorage, Trader.address);
     await traderInstance.setStorage(TraderStorage.address);
 
     const marketInstance = await deployer.deploy(Market, Resolver.address);
     await deployer.deploy(Special, Resolver.address);
-    await deployer.deploy(SupplySchedule, Resolver.address, 0, 0);
+    const supplyScheduleInstance = await deployer.deploy(SupplySchedule, Resolver.address, 0, 0);
+
 
     await resolverInstance.setAddress(Web3Utils.fromAscii('Escrow'), Escrow.address);
     await resolverInstance.setAddress(Web3Utils.fromAscii('Staker'), Staker.address);
@@ -103,12 +118,12 @@ module.exports = async function(deployer, network, accounts) {
 
     // resolver, add stake asset
     await resolverInstance.addAsset(Web3Utils.fromAscii('Stake'), Web3Utils.fromAscii('ETH'), accounts[0]);
-
+    await resolverInstance.addAsset(Web3Utils.fromAscii('Synth'), Web3Utils.fromAscii('dUSD'), DUSD.address);
 
     // setting
 
     let res = await settingInstance.getCollateralRate(Web3Utils.fromAscii('ETH'));
-    console.log("CollateralRate:", res);
+    console.log("CollateralRate:", res.toString());
 
     settingInstance.setCollateralRate(Web3Utils.fromAscii('ETH'), 1);
     settingInstance.setLiquidationRate(Web3Utils.fromAscii('ETH'), 1);
@@ -132,6 +147,7 @@ module.exports = async function(deployer, network, accounts) {
     await hitoryInstance.refreshCache();
     await liquidatorInstance.refreshCache();
     await issuerInstance.refreshCache();
+    await supplyScheduleInstance.refreshCache();
 
 
     // mintFromCoin
