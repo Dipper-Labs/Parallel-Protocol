@@ -93,6 +93,17 @@ module.exports = async function(deployer, network, accounts) {
     await resolverInstance.addAsset(Web3Utils.fromAscii('Stake'), Web3Utils.fromAscii('ETH'), accounts[0]);
 
 
+    // setting
+    const res = await Setting.getCollateralRate();
+    console.log("CollateralRate:", res);
+
+    Setting.setCollateralRate(); // x 10**18
+    Setting.setLiquidationRate();
+    Setting.setLiquidationRate();
+    Setting.setLiquidationDelay();
+    Setting.setTradingFeeRate();
+    Setting.setMintPeriodDuration(); // second
+
 
     const synthxInstance = await deployer.deploy(Synthx);
     synthxInstance.initialize(Resolver.address, Web3Utils.fromAscii('ETH'));
