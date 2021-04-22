@@ -11,6 +11,7 @@ const SettingStorage = artifacts.require("SettingStorage");
 const Resolver = artifacts.require("Resolver");
 
 const Issuer = artifacts.require("Issuer");
+const IssuerStorage = artifacts.require("IssuerStorage");
 
 const Escrow = artifacts.require("Escrow");
 const EscrowStorage = artifacts.require("EscrowStorage");
@@ -59,6 +60,8 @@ module.exports = async function(deployer, network, accounts) {
     await escrowInstance.setStorage(EscrowStorage.address);
     
     const issuerInstance = await deployer.deploy(Issuer, Resolver.address);
+    await deployer.deploy(IssuerStorage, Issuer.address);
+    await issuerInstance.setStorage(IssuerStorage.address);
 
     // must done before 'synthxTokenInstance.initialize(Resolver.address);'
     await resolverInstance.setAddress(Web3Utils.fromAscii('Issuer'), Issuer.address);
@@ -89,11 +92,6 @@ module.exports = async function(deployer, network, accounts) {
 
     assetPriceInstace.setOracle(Web3Utils.fromAscii('ETH'), SynthxOracle.address);
     SynthxOracleInstance.setPrice(Web3Utils.fromAscii('ETH'), 10000);
-
-    // DUSD
-    const liquidatorInstance = await deployer.deploy(Liquidator, Resolver.address);
-    await deployer.deploy(LiquidatorStorage, Liquidator.address);
-    await liquidatorInstance.setStorage(LiquidatorStorage.address)
 
     const traderInstance = await deployer.deploy(Trader, Resolver.address);
     await deployer.deploy(TraderStorage, Trader.address);
