@@ -174,10 +174,22 @@ module.exports = async function(deployer, network, accounts) {
 
     console.log("call mintFromCoin")
 
-    // mintFromCoin
-    const receipt = await synthxInstance.mintFromCoin({value:Web3Utils.toWei('2', 'ether')});
+    /////////////// mintFromCoin
+    receipt = await synthxInstance.mintFromCoin({value:Web3Utils.toWei('2', 'ether')});
     console.log("receipt:", receipt);
 
+    bal = await dUSDInstance.balanceOf(accounts[0]);
+    console.log("dUSD balance:", Web3Utils.fromWei(bal, 'ether'));
+
+    dTokenBal = await synthxDTokenInstance.balanceOf(accounts[0]);
+    console.log("dToken balance:", Web3Utils.fromWei(dTokenBal, 'ether'));
+
+    // getTotalCollateral
+    col = await statsInstance.getTotalCollateral(accounts[0])
+    console.log("totalDebt:", Web3Utils.fromWei(col.totalDebt, 'ether'));
+
+    ///////////////  burn
+    await synthxInstance.burn(Web3Utils.fromAscii('ETH'), Web3Utils.toWei('2000', 'ether'));
     bal = await dUSDInstance.balanceOf(accounts[0]);
     console.log("dUSD balance:", Web3Utils.fromWei(bal, 'ether'));
 
