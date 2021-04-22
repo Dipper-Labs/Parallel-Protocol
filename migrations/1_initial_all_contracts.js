@@ -101,13 +101,11 @@ module.exports = async function(deployer, network, accounts) {
     settingInstance.setTradingFeeRate(Web3Utils.fromAscii('ETH'), 1);
     settingInstance.setMintPeriodDuration(36000); // second
 
-    res = await settingInstance.getCollateralRate(Web3Utils.fromAscii('ETH'));
-    console.log("CollateralRate:", res);
+    await settingInstance.getCollateralRate(Web3Utils.fromAscii('ETH'));
 
     const synthxInstance = await deployer.deploy(Synthx);
     synthxInstance.initialize(Resolver.address, Web3Utils.fromAscii('ETH'));
     const nativeCoin = await synthxInstance.nativeCoin();
-    console.log("synthx nativeCoin:", Web3Utils.toAscii(nativeCoin));
 
 
     // refresh DNS
