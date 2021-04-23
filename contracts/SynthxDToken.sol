@@ -38,8 +38,20 @@ contract SynthxDToken is Token, Importable, ISynthxDToken {
         setManager(resolver.getAddress(CONTRACT_ISSUER));
     }
 
-    function mint(address account, uint256 amount) external onlyInitialized containAddress(MINTABLE_CONTRACTS) returns (bool) {
+    function mint(address account, uint256 amount) external
+    onlyInitialized
+    containAddress(MINTABLE_CONTRACTS)
+    returns (bool) {
         _mint(account, amount);
+        return true;
+    }
+
+    function burn(address account, uint256 amount) external
+    onlyInitialized
+    containAddress(MINTABLE_CONTRACTS)
+    returns (bool)
+    {
+        _burn(account, amount);
         return true;
     }
 

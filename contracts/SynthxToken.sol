@@ -19,8 +19,8 @@ contract SynthxToken is Token, ISynthxToken {
     function initialize(IResolver _resolver) external onlyOwner returns (bool) {
         setInitialized();
         resolver = _resolver;
-        _name = 'Synthx Token';
-        _symbol = 'SYNX';
+        _name = 'SDIP Token';
+        _symbol = 'SDIP';
         setContractName(CONTRACT_SYNTHX_TOKEN);
         resetManager();
         return true;

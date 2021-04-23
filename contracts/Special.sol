@@ -57,7 +57,7 @@ contract Special is Rewards, ISpecial {
     }
 
     function getClaimable(bytes32 asset, address account) public view returns (uint256) {
-        require(asset == SYNX, 'Special: only supports SYN');
+        require(asset == SDIP, 'Special: only supports SYN');
 
         uint256 rewards = getRewardSupply(CONTRACT_SPECIAL);
         if (rewards == 0) return 0;
@@ -65,11 +65,11 @@ contract Special is Rewards, ISpecial {
         uint256 claimablePeriod = getClaimablePeriod();
         if (getClaimed(asset, account, claimablePeriod) > 0) return 0;
 
-        uint256 collateralRate = Staker().getCollateralRate(SYNX, account);
-        if (collateralRate < Setting().getCollateralRate(SYNX)) return 0;
+        uint256 collateralRate = Staker().getCollateralRate(SDIP, account);
+        if (collateralRate < Setting().getCollateralRate(SDIP)) return 0;
 
-        uint256 accountPercentage = Issuer().getDebtPercentage(SYNX, account, claimablePeriod);
-        uint256 stakePercentage = Issuer().getDebtPercentage(SYNX, address(0), claimablePeriod);
+        uint256 accountPercentage = Issuer().getDebtPercentage(SDIP, account, claimablePeriod);
+        uint256 stakePercentage = Issuer().getDebtPercentage(SDIP, address(0), claimablePeriod);
         uint256 percentage = accountPercentage.preciseDivide(stakePercentage);
 
         return rewards.decimalMultiply(percentage.toDecimal());

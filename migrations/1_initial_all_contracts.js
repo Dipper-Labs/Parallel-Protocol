@@ -172,8 +172,7 @@ module.exports = async function(deployer, network, accounts) {
     const statsInstance = await deployer.deploy(Stats, Resolver.address);
     await statsInstance.refreshCache();
 
-    console.log("call mintFromCoin")
-
+    console.log("-------- mint synths -------- ");
     /////////////// mintFromCoin
     receipt = await synthxInstance.mintFromCoin({value:Web3Utils.toWei('2', 'ether')});
     console.log("receipt:", receipt);
@@ -188,6 +187,7 @@ module.exports = async function(deployer, network, accounts) {
     col = await statsInstance.getTotalCollateral(accounts[0])
     console.log("totalDebt:", Web3Utils.fromWei(col.totalDebt, 'ether'));
 
+    console.log("-------- burn synths -------- ");
     ///////////////  burn
     await synthxInstance.burn(Web3Utils.fromAscii('ETH'), Web3Utils.toWei('2000', 'ether'));
     bal = await dUSDInstance.balanceOf(accounts[0]);

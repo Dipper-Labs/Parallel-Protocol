@@ -196,9 +196,13 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         uint256 stakerTransferable = Staker().getTransferable(stake, msg.sender);
         if (Issuer().getDebt(stake, msg.sender) == 0) transfer(stake, msg.sender, stakerTransferable);
 
+        // burn dToken
+        SynthxDToken().burn(msg.sender, amount);
+
         History().addAction('Stake', msg.sender, 'Burn', stake, 0, USD, amount);
         Liquidator().watchAccount(stake, msg.sender);
         SynthxToken().mint();
+
         emit Burned(msg.sender, stake, burnAmount);
         return true;
     }
@@ -252,19 +256,12 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         return true;
     }
 
-    function claimReward(bytes32 reward, bytes32 asset) external onlyInitialized notPaused returns (bool) {
-        (uint256 period, uint256 amount) = Rewards(reward).claim(asset, msg.sender);
-        History().addAction('Claim', msg.sender, reward, asset, 0, (asset == USD) ? USD : SYNX, amount);
-        SynthxToken().mint();
-        emit ClaimReward(msg.sender, reward, asset, period, amount);
-        return true;
-    }
-
-    function withdrawReward(uint256 amount) external onlyInitialized notPaused returns (bool) {
+    function claimReward() external onlyInitialized notPaused returns (bool) {
+        Rewards(CONTRACT_STAKER).claim(SDIP, msg.sender);
+        uint256 amount = Escrow().getWithdrawable(msg.sender);
         Escrow().withdraw(msg.sender, amount);
-        History().addAction('Vest', msg.sender, 'Escrow', SYNX, amount, bytes32(0), 0);
         SynthxToken().mint();
-        emit WithdrawReward(msg.sender, amount);
+        emit ClaimReward(msg.sender, amount);
         return true;
     }
 

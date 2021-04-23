@@ -116,7 +116,7 @@ contract Staker is Rewards, IStaker {
     }
 
     function getClaimable(bytes32 asset, address account) public view returns (uint256) {
-        require(asset == SYNX || asset == USD, 'Staker: only supports SYN & yUSD');
+        require(asset == SDIP || asset == USD, 'Staker: only supports SYN & yUSD');
 
         uint256 rewards = getRewardSupply(CONTRACT_STAKER);
         if (rewards == 0) return 0;

@@ -228,7 +228,7 @@ contract Stats is Importable, IStats {
         bytes32 assetName = stake;
         address assetAddress = requireAsset(STAKE, assetName);
         balance = _getBalance(assetName, assetAddress, account);
-        escrowed = (assetName == SYNX) ? Escrow().getBalance(account) : 0;
+        escrowed = (assetName == SDIP) ? Escrow().getBalance(account) : 0;
         (transferable) = Staker().getTransferable(assetName, account);
     }
 
@@ -270,7 +270,7 @@ contract Stats is Importable, IStats {
         Reward[] memory items = new Reward[](2);
         uint256 nextTime = SupplySchedule().nextMintTime();
         bytes32 reward = 'Staker';
-        items[0] = Reward(reward, SYNX, SYNX, Rewards(reward).getClaimable(SYNX, account), nextTime);
+        items[0] = Reward(reward, SDIP, SDIP, Rewards(reward).getClaimable(SDIP, account), nextTime);
         items[1] = Reward(reward, USD, USD, Rewards(reward).getClaimable(USD, account), nextTime);
 
         return items;

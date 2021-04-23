@@ -27,9 +27,7 @@ interface ISynthx {
         bytes32 toSynth
     ) external returns (bool);
 
-    function claimReward(bytes32 reward, bytes32 asset) external returns (bool);
-
-    function withdrawReward(uint256 amount) external returns (bool);
+    function claimReward() external returns (bool);
 
     function liquidate(
         bytes32 stake,
@@ -58,15 +56,7 @@ interface ISynthx {
         uint256 toSynthPirce
     );
 
-
-    event ClaimReward(
-        address indexed account,
-        bytes32 indexed reward,
-        bytes32 indexed asset,
-        uint256 period,
-        uint256 amount
-    );
-    event WithdrawReward(address indexed account, uint256 amount);
+    event ClaimReward(address indexed account, uint256 amount);
     event Liquidated(
         address indexed liquidator,
         bytes32 indexed stake,
