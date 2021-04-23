@@ -4,54 +4,43 @@ const Migrations = artifacts.require("Migrations");
 
 const Storage = artifacts.require("Storage");
 const AddressStorage = artifacts.require("AddressStorage");
-
-const Setting = artifacts.require("Setting");
 const SettingStorage = artifacts.require("SettingStorage");
-
-const Resolver = artifacts.require("Resolver");
-
-const Issuer = artifacts.require("Issuer");
 const IssuerStorage = artifacts.require("IssuerStorage");
-
-const Escrow = artifacts.require("Escrow");
 const EscrowStorage = artifacts.require("EscrowStorage");
-
-const History = artifacts.require("History");
-
-const Liquidator = artifacts.require("Liquidator");
 const LiquidatorStorage = artifacts.require("LiquidatorStorage");
-
-const Staker = artifacts.require("Staker");
 const StakerStorage = artifacts.require("StakerStorage");
-
-const AssetPrice = artifacts.require("AssetPrice");
-
-const SynthxOracle = artifacts.require("SynthxOracle");
 const OracleStorage = artifacts.require("OracleStorage");
-
-const Trader = artifacts.require("Trader");
 const TraderStorage = artifacts.require("TraderStorage");
 
+const Setting = artifacts.require("Setting");
+const Resolver = artifacts.require("Resolver");
+const Issuer = artifacts.require("Issuer");
+const Escrow = artifacts.require("Escrow");
+const History = artifacts.require("History");
+const Liquidator = artifacts.require("Liquidator");
+const Staker = artifacts.require("Staker");
+const AssetPrice = artifacts.require("AssetPrice");
+const SynthxOracle = artifacts.require("SynthxOracle");
+const Trader = artifacts.require("Trader");
 const Market = artifacts.require("Market");
 const Special = artifacts.require("Special");
 const SupplySchedule = artifacts.require("SupplySchedule");
 
-// token
-const SynthxToken = artifacts.require("SynthxToken");
-const SynthxDToken = artifacts.require("SynthxDToken");
+// tokens
 const SynthxTokenStorage = artifacts.require("TokenStorage");
 const SynthxDTokenStorage = artifacts.require("TokenStorage");
 
+const SynthxToken = artifacts.require("SynthxToken");   // sDIP
+const SynthxDToken = artifacts.require("SynthxDToken"); // DToken
 
 // synth token
-const DUSD = artifacts.require("Synth");
 const TokenStorage = artifacts.require("TokenStorage");
-
-const dTSLA = artifacts.require("Synth");
 const dTSLATokenStorage = artifacts.require("TokenStorage");
-
-const dAPPLE = artifacts.require("Synth");
 const dAPPLETokenStorage = artifacts.require("TokenStorage");
+
+const DUSD = artifacts.require("Synth");
+const dTSLA = artifacts.require("Synth");
+const dAPPLE = artifacts.require("Synth");
 
 const Synthx = artifacts.require("Synthx");
 const Stats = artifacts.require("Stats");
