@@ -25,14 +25,6 @@ interface IStats {
         uint256 price;
     }
 
-    struct Reward {
-        bytes32 reward;
-        bytes32 token;
-        bytes32 asset;
-        uint256 amount;
-        uint256 time;
-    }
-
     struct Pair {
         bytes32 fromAsset;
         uint256 fromAssetPrice;
@@ -97,7 +89,7 @@ interface IStats {
 
     function getWithdrawable(address account) external view returns (uint256);
 
-    function getRewards(address account) external view returns (Reward[] memory);
+    function getRewards(address account) external view returns (uint256);
 
 
     function getAssetMarket(bytes32 asset)

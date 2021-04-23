@@ -266,14 +266,8 @@ contract Stats is Importable, IStats {
         return Escrow().getWithdrawable(account);
     }
 
-    function getRewards(address account) external view returns (Reward[] memory) {
-        Reward[] memory items = new Reward[](2);
-        uint256 nextTime = SupplySchedule().nextMintTime();
-        bytes32 reward = 'Staker';
-        items[0] = Reward(reward, SDIP, SDIP, Rewards(reward).getClaimable(SDIP, account), nextTime);
-        items[1] = Reward(reward, USD, USD, Rewards(reward).getClaimable(USD, account), nextTime);
-
-        return items;
+    function getRewards(address account) external view returns (uint256) {
+        return Rewards(CONTRACT_STAKER).getClaimable(SDIP, account);
     }
 
     function getAssetMarket(bytes32 asset)
