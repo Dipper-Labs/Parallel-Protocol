@@ -36,16 +36,24 @@ const Market = artifacts.require("Market");
 const Special = artifacts.require("Special");
 const SupplySchedule = artifacts.require("SupplySchedule");
 
+// token
 const SynthxToken = artifacts.require("SynthxToken");
 const SynthxDToken = artifacts.require("SynthxDToken");
 const SynthxTokenStorage = artifacts.require("TokenStorage");
 const SynthxDTokenStorage = artifacts.require("TokenStorage");
 
+
+// synth token
 const DUSD = artifacts.require("Synth");
 const TokenStorage = artifacts.require("TokenStorage");
 
-const Synthx = artifacts.require("Synthx");
+const dTSLA = artifacts.require("Synth");
+const dTSLATokenStorage = artifacts.require("TokenStorage");
 
+const dAPPLE = artifacts.require("Synth");
+const dAPPLETokenStorage = artifacts.require("TokenStorage");
+
+const Synthx = artifacts.require("Synthx");
 const Stats = artifacts.require("Stats");
 
 module.exports = async function(deployer, network, accounts) {
@@ -75,54 +83,73 @@ module.exports = async function(deployer, network, accounts) {
     await synthxTokenInstance.initialize(Resolver.address);
     const synthxTokenStorageInstance = await deployer.deploy(SynthxTokenStorage, synthxTokenInstance.address);
     await synthxTokenInstance.setStorage(synthxTokenStorageInstance.address);
-    console.log("after SynthxToken deployed====");
-    console.log(TokenStorage.address);
-    console.log(synthxTokenStorageInstance.address);
 
     const synthxDTokenInstance = await deployer.deploy(SynthxDToken,Resolver.address);
     await synthxDTokenInstance.initialize();
     const synthxDTokenStorageInstance = await deployer.deploy(SynthxDTokenStorage, synthxDTokenInstance.address);
     await synthxDTokenInstance.setStorage(synthxDTokenStorageInstance.address);
-    console.log("after SynthxDToken deployed====");
-    console.log(TokenStorage.address);
-    console.log(synthxDTokenStorageInstance.address);
+
 
     const hitoryInstance = await deployer.deploy(History, Resolver.address);
 
+    // liquidator
     const liquidatorInstance = await deployer.deploy(Liquidator, Resolver.address);
     await deployer.deploy(LiquidatorStorage, Liquidator.address);
     await liquidatorInstance.setStorage(LiquidatorStorage.address)
 
-
+    // staker
     const stakerInstance = await deployer.deploy(Staker, Resolver.address);
     await deployer.deploy(StakerStorage, Staker.address);
     await stakerInstance.setStorage(StakerStorage.address);
 
     const dUSDInstance = await deployer.deploy(DUSD);
     const dUSDStorageInstance = await deployer.deploy(TokenStorage, DUSD.address);
+    // synth asset
+    // dUSD
     await dUSDInstance.setStorage(dUSDStorageInstance.address);
     await dUSDInstance.initialize(Issuer.address, "dUSD", "dUSD", Web3Utils.fromAscii('erc20'));
-    console.log("after DUSD deployed====");
-    console.log(TokenStorage.address);
-    console.log(dUSDStorageInstance.address);
+    // dTSLA
+    const dTSLAInstance = await deployer.deploy(dTSLA);
+    const dTSLAStorageInstance = await deployer.deploy(dTSLATokenStorage, dTSLA.address);
+    await dTSLAInstance.setStorage(dTSLAStorageInstance.address);
+    await dTSLAInstance.initialize(Issuer.address, "dTSLA", "dTSLA", Web3Utils.fromAscii('2'));
+    // dAPPLE
+    const dAPPLEInstance = await deployer.deploy(dAPPLE);
+    const dAPPLEStorageInstance = await deployer.deploy(dAPPLETokenStorage, dAPPLE.address);
+    await dAPPLEInstance.setStorage(dAPPLEStorageInstance.address);
+    await dAPPLEInstance.initialize(Issuer.address, "dAPPLE", "dAPPLE", Web3Utils.fromAscii('2'));
 
+    // AssetPrice
     const assetPriceInstace = await deployer.deploy(AssetPrice);
 
+    // Oracle
     const SynthxOracleInstance = await deployer.deploy(SynthxOracle);
     await deployer.deploy(OracleStorage, SynthxOracle.address);
     await SynthxOracleInstance.setStorage(OracleStorage.address);
 
+    // set asset oracle
     assetPriceInstace.setOracle(Web3Utils.fromAscii('ETH'), SynthxOracle.address);
-    SynthxOracleInstance.setPrice(Web3Utils.fromAscii('ETH'), Web3Utils.toWei('2000', 'ether'));
+    assetPriceInstace.setOracle(Web3Utils.fromAscii('BTC'), SynthxOracle.address);
+    assetPriceInstace.setOracle(Web3Utils.fromAscii('dTSLA'), SynthxOracle.address);
+    assetPriceInstace.setOracle(Web3Utils.fromAscii('dAPPLE'), SynthxOracle.address);
 
+    // set asset price
+    SynthxOracleInstance.setPrice(Web3Utils.fromAscii('ETH'), Web3Utils.toWei('2000', 'ether'));
+    SynthxOracleInstance.setPrice(Web3Utils.fromAscii('BTC'), Web3Utils.toWei('50000', 'ether'));
+    SynthxOracleInstance.setPrice(Web3Utils.fromAscii('dTSLA'), Web3Utils.toWei('750', 'ether'));
+    SynthxOracleInstance.setPrice(Web3Utils.fromAscii('dAPPLE'), Web3Utils.toWei('150', 'ether'));
+
+    // Trader
     const traderInstance = await deployer.deploy(Trader, Resolver.address);
     await deployer.deploy(TraderStorage, Trader.address);
     await traderInstance.setStorage(TraderStorage.address);
 
+    // Market
     const marketInstance = await deployer.deploy(Market, Resolver.address);
     await deployer.deploy(Special, Resolver.address);
     const supplyScheduleInstance = await deployer.deploy(SupplySchedule, Resolver.address, 0, 0);
 
+    // resolver
     await resolverInstance.setAddress(Web3Utils.fromAscii('Escrow'), Escrow.address);
     await resolverInstance.setAddress(Web3Utils.fromAscii('Staker'), Staker.address);
     await resolverInstance.setAddress(Web3Utils.fromAscii('AssetPrice'), AssetPrice.address);
@@ -139,7 +166,10 @@ module.exports = async function(deployer, network, accounts) {
 
     // resolver, add stake asset
     await resolverInstance.addAsset(Web3Utils.fromAscii('Stake'), Web3Utils.fromAscii('ETH'), accounts[0]);
+    // await resolverInstance.addAsset(Web3Utils.fromAscii('Stake'), Web3Utils.fromAscii('BTC'), BTC.address);
     await resolverInstance.addAsset(Web3Utils.fromAscii('Synth'), Web3Utils.fromAscii('dUSD'), DUSD.address);
+    await resolverInstance.addAsset(Web3Utils.fromAscii('Synth'), Web3Utils.fromAscii('dTSLA'), dTSLA.address);
+    await resolverInstance.addAsset(Web3Utils.fromAscii('Synth'), Web3Utils.fromAscii('dAPPLE'), dAPPLE.address);
 
     // setting
     settingInstance.setCollateralRate(Web3Utils.fromAscii('ETH'), Web3Utils.toWei('2', 'ether'));
@@ -153,6 +183,7 @@ module.exports = async function(deployer, network, accounts) {
 
     const synthxInstance = await deployer.deploy(Synthx);
     synthxInstance.initialize(Resolver.address, Web3Utils.fromAscii('ETH'));
+
 
     await resolverInstance.setAddress(Web3Utils.fromAscii('Synthx'), Synthx.address);
 
@@ -175,7 +206,7 @@ module.exports = async function(deployer, network, accounts) {
 
     console.log("-------- mint synths -------- ");
     /////////////// mintFromCoin
-    receipt = await synthxInstance.mintFromCoin({value:Web3Utils.toWei('2', 'ether')});
+    receipt = await synthxInstance.mintFromCoin({value:Web3Utils.toWei('20', 'ether')});
     // console.log("receipt:", receipt);
 
     bal = await dUSDInstance.balanceOf(accounts[0]);
