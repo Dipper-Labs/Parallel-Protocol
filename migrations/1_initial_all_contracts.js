@@ -135,6 +135,7 @@ module.exports = async function(deployer, network, accounts) {
     await resolverInstance.setAddress(Web3Utils.fromAscii('History'), History.address);
     await resolverInstance.setAddress(Web3Utils.fromAscii('Liquidator'), Liquidator.address);
     await resolverInstance.setAddress(Web3Utils.fromAscii('SupplySchedule'), SupplySchedule.address);
+    await resolverInstance.setAddress(Web3Utils.fromAscii('Team'), accounts[0]); // Team address
 
     // resolver, add stake asset
     await resolverInstance.addAsset(Web3Utils.fromAscii('Stake'), Web3Utils.fromAscii('ETH'), accounts[0]);
@@ -145,7 +146,7 @@ module.exports = async function(deployer, network, accounts) {
     settingInstance.setLiquidationRate(Web3Utils.fromAscii('ETH'), Web3Utils.toWei('1', 'ether'));
     settingInstance.setLiquidationDelay(36000);
     settingInstance.setTradingFeeRate(Web3Utils.fromAscii('ETH'), Web3Utils.toWei('2', 'milliether'));
-    settingInstance.setMintPeriodDuration(36000); // second
+    settingInstance.setMintPeriodDuration(1); // second
 
     let res = await settingInstance.getCollateralRate(Web3Utils.fromAscii('ETH'));
     console.log("CollateralRate:", res.toString());
@@ -175,7 +176,7 @@ module.exports = async function(deployer, network, accounts) {
     console.log("-------- mint synths -------- ");
     /////////////// mintFromCoin
     receipt = await synthxInstance.mintFromCoin({value:Web3Utils.toWei('2', 'ether')});
-    console.log("receipt:", receipt);
+    // console.log("receipt:", receipt);
 
     bal = await dUSDInstance.balanceOf(accounts[0]);
     console.log("dUSD balance:", Web3Utils.fromWei(bal, 'ether'));
@@ -188,6 +189,8 @@ module.exports = async function(deployer, network, accounts) {
     console.log("totalDebt:", Web3Utils.fromWei(col.totalDebt, 'ether'));
 
     console.log("-------- burn synths -------- ");
+    await new Promise(r => setTimeout(r, 2000)); // sleep
+
     ///////////////  burn
     await synthxInstance.burn(Web3Utils.fromAscii('ETH'), Web3Utils.toWei('2000', 'ether'));
     bal = await dUSDInstance.balanceOf(accounts[0]);
@@ -199,4 +202,17 @@ module.exports = async function(deployer, network, accounts) {
     // getTotalCollateral
     col = await statsInstance.getTotalCollateral(accounts[0])
     console.log("totalDebt:", Web3Utils.fromWei(col.totalDebt, 'ether'));
+
+    res = await statsInstance.getRewards(accounts[0]);
+    console.log("rewards: ", Web3Utils.fromWei(res, 'ether'))
+
+    res = await statsInstance.getWithdrawable(accounts[0]);
+    console.log("getWithdrawable:", Web3Utils.fromWei(res, 'ether'));
+
+    console.log("-------- claim rewards -------- ");
+    ///////////////  claimReward
+    await synthxInstance.claimReward();
+    bal = await synthxTokenInstance.balanceOf(accounts[0]);
+    console.log("synthx balance:", Web3Utils.fromWei(bal, 'ether'));
+
 };

@@ -38,7 +38,6 @@ contract SupplySchedule is Importable, ISupplySchedule {
 
         percentages[CONTRACT_STAKER] = 0.8 ether; // 80%
         percentages[CONTRACT_TEAM] = 0.15 ether; // 15%
-        percentages[CONTRACT_SPECIAL] = 0.03 ether; // 3%
         percentages[CONTRACT_TRADER] = 0.01 ether; // 1%
 
     }

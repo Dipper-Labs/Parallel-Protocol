@@ -257,7 +257,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
     }
 
     function claimReward() external onlyInitialized notPaused returns (bool) {
-        Rewards(CONTRACT_STAKER).claim(SDIP, msg.sender);
+//        Rewards(CONTRACT_STAKER).claim(SDIP, msg.sender);
         uint256 amount = Escrow().getWithdrawable(msg.sender);
         Escrow().withdraw(msg.sender, amount);
         SynthxToken().mint();
