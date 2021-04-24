@@ -71,15 +71,13 @@ contract SupplySchedule is Importable, ISupplySchedule {
     function _isRecipient(bytes32 recipient) private pure returns (bool) {
         return (recipient == CONTRACT_TRADER ||
             recipient == CONTRACT_TEAM ||
-            recipient == CONTRACT_SPECIAL ||
             recipient == CONTRACT_STAKER);
     }
 
     function _getTotalPercentageWithoutStaker() private view returns (uint256) {
         return
             percentages[CONTRACT_TRADER]
-                .add(percentages[CONTRACT_TEAM])
-                .add(percentages[CONTRACT_SPECIAL]);
+                .add(percentages[CONTRACT_TEAM]);
     }
 
     function distributeSupply()

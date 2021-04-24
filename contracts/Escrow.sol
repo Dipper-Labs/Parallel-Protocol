@@ -19,8 +19,7 @@ contract Escrow is Importable, ExternalStorable, IEscrow {
     bytes32 private constant BALANCE = 'Balance';
     bytes32 private constant WITHDRAWN = 'Withdrawn';
     bytes32[] private ESCROW_CONTRACTS = [
-        CONTRACT_SUPPLY_SCHEDULE,
-        CONTRACT_SPECIAL
+        CONTRACT_SUPPLY_SCHEDULE
     ];
 
     constructor(IResolver _resolver) public Importable(_resolver) {
@@ -28,8 +27,7 @@ contract Escrow is Importable, ExternalStorable, IEscrow {
         imports = [
             CONTRACT_SYNTHX,
             CONTRACT_SYNTHX_TOKEN,
-            CONTRACT_SUPPLY_SCHEDULE,
-            CONTRACT_SPECIAL
+            CONTRACT_SUPPLY_SCHEDULE
         ];
     }
 
