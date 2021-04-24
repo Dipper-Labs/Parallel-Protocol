@@ -190,12 +190,96 @@ function getRewards(address account) external view returns (uint256)
 abi
 
 ```cgo
+   {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "getRewards",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
 ```
 
 ### 查询账户资产
 
 ```cgo
 function getAssets(bytes32 assetType, address account) external view returns (Asset[] memory)
+```
+
+abi
+
+```cgo
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "assetType",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "getAssets",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "assetName",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "address",
+              "name": "assetAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "bytes32",
+              "name": "category",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint256",
+              "name": "balance",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "price",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "status",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IStats.Asset[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
 ```
 
 Asset结构如下：
@@ -214,12 +298,67 @@ Asset结构如下：
 
 assetType 为Synth时，返回账户中的合成资产；assetType为Stake时，返回账户中的基础资产。
 
+返回示例：
+
+```cgo
+ [
+  [
+    assetName: '0x6455534400000000000000000000000000000000000000000000000000000000',
+    assetAddress: '0xB9e946d00cECA36a527D354C423BaB96C0E977Ee',
+    category: '0x6572633230000000000000000000000000000000000000000000000000000000',
+    balance: '8000000000000000000000',
+    price: '1000000000000000000',
+    status: '0'
+  ],
+  [
+    assetName: '0x6454534c41000000000000000000000000000000000000000000000000000000',
+    assetAddress: '0xdeE2c551e57b0a0aaCe9FEC499907605696e998a',
+    category: '0x3200000000000000000000000000000000000000000000000000000000000000',
+    balance: '333333333333333333',
+    price: '750000000000000000000',
+    status: '0'
+  ],
+  [
+    assetName: '0x644150504c450000000000000000000000000000000000000000000000000000',
+    assetAddress: '0x6170c8591B6f7F0ad017c742fCD125beA67d336B',
+    category: '0x3200000000000000000000000000000000000000000000000000000000000000',
+    balance: '65000000000000000000',
+    price: '150000000000000000000',
+    status: '0'
+  ]
+]
+
+```
 
 ### 查询账户合成资产总价值
 ```cgo
 function getSynthValue(address account) external view returns (uint256)
 ```
 
+abi
+```cgo
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "getSynthValue",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+ ```
 
 ### 查询账户总债务
 
@@ -232,4 +371,148 @@ function getTotalCollateral(address account)
             uint256 totalCollateralValue,
             uint256 totalDebt
         )
+```
+
+abi
+
+```cgo
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "getTotalCollateral",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "totalCollateralRatio",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "totalCollateralValue",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "totalDebt",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+```
+### 查询账户债仓
+
+```cgo
+function getVaults(address account) public view returns (Vault[] memory)
+```
+
+abi
+
+```cgo
+ {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "getVaults",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "assetName",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "address",
+              "name": "assetAddress",
+              "type": "address"
+            },
+            {
+              "internalType": "uint256",
+              "name": "currentCollateralRate",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "rewardCollateralRate",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "liquidationCollateralRate",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "liquidationFeeRate",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "staked",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "debt",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "transferable",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "balance",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "price",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IStats.Vault[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    },
+```
+返回结果示例：
+
+```cgo
+ [
+  [
+    assetName: '0x4554480000000000000000000000000000000000000000000000000000000000',
+    assetAddress: '0xEa3ED7E36aBb9AC0Adb61c58359Be48Ad87C3bCC',
+    currentCollateralRate: '2222222222222222222',
+    rewardCollateralRate: '2000000000000000000',
+    liquidationCollateralRate: '1000000000000000000',
+    liquidationFeeRate: '0',
+    staked: '20000000000000000000',
+    debt: '17999999999999999999750',
+    transferable: '2000000000000000001',
+    balance: '999996637603276526373410000000000',
+    price: '2000000000000000000000'
+  ]
+]
+
 ```

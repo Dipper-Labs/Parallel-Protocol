@@ -207,4 +207,17 @@ module.exports = async function(deployer, network, accounts) {
     bal = await dAPPLE.balanceOf(accounts[0]);
     console.log("dAPPLE balance:", Web3Utils.fromWei(bal, 'ether'));
 
+    // get synth asset
+    res = await stats.getAssets(Web3Utils.fromAscii('Synth'), accounts[0]);
+    console.log("synth assets:", res)
+    // get stake asset
+    res = await stats.getAssets(Web3Utils.fromAscii('Stake'), accounts[0]);
+    console.log("stake assets:", res)
+    // get vaullts
+    res = await stats.getVaults(accounts[0]);
+    console.log("getVaults:", res)
+
+    // getTotalCollateral
+    res = await stats.getTotalCollateral(accounts[0]);
+    console.log("getTotalCollateral:", res)
 };
