@@ -158,7 +158,7 @@ module.exports = async function(deployer, network, accounts) {
     await setting.setMintPeriodDuration(1); // second
 
     let res = await setting.getCollateralRate(Web3Utils.fromAscii('ETH'));
-    console.log("CollateralRate: ", res.toString());
+    console.log("CollateralRate: ", Web3Utils.fromWei(res, 'ether'));
     console.log("contracts deployment finished\n\n")
 
     ///////////////////////////////////////////////////////////////////////////////////////
@@ -194,4 +194,17 @@ module.exports = async function(deployer, network, accounts) {
     await synthx.claimReward();
     bal = await synthxToken.balanceOf(accounts[0]);
     console.log("synthx balance:", Web3Utils.fromWei(bal, 'ether'));
+
+    console.log("-------- trade -------- ");
+    ///////////////  trade
+    // dUSD => dTSLA
+    await synthx.trade(Web3Utils.fromAscii('dUSD'), Web3Utils.toWei('10000', 'ether'),  Web3Utils.fromAscii('dTSLA'));
+    bal = await dTSLA.balanceOf(accounts[0]);
+    console.log("dTSLA balance:", Web3Utils.fromWei(bal, 'ether'));
+
+    // dTSLA => dAPPLE
+    await synthx.trade(Web3Utils.fromAscii('dTSLA'), Web3Utils.toWei('13', 'ether'),  Web3Utils.fromAscii('dAPPLE'));
+    bal = await dAPPLE.balanceOf(accounts[0]);
+    console.log("dAPPLE balance:", Web3Utils.fromWei(bal, 'ether'));
+
 };
