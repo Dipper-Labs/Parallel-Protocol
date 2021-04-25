@@ -6,92 +6,130 @@ const Synth = artifacts.require("Synth");
 const Stats = artifacts.require("Stats");
 const SynthxDToken = artifacts.require("SynthxDToken");
 
-module.exports = async function(deployer) {
-    let contracts = {};
+module.exports = async function(deployer, network, accounts) {
     let contractsAddrs = {};
 
-    await fs.readFile('contractsAddrs.json', 'utf-8', (err, data) => {
-        if (err) {
-            throw err;
-        }
-
-        contractsAddrs = JSON.parse(data.toString());
-        console.log(contractsAddrs.staker);
-    });
+    const data = fs.readFileSync('contractsAddrs.json', 'utf-8')
+    contractsAddrs = JSON.parse(data.toString());
 
     console.log(contractsAddrs);
 
+    let contracts = {};
     contracts.synthx = await Synthx.at(Synthx.address);
     contracts.dUSD = await Synth.at(contractsAddrs.dUSD);
     contracts.stats = await Stats.at(Stats.address);
-    contracts.synthxDToken = await SynthxDToken.at(contractsAddrs.synthxDToken);
+    contracts.synthxDToken = await SynthxDToken.at(SynthxDToken.address);
     contracts.dTSLA = await Synth.at(contractsAddrs.dTSLA);
     contracts.dAPPLE = await Synth.at(contractsAddrs.dAPPLE);
 
-    console.log(contracts.synthx);
-    console.log(contracts.dUSD);
-    console.log(contracts.stats);
-    console.log(contracts.synthxDToken);
-    console.log(contracts.dTSLA);
-    console.log(contracts.dAPPLE);
+    console.log(contracts.synthx.address);
+    console.log(contracts.dUSD.address);
+    console.log(contracts.stats.address);
+    console.log(contracts.synthxDToken.address);
+    console.log(contracts.dTSLA.address);
+    console.log(contracts.dAPPLE.address);
 
     console.log("-------- mint synths -------- ");
-    let receipt = await contracts.synthx.mintFromCoin({value:Web3Utils.toWei('20', 'ether')});
-    console.log('synthx.mintFromCoin receipt: ', receipt);
+    await deployer
+        .then(() => {
+            return contracts.synthx.mintFromCoin({value: Web3Utils.toWei('20', 'ether')});
+        })
+        .then((receipt) => {
+            console.log('synthx.mintFromCoin receipt: ', receipt);
+            return contracts.dUSD.balanceOf(accounts[0]);
+        })
+        .then((balance) => {
+            console.log("dUSD balance:", Web3Utils.fromWei(balance, 'ether'));
+            return contracts.synthxDToken.balanceOf(accounts[0]);
+        })
+        .then((balance) => {
+            console.log("dToken balance:", Web3Utils.fromWei(balance, 'ether'));
+            return contracts.stats.getTotalCollateral(accounts[0]);
+        })
+        .then((totalCollateral) => {
+            console.log("totalDebt:", Web3Utils.fromWei(totalCollateral.totalDebt, 'ether'));
 
-    bal = await contracts.dUSD.balanceOf(accounts[0]);
-    console.log("dUSD balance:", Web3Utils.fromWei(bal, 'ether'));
-    dTokenBal = await contracts.synthxDToken.balanceOf(accounts[0]);
-    console.log("dToken balance:", Web3Utils.fromWei(dTokenBal, 'ether'));
-    col = await contracts.stats.getTotalCollateral(accounts[0])
-    console.log("totalDebt:", Web3Utils.fromWei(col.totalDebt, 'ether'));
+            console.log("\n-------- burn synths -------- ");
+            return contracts.synthx.burn(Web3Utils.fromAscii('ETH'), Web3Utils.toWei('2000', 'ether'));
+        })
+        .then((receipt) => {
+            console.log('synthx.burn receipt: ', receipt);
+            return contracts.dUSD.balanceOf(accounts[0]);
+        })
+        .then((balance) => {
+            console.log("dUSD balance:", Web3Utils.fromWei(balance, 'ether'));
+            return contracts.synthxDToken.balanceOf(accounts[0]);
+        })
+        .then((balance) => {
+            console.log("dToken balance:", Web3Utils.fromWei(balance, 'ether'));
+            return contracts.stats.getTotalCollateral(accounts[0]);
+        })
+        .then((totalCollateral) => {
+            console.log("totalDebt:", Web3Utils.fromWei(totalCollateral.totalDebt, 'ether'));
+            return contracts.stats.getRewards(accounts[0]);
+        })
+        .then((reward) => {
+            console.log("rewards: ", Web3Utils.fromWei(reward, 'ether'))
+            return contracts.stats.getWithdrawable(accounts[0]);
+        })
+        .then((rewardable) => {
+            console.log("getWithdrawable:", Web3Utils.fromWei(rewardable, 'ether'));
 
+            console.log("-------- claim rewards -------- ");
+            return contracts.synthx.claimReward();
+        })
+        .then((receipt) => {
+            console.log('synthx.claimReward receipt: ', receipt);
 
-    console.log("\n-------- burn synths -------- ");
-    new Promise(r => setTimeout(r, 2000)); // sleep
-    await contracts.synthx.burn(Web3Utils.fromAscii('ETH'), Web3Utils.toWei('2000', 'ether'));
+            return contracts.synthxToken.balanceOf(accounts[0]);
+        })
+        .then((balance) => {
+            console.log("synthx balance:", Web3Utils.fromWei(balance, 'ether'));
 
-    bal = await contracts.dUSD.balanceOf(accounts[0]);
-    console.log("dUSD balance:", Web3Utils.fromWei(bal, 'ether'));
-    dTokenBal = await contracts.synthxDToken.balanceOf(accounts[0]);
-    console.log("dToken balance:", Web3Utils.fromWei(dTokenBal, 'ether'));
-    col = await contracts.stats.getTotalCollateral(accounts[0])
-    console.log("totalDebt:", Web3Utils.fromWei(col.totalDebt, 'ether'));
+            console.log("-------- trade -------- ");
+            // dUSD => dTSLA
+            return contracts.synthx.trade(Web3Utils.fromAscii('dUSD'), Web3Utils.toWei('10000', 'ether'), Web3Utils.fromAscii('dTSLA'));
+        })
+        .then((receipt) => {
+            console.log('synthx.trade(dUSD => dTSLA) receipt: ', receipt);
 
-    res = await contracts.stats.getRewards(accounts[0]);
-    console.log("rewards: ", Web3Utils.fromWei(res, 'ether'))
+            return contracts.dTSLA.balanceOf(accounts[0]);
+        })
+        .then((balance) => {
+            console.log("dTSLA balance:", Web3Utils.fromWei(balance, 'ether'));
 
-    res = await contracts.stats.getWithdrawable(accounts[0]);
-    console.log("getWithdrawable:", Web3Utils.fromWei(res, 'ether'));
-
-    console.log("-------- claim rewards -------- ");
-    await contracts.synthx.claimReward();
-    bal = await contracts.synthxToken.balanceOf(accounts[0]);
-    console.log("synthx balance:", Web3Utils.fromWei(bal, 'ether'));
-
-    console.log("-------- trade -------- ");
-    ///////////////  trade
-    // dUSD => dTSLA
-    await contracts.synthx.trade(Web3Utils.fromAscii('dUSD'), Web3Utils.toWei('10000', 'ether'),  Web3Utils.fromAscii('dTSLA'));
-    bal = await contracts.dTSLA.balanceOf(accounts[0]);
-    console.log("dTSLA balance:", Web3Utils.fromWei(bal, 'ether'));
-
-    // dTSLA => dAPPLE
-    await contracts.synthx.trade(Web3Utils.fromAscii('dTSLA'), Web3Utils.toWei('13', 'ether'),  Web3Utils.fromAscii('dAPPLE'));
-    bal = await contracts.dAPPLE.balanceOf(accounts[0]);
-    console.log("dAPPLE balance:", Web3Utils.fromWei(bal, 'ether'));
-
-    // get synth asset
-    res = await contracts.stats.getAssets(Web3Utils.fromAscii('Synth'), accounts[0]);
-    console.log("synth assets:", res)
-    // get stake asset
-    res = await contracts.stats.getAssets(Web3Utils.fromAscii('Stake'), accounts[0]);
-    console.log("stake assets:", res)
-    // get vaullts
-    res = await contracts.stats.getVaults(accounts[0]);
-    console.log("getVaults:", res)
-
-    // getTotalCollateral
-    res = await contracts.stats.getTotalCollateral(accounts[0]);
-    console.log("getTotalCollateral:", res)
+            // dTSLA => dAPPLE
+            return contracts.synthx.trade(Web3Utils.fromAscii('dTSLA'), Web3Utils.toWei('13', 'ether'), Web3Utils.fromAscii('dAPPLE'));
+        })
+        .then((receipt) => {
+            console.log('synthx.trade(dTSLA => dAPPLE) receipt: ', receipt);
+            return contracts.dTSLA.balanceOf(accounts[0]);
+        })
+        .then((balance) => {
+            console.log("dTSLA balance:", Web3Utils.fromWei(balance, 'ether'));
+            return contracts.dAPPLE.balanceOf(accounts[0]);
+        })
+        .then((balance) => {
+            console.log("dAPPLE balance:", Web3Utils.fromWei(balance, 'ether'));
+            // get synth asset
+            return contracts.stats.getAssets(Web3Utils.fromAscii('Synth'), accounts[0]);
+        })
+        .then((assets) => {
+            console.log("synth assets:", assets);
+            // get stake asset
+            return contracts.stats.getAssets(Web3Utils.fromAscii('Stake'), accounts[0]);
+        })
+        .then((stakeAssets) => {
+            console.log("stake assets:", res);
+            // get vaullts
+            return contracts.stats.getVaults(accounts[0]);
+        })
+        .then((vaults) => {
+            console.log("getVaults:", vaults);
+            // getTotalCollateral
+            contracts.stats.getTotalCollateral(accounts[0]);
+        })
+        .then((totalCollateral) => {
+            console.log("getTotalCollateral:", totalCollateral)
+        });
 }
