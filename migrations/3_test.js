@@ -1,22 +1,43 @@
 const fs = require('fs');
 const Web3Utils = require('web3-utils');
 
+const Synthx = artifacts.require("Synthx");
+const Synth = artifacts.require("Synth");
+const Stats = artifacts.require("Stats");
+const SynthxDToken = artifacts.require("SynthxDToken");
+
 module.exports = async function(deployer) {
-
     let contracts = {};
+    let contractsAddrs = {};
 
-    await fs.readFile('contracts.json', 'utf-8', (err, data) => {
+    await fs.readFile('contractsAddrs.json', 'utf-8', (err, data) => {
         if (err) {
             throw err;
         }
 
-        contracts = JSON.parse(data.toString());
-
-        console.log(contracts.staker.address);
+        contractsAddrs = JSON.parse(data.toString());
+        console.log(contractsAddrs.staker);
     });
 
+    console.log(contractsAddrs);
+
+    contracts.synthx = await Synthx.at(Synthx.address);
+    contracts.dUSD = await Synth.at(contractsAddrs.dUSD);
+    contracts.stats = await Stats.at(Stats.address);
+    contracts.synthxDToken = await SynthxDToken.at(contractsAddrs.synthxDToken);
+    contracts.dTSLA = await Synth.at(contractsAddrs.dTSLA);
+    contracts.dAPPLE = await Synth.at(contractsAddrs.dAPPLE);
+
+    console.log(contracts.synthx);
+    console.log(contracts.dUSD);
+    console.log(contracts.stats);
+    console.log(contracts.synthxDToken);
+    console.log(contracts.dTSLA);
+    console.log(contracts.dAPPLE);
+
     console.log("-------- mint synths -------- ");
-    receipt = await contracts.synthx.mintFromCoin({value:Web3Utils.toWei('20', 'ether')});
+    let receipt = await contracts.synthx.mintFromCoin({value:Web3Utils.toWei('20', 'ether')});
+    console.log('synthx.mintFromCoin receipt: ', receipt);
 
     bal = await contracts.dUSD.balanceOf(accounts[0]);
     console.log("dUSD balance:", Web3Utils.fromWei(bal, 'ether'));
