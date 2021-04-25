@@ -406,7 +406,7 @@ module.exports = function(deployer, network, accounts) {
         })
         .then((receipt) => {
             console.log(receipt);
-            return contracts.hitory.refreshCache();
+            return contracts.history.refreshCache();
         })
         .then((receipt) => {
             console.log(receipt);
