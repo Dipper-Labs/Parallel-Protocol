@@ -25,13 +25,6 @@ module.exports = async function(deployer, network, accounts) {
 
     await deployer
         .then(() => {
-            console.log("-------- claim rewards -------- ");
-            return contracts.synthx.claimReward();
-        })
-        .then((receipt) => {
-            console.log('synthx.claimReward receipt: ', receipt);
-        })
-        .then(() => {
             console.log("-------- trade -------- ");
             // dUSD => dTSLA
             return contracts.synthx.trade(Web3Utils.fromAscii('dUSD'), Web3Utils.toWei('1', 'ether'), Web3Utils.fromAscii('dTSLA'));
