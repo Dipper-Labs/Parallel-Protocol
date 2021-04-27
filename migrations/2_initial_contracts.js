@@ -49,77 +49,87 @@ module.exports = function(deployer, network, accounts) {
             return deployer.deploy(Setting);
         })
         .then((setting) => {
+            checkUndefined(setting);
             contracts.setting = setting;
             contractsAddrs.setting = setting.address;
-            checkUndefined(contracts.setting);
             return deployer.deploy(Resolver);
         })
         .then((resolver) => {
+            checkUndefined(resolver);
             contracts.resolver = resolver;
             contractsAddrs.resolver = resolver.address;
-            checkUndefined(contracts.resolver);
             return deployer.deploy(Escrow, contracts.resolver.address);
         })
         .then((escrow) => {
+            checkUndefined(escrow);
             contracts.escrow = escrow;
-            checkUndefined(contracts.escrow);
+            contractsAddrs.escrow = escrow.address;
             return deployer.deploy(Issuer, contracts.resolver.address);
         })
         .then((issuer) => {
+            checkUndefined(issuer);
             contracts.issuer = issuer;
-            checkUndefined(contracts.issuer);
+            contractsAddrs.issuer = issuer.address;
             return deployer.deploy(History, contracts.resolver.address);
         })
         .then((history) => {
+            checkUndefined(history);
             contracts.history = history;
-            checkUndefined(contracts.history);
+            contractsAddrs.history = history.address;
             return deployer.deploy(Liquidator, contracts.resolver.address);
         })
         .then((liquidator) => {
+            checkUndefined(liquidator);
             contracts.liquidator = liquidator;
-            checkUndefined(contracts.liquidator);
+            contractsAddrs.liquidator = liquidator.address;
             return deployer.deploy(Staker, contracts.resolver.address);
         })
         .then((staker) => {
+            checkUndefined(staker);
             contracts.staker = staker;
-            checkUndefined(contracts.staker);
+            contractsAddrs.staker = staker.address;
             return deployer.deploy(AssetPrice);
         })
         .then((assetPrice) => {
+            checkUndefined(assetPrice);
             contracts.assetPrice = assetPrice;
-            checkUndefined(contracts.assetPrice);
+            contractsAddrs.assetPrice = assetPrice.address;
             return deployer.deploy(Oracle);
         })
         .then((oracle) => {
+            checkUndefined(oracle);
             contracts.oracle = oracle;
-            checkUndefined(contracts.oracle);
+            contractsAddrs.oracle = oracle.address;
             return deployer.deploy(Trader, Resolver.address);
         })
         .then((trader) => {
+            checkUndefined(trader);
             contracts.trader = trader;
-            checkUndefined(contracts.trader);
+            contractsAddrs.trader = trader.address;
             return deployer.deploy(Market, Resolver.address);
         })
         .then((market) => {
+            checkUndefined(market);
             contracts.market = market;
-            checkUndefined(contracts.market);
+            contractsAddrs.market = market.address;
             return deployer.deploy(SupplySchedule, Resolver.address, 0, 0);
         })
         .then((supplySchedule) => {
+            checkUndefined(supplySchedule);
             contracts.supplySchedule = supplySchedule;
-            checkUndefined(contracts.supplySchedule);
+            contractsAddrs.supplySchedule = supplySchedule.address;
             return deployer.deploy(Stats, Resolver.address);
         })
         .then((stats) => {
+            checkUndefined(stats);
             contracts.stats = stats;
             contractsAddrs.stats = stats.address;
-            checkUndefined(contracts.stats);
             return deployer.deploy(Synthx);
         })
         .then((synthx) => {
+            checkUndefined(synthx);
             contracts.synthx = synthx;
             contractsAddrs.synthx = synthx.address;
-            checkUndefined(contracts.synthx);
             return deployer.deploy(Storage);
         })
         .then((storage) => {
@@ -218,6 +228,7 @@ module.exports = function(deployer, network, accounts) {
         .then((synthxDToken) => {
             contracts.synthxDToken = synthxDToken;
             checkUndefined(contracts.synthxDToken);
+            contracts
             return deployer.deploy(Synth);
         })
         .then((dTSLA) => {
@@ -466,7 +477,7 @@ module.exports = function(deployer, network, accounts) {
             console.log('setting.setMintPeriodDuration receipt: ', receipt);
             console.log("contracts deployment finished\n\n");
 
-            const addrsData = JSON.stringify(contractsAddrs);
+            const addrsData = JSON.stringify(contractsAddrs, null, '\t');
 
             fs.writeFile('contractsAddrs.json', addrsData, (err) => {
                 if (err) {
