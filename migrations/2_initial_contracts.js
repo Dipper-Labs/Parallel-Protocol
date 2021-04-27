@@ -165,33 +165,31 @@ module.exports = function(deployer, network, accounts) {
         .then((traderStorage) => {
             contracts.traderStorage = traderStorage;
             checkUndefined(contracts.traderStorage);
-        })
-        .then(() => {
             return contracts.setting.setStorage(contracts.settingStorage.address);
         })
         .then((receipt) => {
             console.log('setting.setStorage receipts: ', receipt);
-            contracts.escrow.setStorage(contracts.escrowStorage.address);
+            return contracts.escrow.setStorage(contracts.escrowStorage.address);
         })
         .then((receipt) => {
             console.log('escrow.setStorage receipts: ', receipt);
-            contracts.issuer.setStorage(contracts.issuerStorage.address);
+            return contracts.issuer.setStorage(contracts.issuerStorage.address);
         })
         .then((receipt) => {
             console.log('issuer.setStorage receipts: ', receipt);
-            contracts.liquidator.setStorage(contracts.liquidatorStorage.address);
+            return contracts.liquidator.setStorage(contracts.liquidatorStorage.address);
         })
         .then((receipt) => {
             console.log('liquidator.setStorage receipts: ', receipt);
-            contracts.staker.setStorage(contracts.stakerStorage.address);
+            return contracts.staker.setStorage(contracts.stakerStorage.address);
         })
         .then((receipt) => {
             console.log('staker.setStorage receipts: ', receipt);
-            contracts.oracle.setStorage(contracts.oracleStorage.address);
+            return contracts.oracle.setStorage(contracts.oracleStorage.address);
         })
         .then((receipt) => {
             console.log('oracle.setStorage receipts: ', receipt);
-            contracts.trader.setStorage(contracts.traderStorage.address);
+            return contracts.trader.setStorage(contracts.traderStorage.address);
         })
         .then((receipt) => {
             console.log('trader.setStorage receipts: ', receipt);
@@ -257,8 +255,6 @@ module.exports = function(deployer, network, accounts) {
         .then((dAPPLEStorage) => {
             contracts.dAPPLEStorage = dAPPLEStorage;
             checkUndefined(contracts.dAPPLEStorage);
-        })
-        .then(() => {
             return contracts.dUSD.setStorage(contracts.dUSDStorage.address);
         })
         .then((receipt) => {
