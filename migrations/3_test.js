@@ -14,7 +14,6 @@ module.exports = async function(deployer, network, accounts) {
 
     console.log(contractsAddrs);
 
-    contractsAddrs.synthxDToken = '0xde8fd8fa0cafba28adad72ed2f7326e6b09ff6b9';
     let contracts = {};
     contracts.synthx = await Synthx.at(contractsAddrs.synthx);
     contracts.dUSD = await Synth.at(contractsAddrs.dUSD);

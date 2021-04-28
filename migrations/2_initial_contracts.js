@@ -215,31 +215,32 @@ module.exports = function(deployer, network, accounts) {
             return deployer.deploy(Synth);
         })
         .then((dUSD) => {
+            checkUndefined(dUSD);
             contracts.dUSD = dUSD;
             contractsAddrs.dUSD = dUSD.address;
-            checkUndefined(contracts.dUSD);
             return deployer.deploy(SynthxToken);
         })
         .then((synthxToken) => {
+            checkUndefined(synthxToken);
             contracts.synthxToken = synthxToken;
-            checkUndefined(contracts.synthxToken);
+            contractsAddrs.synthxToken = synthxToken.address;
             return deployer.deploy(SynthxDToken, Resolver.address);
         })
         .then((synthxDToken) => {
+            checkUndefined(synthxDToken);
             contracts.synthxDToken = synthxDToken;
-            checkUndefined(contracts.synthxDToken);
-            contracts
+            contractsAddrs.synthxDToken = synthxDToken.address;
             return deployer.deploy(Synth);
         })
         .then((dTSLA) => {
+            checkUndefined(dTSLA);
             contracts.dTSLA = dTSLA;
-            checkUndefined(contracts.dTSLA);
             contractsAddrs.dTSLA = dTSLA.address;
             return deployer.deploy(Synth);
         })
         .then((dAPPLE) => {
+            checkUndefined(dAPPLE);
             contracts.dAPPLE = dAPPLE;
-            checkUndefined(contracts.dAPPLE);
             contractsAddrs.dAPPLE = dAPPLE.address;
             return deployer.deploy(TokenStorage, contracts.dUSD.address);
         })
