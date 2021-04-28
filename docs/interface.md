@@ -760,6 +760,25 @@ abi
 function totalSupply() external view  returns (uint256)
 ```
 
+abi:
+```cgo
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "totalSupply",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+```
+
 2. 查询系统总债务，记为totalDebt
 
 查询方法见```查询系统总债务```
