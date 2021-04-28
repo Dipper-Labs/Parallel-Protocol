@@ -81,11 +81,13 @@ interface IStats {
         bytes32 toSynth
     ) external view returns (uint256 tradingAmount, uint256 tradingFee);
 
-    function getTradingAmountAndFee(
+    function getTradingAmountAndFee2(
         bytes32 fromSynth,
         bytes32 toSynth,
         uint256 toAmount
     ) external view returns (uint256 tradingAmount, uint256 tradingFee);
+
+    function getRequirdDUSDAmount(bytes32 assetType, address account, uint256 dTokenAmount) external view returns (uint256);
 
     function getWithdrawable(address account) external view returns (uint256);
 

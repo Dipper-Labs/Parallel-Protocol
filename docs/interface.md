@@ -1,11 +1,46 @@
 
 # 接口文档
 
+
+## Setting合约
+
+### 1. 查询基础资产的最低抵押率
+
+```cgo
+function getCollateralRate(bytes32 asset) external view returns (uint256);
+```
+
+合成资产时，仓位抵押率按此抵押率进行。其中asset传入资产名字的bytes32, 例如ETH的bytes32:
+
+```cgo
+0x4554480000000000000000000000000000000000000000000000000000000000
+```
+
+## Staker合约
+
+### 获取账户的抵押率
+
+```cgo
+function getCollateralRate(bytes32 token, address account)
+```
+
+
+## Issuer合约
+
+### 查询账户负债
+
+指定基础资产，查询负债
+
+```cgo
+function getDebt(bytes32 stake, address account) external view returns (uint256) 
+```
+
+
 ## Synthx合约
 
-### 发行 dUSD
+### 1. mint(发行 dUSD)
 
-1. 如果基础资产是ETH, 调用如下接口
+#### 1.1  如果基础资产是ETH, 调用如下接口
 ```cgo
  function mintFromCoin() external payable returns (bool)
 ```
@@ -29,7 +64,7 @@ abi
     }
 ```
 
-2. 如果基础资产是ERC20，调用如下接口
+#### 1.2  如果基础资产是ERC20，调用如下接口
 ```cgo
 function mintFromToken(bytes32 stake, uint256 amount) external returns (bool)
 ```
@@ -68,7 +103,44 @@ abi
 stake为资产名字，bytes32类型。
 
 
-ERC20合约，需要先授权。
+ERC20合约，需要先授权。即调用对应ERC20合约的approve方法:
+
+```cgo
+function approve(address spender, uint256 amount) returns (bool)
+```
+
+abi:
+
+```cgo
+   {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "spender",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "approve",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+```
+
+signature: ```0x095ea7b3```
 
 
 ### 销毁 dUSD
@@ -105,6 +177,11 @@ abi
       "stateMutability": "nonpayable",
       "type": "function"
     }
+```
+
+signature:
+```cgo
+0x7a408454
 ```
 
 ### 领取收益
@@ -514,5 +591,13 @@ abi
     price: '2000000000000000000000'
   ]
 ]
+
+```
+
+
+### burn时，根据要burn的dToken数量，查询需要burn的dUSD数量
+
+```
+function getRequirdDUSDAmount(bytes32 assetType, address account, uint256 dTokenAmount) public view returns (uint256) 
 
 ```
