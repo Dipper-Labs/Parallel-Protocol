@@ -109,7 +109,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         _stake(nativeCoin, msg.value, FROM_BALANCE);
         History().addAction('Stake', msg.sender, 'Stake', nativeCoin, msg.value, bytes32(0), 0);
         Liquidator().watchAccount(nativeCoin, msg.sender);
-        SynthxToken().mint();
+//        SynthxToken().mint();
         emit Staked(msg.sender, FROM_BALANCE, nativeCoin, msg.value);
         return true;
     }
@@ -121,7 +121,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         _stake(stake, amount, FROM_BALANCE);
         History().addAction('Stake', msg.sender, 'Stake', stake, amount, bytes32(0), 0);
         Liquidator().watchAccount(stake, msg.sender);
-        SynthxToken().mint();
+//        SynthxToken().mint();
         emit Staked(msg.sender, FROM_BALANCE, stake, amount);
         return true;
     }
@@ -186,7 +186,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
 
         History().addAction('Stake', msg.sender, 'Mint', stake, amount, USD, issueAmount);
         Liquidator().watchAccount(stake, msg.sender);
-        SynthxToken().mint();
+//        SynthxToken().mint();
         emit Minted(msg.sender, from, stake, amount, issueAmount);
     }
 
@@ -201,7 +201,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
 
         History().addAction('Stake', msg.sender, 'Burn', stake, 0, USD, amount);
         Liquidator().watchAccount(stake, msg.sender);
-        SynthxToken().mint();
+//        SynthxToken().mint();
 
         emit Burned(msg.sender, stake, burnAmount);
         return true;
@@ -226,7 +226,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
 
         History().addAction('Stake', msg.sender, 'Transfer', stake, amount, bytes32(0), 0);
         Liquidator().watchAccount(stake, msg.sender);
-        SynthxToken().mint();
+//        SynthxToken().mint();
         emit Transfered(msg.sender, stake, recipient, amount);
         return true;
     }
@@ -242,7 +242,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         Market().addTrade(fromSynth, fromAmount, fromSynthPrice, toSynth, tradingAmount, toSynthPirce);
         History().addTrade(msg.sender, fromSynth, fromAmount, fromSynthPrice, toSynth, tradingAmount, toSynthPirce);
 
-        SynthxToken().mint();
+//        SynthxToken().mint();
         emit Traded(
             msg.sender,
             fromSynth,
@@ -258,10 +258,10 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
 
     function claimReward() external onlyInitialized notPaused returns (bool) {
 //        Rewards(CONTRACT_STAKER).claim(SDIP, msg.sender);
-        uint256 amount = Escrow().getWithdrawable(msg.sender);
-        Escrow().withdraw(msg.sender, amount);
-        SynthxToken().mint();
-        emit ClaimReward(msg.sender, amount);
+//        uint256 amount = Escrow().getWithdrawable(msg.sender);
+//        Escrow().withdraw(msg.sender, amount);
+//        SynthxToken().mint();
+//        emit ClaimReward(msg.sender, amount);
         return true;
     }
 

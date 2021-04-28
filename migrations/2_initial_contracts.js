@@ -203,6 +203,7 @@ module.exports = function(deployer, network, accounts) {
         })
         .then((receipt) => {
             console.log('trader.setStorage receipts: ', receipt);
+            // init nativeCoin as ETH
             return contracts.synthx.initialize(Resolver.address, Web3Utils.fromAscii('ETH'));
         })
         .then((receipt) => {
@@ -307,11 +308,21 @@ module.exports = function(deployer, network, accounts) {
         })
         .then((receipt) => {
             console.log('dAPPLE.initialize receipts: ', receipt);
-            return contracts.oracle.setPrice(Web3Utils.fromAscii('ETH'), Web3Utils.toWei('2000', 'ether'));
+            // set price ETH
+            return contracts.oracle.setPrice(Web3Utils.fromAscii('ETH'), Web3Utils.toWei('2700', 'ether'));
         })
         .then((receipt) => {
             console.log('oracle.setPrice(ETH) receipts: ', receipt);
-            return contracts.oracle.setPrice(Web3Utils.fromAscii('BTC'), Web3Utils.toWei('50000', 'ether'));
+            // set price BNB
+            return contracts.oracle.setPrice(Web3Utils.fromAscii('BNB'), Web3Utils.toWei('600', 'ether'));
+        })
+        .then((receipt) => {
+            console.log('oracle.setPrice(BNB) receipts: ', receipt);
+            return contracts.oracle.setPrice(Web3Utils.fromAscii('DIP'), Web3Utils.toWei('100', 'milliether'));
+        })
+        .then((receipt) => {
+            console.log('oracle.setPrice(DIP) receipts: ', receipt);
+            return contracts.oracle.setPrice(Web3Utils.fromAscii('BTC'), Web3Utils.toWei('57000', 'ether'));
         })
         .then((receipt) => {
             console.log('oracle.setPrice(BTC) receipts: ', receipt);
@@ -331,6 +342,14 @@ module.exports = function(deployer, network, accounts) {
         })
         .then((receipt) => {
             console.log('assetPrice.setOracle(BTC) receipts: ', receipt);
+            return contracts.assetPrice.setOracle(Web3Utils.fromAscii('BNB'), contracts.oracle.address);
+        })
+        .then((receipt) => {
+            console.log('assetPrice.setOracle(BNB) receipts: ', receipt);
+            return contracts.assetPrice.setOracle(Web3Utils.fromAscii('DIP'), contracts.oracle.address);
+        })
+        .then((receipt) => {
+            console.log('assetPrice.setOracle(DIP) receipts: ', receipt);
             return contracts.assetPrice.setOracle(Web3Utils.fromAscii('dTSLA'), contracts.oracle.address);
         })
         .then((receipt) => {
@@ -339,6 +358,10 @@ module.exports = function(deployer, network, accounts) {
         })
         .then((receipt) => {
             console.log('assetPrice.setOracle(dAPPLE) receipts: ', receipt);
+            return contracts.assetPrice.setMaxDelayTime(360000);
+        })
+        .then((receipt) => {
+            console.log('assetPrice.setMaxDelayTime receipts: ', receipt);
             return contracts.resolver.setAddress(Web3Utils.fromAscii('Escrow'), contracts.escrow.address);
         })
         .then((receipt) => {
@@ -399,6 +422,18 @@ module.exports = function(deployer, network, accounts) {
         })
         .then((receipt) => {
             console.log('resolver.addAsset(Stake-ETH) receipts: ', receipt);
+            return contracts.resolver.addAsset(Web3Utils.fromAscii('Stake'), Web3Utils.fromAscii('BNB'), "0x84b9b910527ad5c03a9ca831909e21e236ea7b06");
+        })
+        .then((receipt) => {
+            console.log('resolver.addAsset(Stake-BNB) receipts: ', receipt);
+            return contracts.resolver.addAsset(Web3Utils.fromAscii('Stake'), Web3Utils.fromAscii('DIP'), "0x84b9b910527ad5c03a9ca831909e21e236ea7b06");
+        })
+        .then((receipt) => {
+            console.log('resolver.addAsset(Stake-DIP) receipts: ', receipt);
+            return contracts.resolver.addAsset(Web3Utils.fromAscii('Stake'), Web3Utils.fromAscii('BTC'), "0x84b9b910527ad5c03a9ca831909e21e236ea7b06");
+        })
+        .then((receipt) => {
+            console.log('resolver.addAsset(Stake-BTC) receipts: ', receipt);
             return contracts.resolver.addAsset(Web3Utils.fromAscii('Synth'), Web3Utils.fromAscii('dUSD'), contracts.dUSD.address);
         })
         .then((receipt) => {
@@ -460,7 +495,31 @@ module.exports = function(deployer, network, accounts) {
         })
         .then((receipt) => {
             console.log('setting.setCollateralRate receipt: ', receipt);
+            return contracts.setting.setCollateralRate(Web3Utils.fromAscii('BNB'), Web3Utils.toWei('3', 'ether'));
+        })
+        .then((receipt) => {
+            console.log('setting.setCollateralRate receipt: ', receipt);
+            return contracts.setting.setCollateralRate(Web3Utils.fromAscii('BTC'), Web3Utils.toWei('2', 'ether'));
+        })
+        .then((receipt) => {
+            console.log('setting.setCollateralRate receipt: ', receipt);
+            return contracts.setting.setCollateralRate(Web3Utils.fromAscii('DIP'), Web3Utils.toWei('5', 'ether'));
+        })
+        .then((receipt) => {
+            console.log('setting.setCollateralRate receipt: ', receipt);
             return contracts.setting.setLiquidationRate(Web3Utils.fromAscii('ETH'), Web3Utils.toWei('1', 'ether'));
+        })
+        .then((receipt) => {
+            console.log('setting.setCollateralRate receipt: ', receipt);
+            return contracts.setting.setLiquidationRate(Web3Utils.fromAscii('BTC'), Web3Utils.toWei('1', 'ether'));
+        })
+        .then((receipt) => {
+            console.log('setting.setCollateralRate receipt: ', receipt);
+            return contracts.setting.setLiquidationRate(Web3Utils.fromAscii('BNB'), Web3Utils.toWei('1', 'ether'));
+        })
+        .then((receipt) => {
+            console.log('setting.setCollateralRate receipt: ', receipt);
+            return contracts.setting.setLiquidationRate(Web3Utils.fromAscii('DIP'), Web3Utils.toWei('1', 'ether'));
         })
         .then((receipt) => {
             console.log('setting.setLiquidationRate receipt: ', receipt);
@@ -469,6 +528,18 @@ module.exports = function(deployer, network, accounts) {
         .then((receipt) => {
             console.log('setting.setLiquidationDelay receipt: ', receipt);
             return contracts.setting.setTradingFeeRate(Web3Utils.fromAscii('ETH'), Web3Utils.toWei('2', 'milliether'));
+        })
+        .then((receipt) => {
+            console.log('setting.setLiquidationDelay receipt: ', receipt);
+            return contracts.setting.setTradingFeeRate(Web3Utils.fromAscii('BTC'), Web3Utils.toWei('2', 'milliether'));
+        })
+        .then((receipt) => {
+            console.log('setting.setLiquidationDelay receipt: ', receipt);
+            return contracts.setting.setTradingFeeRate(Web3Utils.fromAscii('BNB'), Web3Utils.toWei('2', 'milliether'));
+        })
+        .then((receipt) => {
+            console.log('setting.setLiquidationDelay receipt: ', receipt);
+            return contracts.setting.setTradingFeeRate(Web3Utils.fromAscii('DIP'), Web3Utils.toWei('2', 'milliether'));
         })
         .then((receipt) => {
             console.log('setting.setTradingFeeRate receipt: ', receipt);
