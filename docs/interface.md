@@ -10,18 +10,78 @@
 function getCollateralRate(bytes32 asset) external view returns (uint256);
 ```
 
-合成资产时，仓位抵押率按此抵押率进行。其中asset传入资产名字的bytes32, 例如ETH的bytes32:
+合成资产时，仓位抵押率不得低于此值。其中asset传入资产名字的bytes32, 例如ETH的bytes32:
 
 ```cgo
 0x4554480000000000000000000000000000000000000000000000000000000000
+```
+
+
+abi
+
+```cgo
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "asset",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getCollateralRate",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
 ```
 
 ## Staker合约
 
 ### 获取账户的抵押率
 
+指定资产名字和帐户地址，查询帐户的仓位抵押率。
+
 ```cgo
 function getCollateralRate(bytes32 token, address account)
+```
+
+abi
+
+```cgo
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "token",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "getCollateralRate",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
 ```
 
 
@@ -35,6 +95,76 @@ function getCollateralRate(bytes32 token, address account)
 function getDebt(bytes32 stake, address account) external view returns (uint256) 
 ```
 
+abi
+```cgo
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "stake",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "getDebt",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+```
+
+### 如何在前端计算用户的仓位抵押率
+
+#### 首次mint时，前端展示的用户他们抵押率
+
+以ETH为例，假如用户质押的ETH数量为 ETHAmount， 质押出的dUSD数量为dUSDAmount，那么ETH的价格ETHPrice可以通过getAssets获取, dUSD的价格恒定为1000000000000000000
+
+CollateralRate = (dUSDAmount * 1) / (ETHAmount * ETHPrice)
+
+### 非首次mint，前端展示的用户抵押率
+
+以ETH为例
+
+1. 先调用getVaults接口，获取用户的债仓信息，返回结果类似如下：
+
+```cgo
+ [
+  [
+    assetName: '0x4554480000000000000000000000000000000000000000000000000000000000',
+    assetAddress: '0xEa3ED7E36aBb9AC0Adb61c58359Be48Ad87C3bCC',
+    currentCollateralRate: '2222222222222222222',
+    rewardCollateralRate: '2000000000000000000',
+    liquidationCollateralRate: '1000000000000000000',
+    liquidationFeeRate: '0',
+    staked: '20000000000000000000',
+    debt: '17999999999999999999750',
+    transferable: '2000000000000000001',
+    balance: '999996637603276526373410000000000',
+    price: '2000000000000000000000'
+  ]
+]
+```
+
+其中assetName为资产名，currentCollateralRate为当前抵押率，staked为仓位中质押的ETH数量, debt为仓位中质押出的dUSD数量, balance为账户中ETH余额，
+price为ETH价格
+
+2. 新债仓的抵押率为
+
+假设deltaUSDAmount为新合成的dUSD数量，ETHDeltaAmount为新质押的ETH数量，则：
+
+CollateralRate = (USDAmount + deltaUSDAmount) / ((ETHAmount + ETHDeltaAmount) * ETHPrice)
 
 ## Synthx合约
 
