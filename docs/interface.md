@@ -125,6 +125,31 @@ abi
     }
 ```
 
+### 查询系统总债务
+
+```cgo
+function getTotalDebt() public view returns (uint256)
+```
+
+abi
+```cgo
+   {
+      "constant": true,
+      "inputs": [],
+      "name": "getTotalDebt",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+```
+
 ### 如何在前端计算用户的仓位抵押率
 
 #### 首次mint时，前端展示的用户他们抵押率
@@ -727,7 +752,18 @@ abi
 
 ### burn时，根据要burn的dToken数量，查询需要burn的dUSD数量
 
-```
-function getRequirdDUSDAmount(bytes32 assetType, address account, uint256 dTokenAmount) public view returns (uint256) 
+假设要burn的dToken数量为dTokenAmount
 
+1. 查询dToken合约的总量，记为totalSupply
+
+```cgo
+function totalSupply() external view  returns (uint256)
 ```
+
+2. 查询系统总债务，记为totalDebt
+
+查询方法见```查询系统总债务```
+
+3. 需要burn的dUSD数量为
+
+dUSDAmount = (dTokenAmount / totalSupply) * totalDebt
