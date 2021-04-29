@@ -262,10 +262,6 @@ contract Stats is Importable, IStats {
         (tradingAmount, tradingFee, , ) = Trader().getTradingAmountAndFee(fromSynth, toSynth, toAmount);
     }
 
-    function getRequirdDUSDAmount(bytes32 assetType, address account, uint256 dTokenAmount) public view returns (uint256) {
-        return Staker().getRequirdDUSDAmount(assetType, account, dTokenAmount);
-    }
-
     function getWithdrawable(address account) external view returns (uint256) {
         return Escrow().getWithdrawable(account);
     }

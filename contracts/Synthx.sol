@@ -153,26 +153,27 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
     }
 
     // 0xf82d43e5
-    function mintFromCoin() external payable returns (bool) {
-        _mint(nativeCoin, msg.value, FROM_BALANCE);
+    function mintFromCoin(uint256 mintedAmount) external payable returns (bool) {
+        _mint(nativeCoin, msg.value, mintedAmount, FROM_BALANCE);
         return true;
     }
 
-    function mintFromToken(bytes32 stake, uint256 amount) external returns (bool) {
+    function mintFromToken(bytes32 stake, uint256 amount, uint256 mintedAmount) external returns (bool) {
         require(stake != nativeCoin, 'Synthx: Native Coin use "mintFromCoin" function');
 
-        _mint(stake, amount, FROM_BALANCE);
+        _mint(stake, amount, mintedAmount, FROM_BALANCE);
         return true;
     }
 
-    function mintFromTransferable(bytes32 stake, uint256 amount) external returns (bool) {
-        _mint(stake, amount, FROM_TRANSFERABLE);
+    function mintFromTransferable(bytes32 stake, uint256 amount, uint256 mintedAmount) external returns (bool) {
+        _mint(stake, amount, mintedAmount, FROM_TRANSFERABLE);
         return true;
     }
 
     function _mint(
         bytes32 stake,
         uint256 amount,
+        uint256 mintedAmount,
         bytes32 from
     ) internal {
         _stake(stake, amount, from);
@@ -181,7 +182,18 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         require(collateralRate > 0, 'Synthx: Missing Collateral Rate');
 
         uint256 issueAmount = value.decimalDivide(collateralRate);
-        Issuer().issueDebt(stake, msg.sender, issueAmount);
+        require(issueAmount >= mintedAmount, "Synthx: mint collateral rate too low");
+
+        // dTokenMintedAmount
+        uint256 totalDebt = Issuer().getTotalDebt();
+
+        IERC20 token = IERC20(requireAddress(CONTRACT_SYNTHX_DTOKEN));
+        uint256 dTokenTotalSupply = token.totalSupply();
+        uint256 dTokenMintedAmount = dTokenTotalSupply.decimalMultiply(mintedAmount).decimalDivide(totalDebt);
+
+        // issue debt
+        Issuer().issueDebt(stake, msg.sender, mintedAmount);
+        // mint dToken
         SynthxDToken().mint(msg.sender, issueAmount);
 
         History().addAction('Stake', msg.sender, 'Mint', stake, amount, USD, issueAmount);
@@ -190,16 +202,22 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         emit Minted(msg.sender, from, stake, amount, issueAmount);
     }
 
-    function burn(bytes32 stake, uint256 amount) external onlyInitialized notPaused returns (bool) {
-        uint256 burnAmount = Issuer().burnDebt(stake, msg.sender, amount, msg.sender);
+    function burn(bytes32 stake, uint256 dTokenAmount) external onlyInitialized notPaused returns (bool) {
+        uint256 totalDebt = Issuer().getTotalDebt();
+
+        IERC20 token = IERC20(requireAddress(CONTRACT_SYNTHX_DTOKEN));
+        uint256 dTokenTotalSupply = token.totalSupply();
+        uint256 dUSDAmount = totalDebt.decimalMultiply(dTokenAmount).decimalDivide(dTokenTotalSupply);
+
+        uint256 burnAmount = Issuer().burnDebt(stake, msg.sender, dUSDAmount, msg.sender);
 
         uint256 stakerTransferable = Staker().getTransferable(stake, msg.sender);
         if (Issuer().getDebt(stake, msg.sender) == 0) transfer(stake, msg.sender, stakerTransferable);
 
         // burn dToken
-        SynthxDToken().burn(msg.sender, amount);
+        SynthxDToken().burn(msg.sender, dTokenAmount);
 
-        History().addAction('Stake', msg.sender, 'Burn', stake, 0, USD, amount);
+        History().addAction('Stake', msg.sender, 'Burn', stake, 0, DTOKEN, dTokenAmount);
         Liquidator().watchAccount(stake, msg.sender);
 //        SynthxToken().mint();
 

@@ -7,11 +7,11 @@ interface ISynthx {
 
     function stakeFromToken(bytes32 stake, uint256 amount) external returns (bool);
 
-    function mintFromCoin() external payable returns (bool);
+    function mintFromCoin(uint256 mintedAmount) external payable returns (bool);
 
-    function mintFromToken(bytes32 stake, uint256 amount) external returns (bool);
+    function mintFromToken(bytes32 stake, uint256 amount, uint256 mintedAmount) external returns (bool);
 
-    function mintFromTransferable(bytes32 stake, uint256 amount) external returns (bool);
+    function mintFromTransferable(bytes32 stake, uint256 amount, uint256 mintedAmount) external returns (bool);
 
     function burn(bytes32 stake, uint256 amount) external returns (bool);
 
