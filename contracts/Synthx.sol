@@ -190,11 +190,11 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         IERC20 token = IERC20(requireAddress(CONTRACT_SYNTHX_DTOKEN));
         uint256 dTokenTotalSupply = token.totalSupply();
         uint256 dTokenMintedAmount = dTokenTotalSupply.decimalMultiply(mintedAmount).decimalDivide(totalDebt);
+        // mint dToken
+        SynthxDToken().mint(msg.sender, dTokenMintedAmount);
 
         // issue debt
         Issuer().issueDebt(stake, msg.sender, mintedAmount);
-        // mint dToken
-        SynthxDToken().mint(msg.sender, issueAmount);
 
         History().addAction('Stake', msg.sender, 'Mint', stake, amount, USD, issueAmount);
         Liquidator().watchAccount(stake, msg.sender);
