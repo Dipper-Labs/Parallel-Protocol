@@ -12,9 +12,9 @@ let prices = {}
 
 const req = https.request(options, res => {
 	res.on('data',d => {
-		let res = /hq_str_gb_aapl=".*,([\d\.]*),/m.exec(d.toString());
+		let res = /hq_str_gb_aapl="[^,]*,(\d*\.\d*)/g.exec(d.toString());
 		prices.aapl = res[1];
-		res = /hq_str_gb_tsla=".*,([\d\.]*),/m.exec(d.toString());
+		res = /hq_str_gb_tsla="[^,]*,(\d*\.\d*)/g.exec(d.toString());
 		prices.tsla = res[1];
 		console.log(prices);
 
