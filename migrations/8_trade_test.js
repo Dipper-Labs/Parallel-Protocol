@@ -14,7 +14,6 @@ module.exports = async function(deployer, network, accounts) {
 
     console.log(contractsAddrs);
 
-    contractsAddrs.synthxDToken = '0xde8fd8fa0cafba28adad72ed2f7326e6b09ff6b9';
     let contracts = {};
     contracts.synthx = await Synthx.at(contractsAddrs.synthx);
     contracts.dUSD = await Synth.at(contractsAddrs.dUSD);
@@ -38,7 +37,7 @@ module.exports = async function(deployer, network, accounts) {
             console.log("dTSLA balance:", Web3Utils.fromWei(balance, 'ether'));
 
             // dTSLA => dAPPLE
-            return contracts.synthx.trade(Web3Utils.fromAscii('dTSLA'), Web3Utils.toWei('1', 'ether'), Web3Utils.fromAscii('dAPPLE'));
+            return contracts.synthx.trade(Web3Utils.fromAscii('dTSLA'), Web3Utils.toWei('4', 'milliether'), Web3Utils.fromAscii('dAPPLE'));
         })
         .then((receipt) => {
             console.log('synthx.trade(dTSLA => dAPPLE) receipt: ', receipt);
@@ -59,14 +58,14 @@ module.exports = async function(deployer, network, accounts) {
             return contracts.stats.getAssets(Web3Utils.fromAscii('Stake'), accounts[0]);
         })
         .then((stakeAssets) => {
-            console.log("stake assets:", res);
+            console.log("stake assets:", stakeAssets);
             // get vaullts
             return contracts.stats.getVaults(accounts[0]);
         })
         .then((vaults) => {
             console.log("getVaults:", vaults);
             // getTotalCollateral
-            contracts.stats.getTotalCollateral(accounts[0]);
+            return contracts.stats.getTotalCollateral(accounts[0]);
         })
         .then((totalCollateral) => {
             console.log("getTotalCollateral:", totalCollateral)

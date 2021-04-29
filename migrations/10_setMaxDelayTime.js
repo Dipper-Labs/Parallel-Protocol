@@ -12,7 +12,7 @@ module.exports = async function(deployer, network, accounts) {
 
     let contracts = {};
     contracts.resolver = await Resolver.at(contractsAddrs.resolver);
-    contracts.assetPrice = await AssetPrice.at('0x644a589DeBd2603912Aaf7b79EF73845E3bf55a4')
+    contracts.assetPrice = await AssetPrice.at(contractsAddrs.assetPrice);
 
     await deployer
         .then(() => {
