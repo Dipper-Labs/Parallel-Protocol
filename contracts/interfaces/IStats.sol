@@ -87,8 +87,6 @@ interface IStats {
         uint256 toAmount
     ) external view returns (uint256 tradingAmount, uint256 tradingFee);
 
-    function getRequirdDUSDAmount(bytes32 assetType, address account, uint256 dTokenAmount) external view returns (uint256);
-
     function getWithdrawable(address account) external view returns (uint256);
 
     function getRewards(address account) external view returns (uint256);
