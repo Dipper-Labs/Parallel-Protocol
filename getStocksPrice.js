@@ -12,8 +12,20 @@ let prices = {}
 
 const req = https.request(options, res => {
 	res.on('data',d => {
-		process.stdout.write(d);
-		fs.writeFileSync('StocksPrice.js', d, 'UTF-8');
+		let res = /hq_str_gb_aapl=".*,([\d\.]*),/m.exec(d.toString());
+		prices.aapl = res[1];
+		res = /hq_str_gb_tsla=".*,([\d\.]*),/m.exec(d.toString());
+		prices.tsla = res[1];
+		console.log(prices);
+
+		const stocksPrice = JSON.stringify(prices, null, '\t');
+
+		fs.writeFile('stocks_price.json', stocksPrice, (err) => {
+			if (err) {
+				throw err;
+			}
+			console.log("prices saved");
+		});
 	})
 })
 
@@ -22,8 +34,3 @@ req.on('error', error => {
 })
 
 req.end()
-
-setTimeout(()=>{
-	const sp = require('./StocksPrice.js')
-	console.log(sp.hq_str_gb_aapl);
-}, 2000)
