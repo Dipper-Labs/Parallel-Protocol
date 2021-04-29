@@ -127,7 +127,7 @@ module.exports = async function(deployer, network, accounts) {
         .then((vaults) => {
             console.log("getVaults:", vaults);
             // getTotalCollateral
-            contracts.stats.getTotalCollateral(accounts[0]);
+            return contracts.stats.getTotalCollateral(accounts[0]);
         })
         .then((totalCollateral) => {
             console.log("getTotalCollateral:", totalCollateral)
