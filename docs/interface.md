@@ -339,6 +339,148 @@ signature:
 0x7a408454
 ```
 
+
+### 增加保证金
+
+向仓位中增加保证金，提升抵押率。
+
+1. 如果是nativeCoin，调用stakeFromCoin接口
+
+```cgo
+function stakeFromCoin() external payable returns (bool)
+```
+
+
+abi
+
+```cgo
+    {
+      "constant": false,
+      "inputs": [],
+      "name": "stakeFromCoin",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": true,
+      "stateMutability": "payable",
+      "type": "function"
+    }
+
+```
+
+
+signature:
+```cgo
+0x74d770ac
+```
+
+2. 如果是ERC20， 调用stakeFromToken接口
+
+
+```cgo
+function stakeFromToken(bytes32 stake, uint256 amount) external returns (bool)
+```
+参数说明同mintFromToken， stake为资产名字的bytes32, amount为数量.
+
+
+abi
+
+```cgo
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "stake",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "stakeFromToken",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+```
+
+signature:
+
+```cgo
+0xb307cce8
+```
+
+### 减少保证金
+
+从仓位中取出基础资产，降低抵押率，取回的资产将转至钱包地址。
+
+```cgo
+
+    function transfer(
+        bytes32 stake,
+        address payable recipient,
+        uint256 amount
+    ) public returns (bool)
+```
+
+参数说明： stake为资产名称的bytes32, recipient为收币地址，amount为取回的资产数量。
+
+abi
+
+```cgo
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "stake",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address payable",
+          "name": "recipient",
+          "type": "address"
+        },
+        {
+          "internalType": "uint256",
+          "name": "amount",
+          "type": "uint256"
+        }
+      ],
+      "name": "transfer",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "",
+          "type": "bool"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+```
+
+
+signature:
+```cgo
+3feb1bd8
+```
+
 ### 领取收益
 
 ```cgo
