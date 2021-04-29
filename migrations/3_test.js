@@ -32,7 +32,7 @@ module.exports = async function(deployer, network, accounts) {
     console.log("-------- mint synths -------- ");
     await deployer
         .then(() => {
-            return contracts.synthx.mintFromCoin({value: Web3Utils.toWei('1', 'ether')});
+            return contracts.synthx.mintFromCoin(Web3Utils.toWei('1000', 'ether'), {value: Web3Utils.toWei('1', 'ether')});
         })
         .then((receipt) => {
             console.log('synthx.mintFromCoin receipt: ', receipt);
@@ -99,7 +99,7 @@ module.exports = async function(deployer, network, accounts) {
             console.log("dTSLA balance:", Web3Utils.fromWei(balance, 'ether'));
 
             // dTSLA => dAPPLE
-            return contracts.synthx.trade(Web3Utils.fromAscii('dTSLA'), Web3Utils.toWei('1', 'ether'), Web3Utils.fromAscii('dAPPLE'));
+            return contracts.synthx.trade(Web3Utils.fromAscii('dTSLA'), Web3Utils.toWei('100', 'milliether'), Web3Utils.fromAscii('dAPPLE'));
         })
         .then((receipt) => {
             console.log('synthx.trade(dTSLA => dAPPLE) receipt: ', receipt);

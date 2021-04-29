@@ -3,6 +3,7 @@ pragma solidity ^0.5.17;
 contract Constants {
     bytes32 internal constant SDIP = 'SDIP';
     bytes32 internal constant USD = 'dUSD';
+    bytes32 internal constant DTOKEN = 'dToken';
 
     bytes32 internal constant CONTRACT_RESOLVER = 'Resolver';
     bytes32 internal constant CONTRACT_ASSET_PRICE = 'AssetPrice';

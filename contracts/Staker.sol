@@ -115,10 +115,6 @@ contract Staker is Rewards, IStaker {
         return (claimablePeriod, claimable);
     }
 
-    function getRequirdDUSDAmount(bytes32 assetType, address account, uint256 dTokenAmount) public view returns (uint256) {
-        return dTokenAmount;
-    }
-
     function getClaimable(bytes32 asset, address account) public view returns (uint256) {
         require(asset == SDIP || asset == USD, 'Staker: only supports SYN & yUSD');
 
