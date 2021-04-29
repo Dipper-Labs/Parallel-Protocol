@@ -81,14 +81,14 @@ module.exports = async function(deployer, network, accounts) {
         .then((receipt) => {
             console.log('synthx.claimReward receipt: ', receipt);
 
-            return contracts.synthxToken.balanceOf(accounts[0]);
-        })
-        .then((balance) => {
-            console.log("synthx balance:", Web3Utils.fromWei(balance, 'ether'));
+        //     return contracts.synthxToken.balanceOf(accounts[0]);
+        // })
+        // .then((balance) => {
+        //     console.log("synthx balance:", Web3Utils.fromWei(balance, 'ether'));
 
             console.log("-------- trade -------- ");
             // dUSD => dTSLA
-            return contracts.synthx.trade(Web3Utils.fromAscii('dUSD'), Web3Utils.toWei('1', 'ether'), Web3Utils.fromAscii('dTSLA'));
+            return contracts.synthx.trade(Web3Utils.fromAscii('dUSD'), Web3Utils.toWei('10', 'ether'), Web3Utils.fromAscii('dTSLA'));
         })
         .then((receipt) => {
             console.log('synthx.trade(dUSD => dTSLA) receipt: ', receipt);
@@ -99,7 +99,7 @@ module.exports = async function(deployer, network, accounts) {
             console.log("dTSLA balance:", Web3Utils.fromWei(balance, 'ether'));
 
             // dTSLA => dAPPLE
-            return contracts.synthx.trade(Web3Utils.fromAscii('dTSLA'), Web3Utils.toWei('100', 'milliether'), Web3Utils.fromAscii('dAPPLE'));
+            return contracts.synthx.trade(Web3Utils.fromAscii('dTSLA'), Web3Utils.toWei('10', 'milliether'), Web3Utils.fromAscii('dAPPLE'));
         })
         .then((receipt) => {
             console.log('synthx.trade(dTSLA => dAPPLE) receipt: ', receipt);
@@ -120,7 +120,7 @@ module.exports = async function(deployer, network, accounts) {
             return contracts.stats.getAssets(Web3Utils.fromAscii('Stake'), accounts[0]);
         })
         .then((stakeAssets) => {
-            console.log("stake assets:", res);
+            console.log("stake assets:", stakeAssets);
             // get vaullts
             return contracts.stats.getVaults(accounts[0]);
         })
