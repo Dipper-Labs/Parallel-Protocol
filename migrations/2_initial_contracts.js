@@ -5,7 +5,6 @@ const Storage = artifacts.require("Storage");
 const AddressStorage = artifacts.require("AddressStorage");
 const SettingStorage = artifacts.require("SettingStorage");
 const IssuerStorage = artifacts.require("IssuerStorage");
-const EscrowStorage = artifacts.require("EscrowStorage");
 const LiquidatorStorage = artifacts.require("LiquidatorStorage");
 const StakerStorage = artifacts.require("StakerStorage");
 const OracleStorage = artifacts.require("OracleStorage");
@@ -15,7 +14,6 @@ const TokenStorage = artifacts.require("TokenStorage");
 const Setting = artifacts.require("Setting");
 const Resolver = artifacts.require("Resolver");
 const Issuer = artifacts.require("Issuer");
-const Escrow = artifacts.require("Escrow");
 const History = artifacts.require("History");
 const Liquidator = artifacts.require("Liquidator");
 const Staker = artifacts.require("Staker");
@@ -58,12 +56,6 @@ module.exports = function(deployer, network, accounts) {
             checkUndefined(resolver);
             contracts.resolver = resolver;
             contractsAddrs.resolver = resolver.address;
-            return deployer.deploy(Escrow, contracts.resolver.address);
-        })
-        .then((escrow) => {
-            checkUndefined(escrow);
-            contracts.escrow = escrow;
-            contractsAddrs.escrow = escrow.address;
             return deployer.deploy(Issuer, contracts.resolver.address);
         })
         .then((issuer) => {
@@ -104,8 +96,10 @@ module.exports = function(deployer, network, accounts) {
         })
         .then((trader) => {
             checkUndefined(trader);
+            console.log("====================");
             contracts.trader = trader;
             contractsAddrs.trader = trader.address;
+            console.log("====================");
             return deployer.deploy(Market, Resolver.address);
         })
         .then((market) => {
@@ -145,11 +139,6 @@ module.exports = function(deployer, network, accounts) {
         .then((settingStorage) => {
             contracts.settingStorage = settingStorage;
             checkUndefined(contracts.settingStorage);
-            return deployer.deploy(EscrowStorage, contracts.escrow.address);
-        })
-        .then((escrowStorage) => {
-            contracts.escrowStorage = escrowStorage;
-            checkUndefined(contracts.escrowStorage);
             return deployer.deploy(IssuerStorage, contracts.issuer.address);
         })
         .then((issuerStorage) => {
@@ -179,10 +168,6 @@ module.exports = function(deployer, network, accounts) {
         })
         .then((receipt) => {
             console.log('setting.setStorage receipts: ', receipt);
-            return contracts.escrow.setStorage(contracts.escrowStorage.address);
-        })
-        .then((receipt) => {
-            console.log('escrow.setStorage receipts: ', receipt);
             return contracts.issuer.setStorage(contracts.issuerStorage.address);
         })
         .then((receipt) => {
@@ -328,10 +313,6 @@ module.exports = function(deployer, network, accounts) {
         })
         .then((receipt) => {
             console.log('assetPrice.setMaxDelayTime receipts: ', receipt);
-            return contracts.resolver.setAddress(Web3Utils.fromAscii('Escrow'), contracts.escrow.address);
-        })
-        .then((receipt) => {
-            console.log('resolver.setAddress(Escrow) receipts: ', receipt);
             return contracts.resolver.setAddress(Web3Utils.fromAscii('Staker'), contracts.staker.address);
         })
         .then((receipt) => {
@@ -401,10 +382,6 @@ module.exports = function(deployer, network, accounts) {
         })
         .then((receipt) => {
             console.log('synthx.refreshCache receipt: ', receipt);
-            return contracts.escrow.refreshCache();
-        })
-        .then((receipt) => {
-            console.log('escrow.refreshCache receipt: ', receipt);
             return contracts.staker.refreshCache();
         })
         .then((receipt) => {

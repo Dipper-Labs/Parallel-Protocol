@@ -134,6 +134,10 @@ contract Trader is Rewards, ITrader {
     {
     }
 
+    function getClaimable(address account) public view returns (uint256) {
+        return 0;
+    }
+
     function getTradingFee(address account, uint256 period) external view returns (uint256) {
         return Storage().getTradingFee(account, period);
     }

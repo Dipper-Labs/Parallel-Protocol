@@ -21,7 +21,8 @@ contract Staker is Rewards, IStaker {
             CONTRACT_SUPPLY_SCHEDULE,
             CONTRACT_ISSUER,
             CONTRACT_SETTING,
-            CONTRACT_ASSET_PRICE
+            CONTRACT_ASSET_PRICE,
+            CONTRACT_SYNTHX_TOKEN
         ];
     }
 
@@ -104,7 +105,7 @@ contract Staker is Rewards, IStaker {
 
     function getClaimable(address account) public view returns (uint256) {
         // TODO
-        uint256 claimable = 1e19;
+        uint256 claimable = IERC20(requireAddress(CONTRACT_SYNTHX_TOKEN)).balanceOf(address(this));
         return claimable;
     }
 }

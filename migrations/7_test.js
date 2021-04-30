@@ -4,6 +4,7 @@ const Web3Utils = require('web3-utils');
 const Synthx = artifacts.require("Synthx");
 const Synth = artifacts.require("Synth");
 const Stats = artifacts.require("Stats");
+const SynthxToken = artifacts.require("SynthxToken");
 const SynthxDToken = artifacts.require("SynthxDToken");
 
 module.exports = async function(deployer, network, accounts) {
@@ -19,6 +20,7 @@ module.exports = async function(deployer, network, accounts) {
     contracts.dUSD = await Synth.at(contractsAddrs.dUSD);
     contracts.stats = await Stats.at(contractsAddrs.stats);
     contracts.synthxDToken = await SynthxDToken.at(contractsAddrs.synthxDToken);
+    contracts.synthxToken = await SynthxToken.at(contractsAddrs.synthxToken);
     contracts.dTSLA = await Synth.at(contractsAddrs.dTSLA);
     contracts.dAPPLE = await Synth.at(contractsAddrs.dAPPLE);
 
@@ -70,16 +72,11 @@ module.exports = async function(deployer, network, accounts) {
         })
         .then((reward) => {
             console.log("rewards: ", Web3Utils.fromWei(reward, 'ether'))
-            return contracts.stats.getWithdrawable(accounts[0]);
-        })
-        .then((rewardable) => {
-            console.log("getWithdrawable:", Web3Utils.fromWei(rewardable, 'ether'));
-
-            console.log("-------- claim rewards -------- ");
-            return contracts.synthx.claimReward();
-        })
-        .then((receipt) => {
-            console.log('synthx.claimReward receipt: ', receipt);
+        //     console.log("-------- claim rewards -------- ");
+        //     return contracts.synthx.claimReward();
+        // })
+        // .then((receipt) => {
+        //     console.log('synthx.claimReward receipt: ', receipt);
 
         //     return contracts.synthxToken.balanceOf(accounts[0]);
         // })
