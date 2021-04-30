@@ -12,7 +12,8 @@ contract SupplySchedule is Importable, ISupplySchedule {
     using SafeMath for uint256;
     using PreciseMath for uint256;
 
-    uint256[] public SUPPLY_SCHEDULE = [9000E22, 6222E22, 4012E22, 2444E22, 1228E22, 200E22];
+    // 315360000 = 30 * 20(20blocks/minute) * 60 * 24 * 365
+    uint256[] public SUPPLY_SCHEDULE = [31536E22, 15768E22, 7884E22, 3942E22, 1971E22, 9855E21];
 
     uint256 public startMintTime;
     uint256 public lastMintTime;
