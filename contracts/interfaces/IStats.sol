@@ -69,7 +69,6 @@ interface IStats {
         view
         returns (
             uint256 balance,
-            uint256 escrowed,
             uint256 transferable
         );
 
@@ -86,8 +85,6 @@ interface IStats {
         bytes32 toSynth,
         uint256 toAmount
     ) external view returns (uint256 tradingAmount, uint256 tradingFee);
-
-    function getWithdrawable(address account) external view returns (uint256);
 
     function getRewards(address account) external view returns (uint256);
 

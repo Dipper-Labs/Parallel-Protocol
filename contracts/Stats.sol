@@ -7,7 +7,6 @@ import './lib/PreciseMath.sol';
 import './base/Importable.sol';
 import './interfaces/IStats.sol';
 import './interfaces/ISynthx.sol';
-import './interfaces/IEscrow.sol';
 import './interfaces/IStaker.sol';
 import './interfaces/IAssetPrice.sol';
 import './interfaces/ISetting.sol';
@@ -30,7 +29,6 @@ contract Stats is Importable, IStats {
         imports = [
             CONTRACT_SUPPLY_SCHEDULE,
             CONTRACT_SYNTHX,
-            CONTRACT_ESCROW,
             CONTRACT_STAKER,
             CONTRACT_ASSET_PRICE,
             CONTRACT_SETTING,
@@ -42,10 +40,6 @@ contract Stats is Importable, IStats {
 
     function Synthx() private view returns (ISynthx) {
         return ISynthx(requireAddress(CONTRACT_SYNTHX));
-    }
-
-    function Escrow() private view returns (IEscrow) {
-        return IEscrow(requireAddress(CONTRACT_ESCROW));
     }
 
     function Staker() private view returns (IStaker) {
@@ -212,23 +206,18 @@ contract Stats is Importable, IStats {
         totalCollateralRatio = totalCollateralValue.decimalDivide(totalDebt);
     }
 
-    function getEscrowed(address account) external view returns (uint256 total) {
-        return Escrow().getBalance(account);
-    }
 
     function getAvailable(bytes32 stake, address account)
         external
         view
         returns (
             uint256 balance,
-            uint256 escrowed,
             uint256 transferable
         )
     {
         bytes32 assetName = stake;
         address assetAddress = requireAsset(STAKE, assetName);
         balance = _getBalance(assetName, assetAddress, account);
-        escrowed = (assetName == SDIP) ? Escrow().getBalance(account) : 0;
         (transferable) = Staker().getTransferable(assetName, account);
     }
 
@@ -262,12 +251,9 @@ contract Stats is Importable, IStats {
         (tradingAmount, tradingFee, , ) = Trader().getTradingAmountAndFee(fromSynth, toSynth, toAmount);
     }
 
-    function getWithdrawable(address account) external view returns (uint256) {
-        return Escrow().getWithdrawable(account);
-    }
 
     function getRewards(address account) external view returns (uint256) {
-        return Rewards(CONTRACT_STAKER).getClaimable(SDIP, account);
+        return Rewards(CONTRACT_STAKER).getClaimable(account);
     }
 
     function getAssetMarket(bytes32 asset)

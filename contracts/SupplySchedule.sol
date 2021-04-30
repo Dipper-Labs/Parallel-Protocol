@@ -5,7 +5,6 @@ import './lib/SafeMath.sol';
 import './lib/PreciseMath.sol';
 import './base/Importable.sol';
 import './interfaces/ISetting.sol';
-import './interfaces/IEscrow.sol';
 import './interfaces/IHistory.sol';
 
 contract SupplySchedule is Importable, ISupplySchedule {
@@ -28,7 +27,6 @@ contract SupplySchedule is Importable, ISupplySchedule {
         imports = [
             CONTRACT_SYNTHX_TOKEN,
             CONTRACT_SETTING,
-            CONTRACT_ESCROW,
             CONTRACT_TRADER,
             CONTRACT_TEAM,
             CONTRACT_HISTORY
@@ -46,9 +44,6 @@ contract SupplySchedule is Importable, ISupplySchedule {
         return ISetting(requireAddress(CONTRACT_SETTING));
     }
 
-    function Escrow() private view returns (IEscrow) {
-        return IEscrow(requireAddress(CONTRACT_ESCROW));
-    }
 
     function History() private view returns (IHistory) {
         return IHistory(requireAddress(CONTRACT_HISTORY));
@@ -93,33 +88,24 @@ contract SupplySchedule is Importable, ISupplySchedule {
         uint256 totalSupply = 0;
         uint256 traderSupply = 0;
         uint256 teamSupply = 0;
-        uint256 escrowSupply = 0;
 
         for (uint256 i = lastMintPeriod; i < currentPeriod; i++) {
             uint256 supply = periodSupply(i);
 
             uint256 traderPeriodSupply = supply.decimalMultiply(percentages[CONTRACT_TRADER]);
-            uint256 escrowPeriodSupply = supply.sub(traderSupply);
 
             traderSupply = traderSupply.add(traderPeriodSupply);
-            escrowSupply = escrowSupply.add(escrowPeriodSupply);
             teamSupply = teamSupply.add(supply.decimalMultiply(percentages[CONTRACT_TEAM]));
-            totalSupply = totalSupply.add(traderSupply).add(escrowSupply);
+            totalSupply = totalSupply.add(traderSupply);
         }
 
         if (totalSupply == 0) return (recipients, amounts);
 
-        recipients = new address[](2);
+        recipients = new address[](1);
         recipients[0] = requireAddress(CONTRACT_TRADER);
-        recipients[1] = requireAddress(CONTRACT_ESCROW);
         amounts = new uint256[](2);
         amounts[0] = traderSupply;
-        amounts[1] = escrowSupply;
 
-        address teamAddress = requireAddress(CONTRACT_TEAM);
-
-        Escrow().deposit(lastMintPeriod, teamAddress, teamSupply);
-        History().addAction('Claim', teamAddress, CONTRACT_SUPPLY_SCHEDULE, SDIP, 0, SDIP, teamSupply);
         lastMintTime = now;
     }
 

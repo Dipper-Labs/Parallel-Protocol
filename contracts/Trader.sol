@@ -124,7 +124,7 @@ contract Trader is Rewards, ITrader {
         tradingAmount = fromSynthValue.decimalDivide(fromSynthPrice);
     }
 
-    function claim(bytes32 asset, address account)
+    function claim(address account)
         external
         onlyAddress(CONTRACT_SYNTHX)
         returns (
@@ -132,30 +132,6 @@ contract Trader is Rewards, ITrader {
             uint256 amount
         )
     {
-        uint256 claimable = getClaimable(asset, account);
-        require(claimable > 0, 'Trader: claimable is zero');
-
-        uint256 claimablePeriod = getClaimablePeriod();
-        setClaimed(asset, account, claimablePeriod, claimable);
-
-        IERC20(requireAddress(CONTRACT_SYNTHX_TOKEN)).safeTransfer(account, claimable);
-
-        return (claimablePeriod, claimable);
-    }
-
-    function getClaimable(bytes32 asset, address account) public view returns (uint256) {
-        require(asset == SDIP, 'Trader: only supports SYN');
-
-        uint256 rewards = getRewardSupply(CONTRACT_TRADER);
-        if (rewards == 0) return 0;
-
-        uint256 claimablePeriod = getClaimablePeriod();
-        if (getClaimed(asset, account, claimablePeriod) > 0) return 0;
-
-        uint256 totalTradingFee = Storage().getTradingFee(address(0), claimablePeriod);
-        uint256 accountTradingFee = Storage().getTradingFee(account, claimablePeriod);
-        uint256 percentage = accountTradingFee.decimalDivide(totalTradingFee);
-        return rewards.decimalMultiply(percentage);
     }
 
     function getTradingFee(address account, uint256 period) external view returns (uint256) {

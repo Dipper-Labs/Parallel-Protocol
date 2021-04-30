@@ -8,7 +8,6 @@ import './base/Proxyable.sol';
 import './base/Pausable.sol';
 import './base/Importable.sol';
 import './interfaces/ISynthx.sol';
-import './interfaces/IEscrow.sol';
 import './interfaces/IStaker.sol';
 import './interfaces/ITrader.sol';
 import './interfaces/IAssetPrice.sol';
@@ -40,7 +39,6 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         nativeCoin = _nativeCoin;
         setContractName(CONTRACT_SYNTHX);
         imports = [
-            CONTRACT_ESCROW,
             CONTRACT_STAKER,
             CONTRACT_ASSET_PRICE,
             CONTRACT_SETTING,
@@ -53,10 +51,6 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
             CONTRACT_LIQUIDATOR
         ];
         return true;
-    }
-
-    function Escrow() private view returns (IEscrow) {
-        return IEscrow(requireAddress(CONTRACT_ESCROW));
     }
 
     function Staker() private view returns (IStaker) {
@@ -280,11 +274,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
     }
 
     function claimReward() external onlyInitialized notPaused returns (bool) {
-//        Rewards(CONTRACT_STAKER).claim(SDIP, msg.sender);
-//        uint256 amount = Escrow().getWithdrawable(msg.sender);
-//        Escrow().withdraw(msg.sender, amount);
-//        SynthxToken().mint();
-//        emit ClaimReward(msg.sender, amount);
+        Rewards(CONTRACT_STAKER).claim(msg.sender);
         return true;
     }
 
