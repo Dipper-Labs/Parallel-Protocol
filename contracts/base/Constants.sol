@@ -15,7 +15,8 @@ contract Constants {
 
     bytes32 internal constant CONTRACT_STAKER = 'Staker';
     bytes32 internal constant CONTRACT_TRADER = 'Trader';
-    bytes32 internal constant CONTRACT_TEAM = 'Team';
+    bytes32 internal constant CONTRACT_FOUNDATION = 'FOUNDATION';
+    bytes32 internal constant CONTRACT_ECOLOGY = 'ECOLOGY';
 
     bytes32 internal constant CONTRACT_SYNTHX_TOKEN = 'SynthxToken';
     bytes32 internal constant CONTRACT_SYNTHX_DTOKEN = 'SynthxDToken';

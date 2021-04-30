@@ -28,9 +28,8 @@ contract SupplySchedule is Importable, ISupplySchedule {
         imports = [
             CONTRACT_SYNTHX_TOKEN,
             CONTRACT_SETTING,
-            CONTRACT_ESCROW,
-            CONTRACT_TRADER,
-            CONTRACT_TEAM,
+            CONTRACT_FOUNDATION,
+            CONTRACT_ECOLOGY,
             CONTRACT_HISTORY
         ];
 
@@ -38,16 +37,12 @@ contract SupplySchedule is Importable, ISupplySchedule {
         lastMintTime = (_lastMintTime < startMintTime) ? startMintTime : _lastMintTime;
 
         percentages[CONTRACT_STAKER] = 0.8 ether; // 80%
-        percentages[CONTRACT_TEAM] = 0.15 ether; // 15%
-        percentages[CONTRACT_TRADER] = 0.01 ether; // 1%
+        percentages[CONTRACT_FOUNDATION] = 0.15 ether; // 15%
+        percentages[CONTRACT_ECOLOGY] = 0.05 ether; // 5%
     }
 
     function Setting() private view returns (ISetting) {
         return ISetting(requireAddress(CONTRACT_SETTING));
-    }
-
-    function Escrow() private view returns (IEscrow) {
-        return IEscrow(requireAddress(CONTRACT_ESCROW));
     }
 
     function History() private view returns (IHistory) {
@@ -69,15 +64,13 @@ contract SupplySchedule is Importable, ISupplySchedule {
     }
 
     function _isRecipient(bytes32 recipient) private pure returns (bool) {
-        return (recipient == CONTRACT_TRADER ||
-            recipient == CONTRACT_TEAM ||
-            recipient == CONTRACT_STAKER);
+        return (recipient == CONTRACT_FOUNDATION ||
+            recipient == CONTRACT_ECOLOGY);
     }
 
     function _getTotalPercentageWithoutStaker() private view returns (uint256) {
-        return
-            percentages[CONTRACT_TRADER]
-                .add(percentages[CONTRACT_TEAM]);
+        return percentages[CONTRACT_FOUNDATION]
+            .add(percentages[CONTRACT_ECOLOGY]);
     }
 
     function distributeSupply()
@@ -103,7 +96,7 @@ contract SupplySchedule is Importable, ISupplySchedule {
 
             traderSupply = traderSupply.add(traderPeriodSupply);
             escrowSupply = escrowSupply.add(escrowPeriodSupply);
-            teamSupply = teamSupply.add(supply.decimalMultiply(percentages[CONTRACT_TEAM]));
+            teamSupply = teamSupply.add(supply.decimalMultiply(percentages[CONTRACT_FOUNDATION]));
             totalSupply = totalSupply.add(traderSupply).add(escrowSupply);
         }
 
@@ -116,10 +109,10 @@ contract SupplySchedule is Importable, ISupplySchedule {
         amounts[0] = traderSupply;
         amounts[1] = escrowSupply;
 
-        address teamAddress = requireAddress(CONTRACT_TEAM);
+//        address teamAddress = requireAddress(CONTRACT_FOUNDATION);
 
-        Escrow().deposit(lastMintPeriod, teamAddress, teamSupply);
-        History().addAction('Claim', teamAddress, CONTRACT_SUPPLY_SCHEDULE, SDIP, 0, SDIP, teamSupply);
+//        Escrow().deposit(lastMintPeriod, teamAddress, teamSupply);
+//        History().addAction('Claim', teamAddress, CONTRACT_SUPPLY_SCHEDULE, SDIP, 0, SDIP, teamSupply);
         lastMintTime = now;
     }
 
