@@ -82,29 +82,10 @@ contract SupplySchedule is Importable, ISupplySchedule {
     {
         if (now < nextMintTime()) return (recipients, amounts);
 
-        uint256 currentPeriod = currentPeriod();
-        uint256 lastMintPeriod = lastMintPeriod();
-
-        uint256 totalSupply = 0;
-        uint256 traderSupply = 0;
-        uint256 teamSupply = 0;
-
-        for (uint256 i = lastMintPeriod; i < currentPeriod; i++) {
-            uint256 supply = periodSupply(i);
-
-            uint256 traderPeriodSupply = supply.decimalMultiply(percentages[CONTRACT_TRADER]);
-
-            traderSupply = traderSupply.add(traderPeriodSupply);
-            teamSupply = teamSupply.add(supply.decimalMultiply(percentages[CONTRACT_TEAM]));
-            totalSupply = totalSupply.add(traderSupply);
-        }
-
-        if (totalSupply == 0) return (recipients, amounts);
-
         recipients = new address[](1);
-        recipients[0] = requireAddress(CONTRACT_TRADER);
+        recipients[0] = requireAddress(CONTRACT_STAKER);
         amounts = new uint256[](2);
-        amounts[0] = traderSupply;
+        amounts[0] = 1e19;
 
         lastMintTime = now;
     }
