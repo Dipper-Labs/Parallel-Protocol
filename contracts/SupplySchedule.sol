@@ -27,6 +27,7 @@ contract SupplySchedule is Importable, ISupplySchedule {
         imports = [
             CONTRACT_SYNTHX_TOKEN,
             CONTRACT_SETTING,
+            CONTRACT_STAKER,
             CONTRACT_TRADER,
             CONTRACT_TEAM,
             CONTRACT_HISTORY

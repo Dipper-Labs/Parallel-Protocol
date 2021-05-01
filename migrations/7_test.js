@@ -65,6 +65,7 @@ module.exports = async function(deployer, network, accounts) {
         .then((balance) => {
             console.log("dToken balance:", Web3Utils.fromWei(balance, 'ether'));
             return contracts.stats.getTotalCollateral(accounts[0]);
+            new Promise(r => setTimeout(r, 2000));
         })
         .then((totalCollateral) => {
             console.log("totalDebt:", Web3Utils.fromWei(totalCollateral.totalDebt, 'ether'));
@@ -72,11 +73,12 @@ module.exports = async function(deployer, network, accounts) {
         })
         .then((reward) => {
             console.log("rewards: ", Web3Utils.fromWei(reward, 'ether'))
+
         //     console.log("-------- claim rewards -------- ");
-        //     return contracts.synthx.claimReward();
-        // })
-        // .then((receipt) => {
-        //     console.log('synthx.claimReward receipt: ', receipt);
+            return contracts.synthx.claimReward();
+        })
+        .then((receipt) => {
+            console.log('synthx.claimReward receipt: ', receipt);
 
         //     return contracts.synthxToken.balanceOf(accounts[0]);
         // })

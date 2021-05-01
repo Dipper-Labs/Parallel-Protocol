@@ -197,7 +197,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
 
         History().addAction('Stake', msg.sender, 'Mint', stake, amount, USD, issueAmount);
         Liquidator().watchAccount(stake, msg.sender);
-//        SynthxToken().mint();
+        SynthxToken().mint();
         emit Minted(msg.sender, from, stake, amount, issueAmount);
     }
 
@@ -218,7 +218,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
 
         History().addAction('Stake', msg.sender, 'Burn', stake, 0, DTOKEN, dTokenAmount);
         Liquidator().watchAccount(stake, msg.sender);
-//        SynthxToken().mint();
+        SynthxToken().mint();
 
         emit Burned(msg.sender, stake, burnAmount);
         return true;
@@ -243,7 +243,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
 
         History().addAction('Stake', msg.sender, 'Transfer', stake, amount, bytes32(0), 0);
         Liquidator().watchAccount(stake, msg.sender);
-//        SynthxToken().mint();
+        SynthxToken().mint();
         emit Transfered(msg.sender, stake, recipient, amount);
         return true;
     }
@@ -259,7 +259,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         Market().addTrade(fromSynth, fromAmount, fromSynthPrice, toSynth, tradingAmount, toSynthPirce);
         History().addTrade(msg.sender, fromSynth, fromAmount, fromSynthPrice, toSynth, tradingAmount, toSynthPirce);
 
-//        SynthxToken().mint();
+        SynthxToken().mint();
         emit Traded(
             msg.sender,
             fromSynth,
