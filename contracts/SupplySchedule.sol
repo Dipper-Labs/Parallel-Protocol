@@ -27,7 +27,8 @@ contract SupplySchedule is Importable, ISupplySchedule {
         setContractName(CONTRACT_SUPPLY_SCHEDULE);
         imports = [
             CONTRACT_SYNTHX_TOKEN,
-            CONTRACT_SETTING,
+            CONTRACT_SETTIN,
+            CONTRACT_STAKER,
             CONTRACT_FOUNDATION,
             CONTRACT_ECOLOGY,
             CONTRACT_HISTORY
@@ -65,6 +66,7 @@ contract SupplySchedule is Importable, ISupplySchedule {
 
     function _isRecipient(bytes32 recipient) private pure returns (bool) {
         return (recipient == CONTRACT_FOUNDATION ||
+            recipient == CONTRACT_STAKER ||
             recipient == CONTRACT_ECOLOGY);
     }
 
@@ -109,10 +111,6 @@ contract SupplySchedule is Importable, ISupplySchedule {
         amounts[0] = traderSupply;
         amounts[1] = escrowSupply;
 
-//        address teamAddress = requireAddress(CONTRACT_FOUNDATION);
-
-//        Escrow().deposit(lastMintPeriod, teamAddress, teamSupply);
-//        History().addAction('Claim', teamAddress, CONTRACT_SUPPLY_SCHEDULE, SDIP, 0, SDIP, teamSupply);
         lastMintTime = now;
     }
 
