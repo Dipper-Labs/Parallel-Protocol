@@ -84,28 +84,4 @@ contract Staker is Rewards, IStaker {
         uint256 staked = getStaked(token, account);
         return staked.decimalMultiply(price).decimalDivide(debt);
     }
-
-    function claim(address account)
-        external
-        onlyAddress(CONTRACT_SYNTHX)
-        returns (
-            uint256 period,
-            uint256 amount
-        )
-    {
-        uint256 claimable = getClaimable(account);
-        require(claimable > 0, 'Holder: claimable is zero');
-
-        uint256 claimablePeriod = getClaimablePeriod();
-        setClaimed(account, claimablePeriod, claimable);
-
-        IERC20(requireAddress(CONTRACT_SYNTHX_TOKEN)).safeTransfer(account, claimable);
-        return (claimablePeriod, claimable);
-    }
-
-    function getClaimable(address account) public view returns (uint256) {
-        // TODO
-        uint256 claimable = IERC20(requireAddress(CONTRACT_SYNTHX_TOKEN)).balanceOf(address(this));
-        return claimable;
-    }
 }

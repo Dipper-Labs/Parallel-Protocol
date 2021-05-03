@@ -65,21 +65,25 @@ contract Holder is Rewards, IHolder {
 
         uint256 claimablePeriod = getClaimablePeriod();
         setClaimed(account, claimablePeriod, claimable);
+        setLastClaimedPeriod(account, claimablePeriod);
 
         ERC20DToken().safeTransfer(account, claimable);
         return (claimablePeriod, claimable);
     }
 
     function getClaimable(address account) public view returns (uint256) {
-        uint256 rewards = getRewardSupply(CONTRACT_HOLDER);
-        if (rewards == 0) return 0;
-
+        uint256 lastClaimedPeriod = getLastClaimedPeriod(account);
         uint256 claimablePeriod = getClaimablePeriod();
         if (getClaimed(account, claimablePeriod) > 0) return 0;
 
-        uint256 totalSuppy = Storage().getBalance(address(0), claimablePeriod);
-        uint256 accountBalance = Storage().getBalance(account, claimablePeriod);
-        uint256 percentage = accountBalance.decimalDivide(totalSuppy);
-        return rewards.decimalMultiply(percentage);
+        uint256 totalClaimable = 0;
+        for (uint256 i = lastClaimedPeriod; i < claimablePeriod; i++) {
+            uint256 totalSuppy = Storage().getBalance(address(0), i);
+            uint256 totalRewards = getRewardSupply(CONTRACT_HOLDER, i);
+            uint256 accountBalance = Storage().getBalance(account, i);
+            uint256 rewards = totalRewards.decimalMultiply(accountBalance).decimalDivide(totalSuppy);
+            totalClaimable = totalClaimable.add(rewards);
+        }
+        return totalClaimable;
     }
 }

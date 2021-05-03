@@ -5,6 +5,7 @@ import '../interfaces/storages/IRewardsStorage.sol';
 
 contract RewardsStorage is ExternalStorage, IRewardsStorage {
      mapping(address => mapping(uint256 => uint256)) private _claimed;
+     mapping(address => uint256) private _lastClaimedPeriod;
 
     constructor(address _manager) public ExternalStorage(_manager) {}
 
@@ -23,5 +24,17 @@ contract RewardsStorage is ExternalStorage, IRewardsStorage {
         uint256 period
     ) external view returns (uint256) {
         return _claimed[account][period];
+    }
+
+    function setLastClaimedPeriod(
+        address account,
+        uint256 period
+    ) external onlyManager(managerName) {
+        require(_lastClaimedPeriod[account] == 0, "RewardsStorage: already set last claimed");
+        _lastClaimedPeriod[account] = period;
+    }
+
+    function getLastClaimedPeriod(address account) external view returns (uint256) {
+        return _lastClaimedPeriod[account];
     }
 }
