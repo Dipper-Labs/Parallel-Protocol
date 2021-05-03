@@ -274,7 +274,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
     }
 
     function claimReward() external onlyInitialized notPaused returns (bool) {
-        Rewards(CONTRACT_STAKER).claim(msg.sender);
+        Rewards(CONTRACT_HOLDER).claim(msg.sender);
         return true;
     }
 

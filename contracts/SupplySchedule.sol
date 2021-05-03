@@ -27,7 +27,7 @@ contract SupplySchedule is Importable, ISupplySchedule {
         imports = [
             CONTRACT_SYNTHX_TOKEN,
             CONTRACT_SETTING,
-            CONTRACT_STAKER,
+            CONTRACT_HOLDER,
             CONTRACT_TRADER,
             CONTRACT_TEAM,
             CONTRACT_HISTORY
@@ -36,7 +36,7 @@ contract SupplySchedule is Importable, ISupplySchedule {
         startMintTime = (_startMintTime == 0) ? now : _startMintTime;
         lastMintTime = (_lastMintTime < startMintTime) ? startMintTime : _lastMintTime;
 
-        percentages[CONTRACT_STAKER] = 0.8 ether; // 80%
+        percentages[CONTRACT_HOLDER] = 0.8 ether; // 80%
         percentages[CONTRACT_TEAM] = 0.15 ether; // 15%
         percentages[CONTRACT_TRADER] = 0.01 ether; // 1%
     }
@@ -52,7 +52,7 @@ contract SupplySchedule is Importable, ISupplySchedule {
 
     function setPercentage(bytes32 recipient, uint256 percent) external onlyOwner {
         require(_isRecipient(recipient), 'SupplySchedule: invalid recipient');
-        require(recipient != CONTRACT_STAKER, 'SupplySchedule: invalid recipient');
+        require(recipient != CONTRACT_HOLDER, 'SupplySchedule: invalid recipient');
 
         emit SupplyPercentageChanged(recipient, percentages[recipient], percent);
         percentages[recipient] = percent;
@@ -61,13 +61,13 @@ contract SupplySchedule is Importable, ISupplySchedule {
             totalPercentage <= PreciseMath.DECIMAL_ONE(),
             'SupplySchedule: total percent must be no greater than 100%'
         );
-        percentages[CONTRACT_STAKER] = PreciseMath.DECIMAL_ONE().sub(totalPercentage);
+        percentages[CONTRACT_HOLDER] = PreciseMath.DECIMAL_ONE().sub(totalPercentage);
     }
 
     function _isRecipient(bytes32 recipient) private pure returns (bool) {
         return (recipient == CONTRACT_TRADER ||
             recipient == CONTRACT_TEAM ||
-            recipient == CONTRACT_STAKER);
+            recipient == CONTRACT_HOLDER);
     }
 
     function _getTotalPercentageWithoutStaker() private view returns (uint256) {
@@ -84,7 +84,7 @@ contract SupplySchedule is Importable, ISupplySchedule {
         if (now < nextMintTime()) return (recipients, amounts);
 
         recipients = new address[](1);
-        recipients[0] = requireAddress(CONTRACT_STAKER);
+        recipients[0] = requireAddress(CONTRACT_HOLDER);
         amounts = new uint256[](2);
         amounts[0] = 1e19;
 
