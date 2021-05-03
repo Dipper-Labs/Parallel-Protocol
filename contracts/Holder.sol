@@ -6,8 +6,6 @@ import './base/Rewards.sol';
 import './interfaces/IHolder.sol';
 import './interfaces/storages/IHolderStorage.sol';
 import './interfaces/IERC20.sol';
-import './interfaces/ISynthxDToken.sol';
-
 
 contract Holder is Rewards, IHolder {
     using SafeERC20 for IERC20;
@@ -21,10 +19,6 @@ contract Holder is Rewards, IHolder {
 
     function Storage() private view returns (IHolderStorage) {
         return IHolderStorage(getStorage());
-    }
-
-    function SynthxDToken() private view returns (ISynthxDToken) {
-        return ISynthxDToken(requireAddress(CONTRACT_SYNTHX_DTOKEN));
     }
 
     function ERC20DToken() private view returns (IERC20) {

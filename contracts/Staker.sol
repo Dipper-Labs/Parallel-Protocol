@@ -84,4 +84,20 @@ contract Staker is Rewards, IStaker {
         uint256 staked = getStaked(token, account);
         return staked.decimalMultiply(price).decimalDivide(debt);
     }
+
+
+    function claim(address account)
+    external
+    onlyAddress(CONTRACT_SYNTHX)
+    returns (
+        uint256 period,
+        uint256 amount
+    )
+    {
+    }
+
+    function getClaimable(address account) public view returns (uint256) {
+        return 0;
+    }
+
 }

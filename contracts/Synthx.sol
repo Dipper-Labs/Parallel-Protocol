@@ -9,11 +9,11 @@ import './base/Pausable.sol';
 import './base/Importable.sol';
 import './interfaces/ISynthx.sol';
 import './interfaces/IStaker.sol';
+import './interfaces/IHolder.sol';
 import './interfaces/ITrader.sol';
 import './interfaces/IAssetPrice.sol';
 import './interfaces/ISetting.sol';
 import './interfaces/IIssuer.sol';
-import './interfaces/IRewards.sol';
 import './interfaces/ISynthxToken.sol';
 import './interfaces/ISynthxDToken.sol';
 import './interfaces/IMarket.sol';
@@ -44,6 +44,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
             CONTRACT_SETTING,
             CONTRACT_ISSUER,
             CONTRACT_TRADER,
+            CONTRACT_HOLDER,
             CONTRACT_SYNTHX_TOKEN,
             CONTRACT_SYNTHX_DTOKEN,
             CONTRACT_MARKET,
@@ -55,6 +56,10 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
 
     function Staker() private view returns (IStaker) {
         return IStaker(requireAddress(CONTRACT_STAKER));
+    }
+
+    function Holder() private view returns (IHolder) {
+        return IHolder(requireAddress(CONTRACT_HOLDER));
     }
 
     function AssetPrice() private view returns (IAssetPrice) {
@@ -71,10 +76,6 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
 
     function Trader() private view returns (ITrader) {
         return ITrader(requireAddress(CONTRACT_TRADER));
-    }
-
-    function Rewards(bytes32 reward) private view returns (IRewards) {
-        return IRewards(requireAddress(reward));
     }
 
     function SynthxToken() private view returns (ISynthxToken) {
@@ -274,7 +275,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
     }
 
     function claimReward() external onlyInitialized notPaused returns (bool) {
-        Rewards(CONTRACT_HOLDER).claim(msg.sender);
+        Holder().claim(msg.sender);
         return true;
     }
 
