@@ -25,7 +25,7 @@ contract Holder is Rewards, IHolder {
         return IERC20(requireAddress(CONTRACT_SYNTHX_DTOKEN));
     }
 
-    function _setBalance(address account) private {
+    function setBalance(address account) external onlyAddress(CONTRACT_SYNTHX) {
         uint256 balance = ERC20DToken().balanceOf(account);
         uint256 totalSupply = ERC20DToken().totalSupply();
         Storage().setBalance(account, getCurrentPeriod(), balance, totalSupply);
