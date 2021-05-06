@@ -57,16 +57,18 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
         uint256 amount,
         uint256 dTokenMintedAmount
     ) external onlyAddress(CONTRACT_SYNTHX) {
+        Item memory item;
+
         uint256 currentPeriod = getCurrentPeriod();
         uint256 totalDebt = getTotalDebt();
         (uint256 lastDebt,) = Storage().getLastDebt(currentPeriod);
 
-        (uint256 accountDebt, uint256 dtokens, ) = _getDebt(stake, account, currentPeriod, lastDebt, totalDebt);
-        (uint256 stakeDebt, , ) = _getDebt(stake, address(0), currentPeriod, lastDebt, totalDebt);
+        (item.accountDebt, item.dtokens, ) = _getDebt(stake, account, currentPeriod, lastDebt, totalDebt);
+        (item.stakeDebt, , ) = _getDebt(stake, address(0), currentPeriod, lastDebt, totalDebt);
 
         uint256 newTotalDebt = totalDebt.add(amount);
         uint256 newLastDebt = PreciseMath.PRECISE_ONE();
-        uint256 newDtokens = dtokens.add(dTokenMintedAmount);
+        item.dtokens = item.dtokens.add(dTokenMintedAmount);
 
         if (lastDebt > 0) {
             uint256 delta = amount.preciseDivide(newTotalDebt);
@@ -77,15 +79,22 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
             stake,
             account,
             currentPeriod,
-            accountDebt.add(amount),
-            stakeDebt.add(amount),
+            item.accountDebt.add(amount),
+            item.stakeDebt.add(amount),
             newTotalDebt,
             newLastDebt,
-            newDtokens,
+            item.dtokens,
             now
         );
 
         Synth(USD).mint(account, amount);
+    }
+
+    struct Item {
+        uint256 accountDebt;
+        uint256 dtokens;
+        uint256 stakeDebt;
+        uint256 lastTime;
     }
 
     function burnDebt(
@@ -94,20 +103,22 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
         uint256 amount,
         address payer
     ) external onlyAddress(CONTRACT_SYNTHX) returns (uint256) {
+        Item memory item;
+
         uint256 currentPeriod = getCurrentPeriod();
         uint256 totalDebt = getTotalDebt();
         (uint256 lastDebt, ) = Storage().getLastDebt(currentPeriod);
 
-        (uint256 accountDebt, uint256 lastTime, uint256 dtokens) = _getDebt(stake, account, currentPeriod, lastDebt, totalDebt);
-        (uint256 stakeDebt, , ) = _getDebt(stake, address(0), currentPeriod, lastDebt, totalDebt);
-        require(amount <= dtokens, 'Issuer: burnable dtokens too large');
+        (item.accountDebt, item.lastTime, item.dtokens) = _getDebt(stake, account, currentPeriod, lastDebt, totalDebt);
+        (item.stakeDebt, , ) = _getDebt(stake, address(0), currentPeriod, lastDebt, totalDebt);
+        require(amount <= item.dtokens, 'Issuer: burnable dtokens too large');
 
-        uint256 burnableAmount = accountDebt.min(amount);
+        uint256 burnableAmount = item.accountDebt.min(amount);
         require(burnableAmount > 0, 'Issuer: burnable is zero');
 
         uint256 newTotalDebt = totalDebt.sub(burnableAmount);
         uint256 newLastDebt = 0;
-        uint256 newDtokens = dtokens.sub(amount);
+        item.dtokens = item.dtokens.sub(amount);
 
         if (newTotalDebt > 0) {
             uint256 delta = burnableAmount.preciseDivide(newTotalDebt);
@@ -118,12 +129,12 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
             stake,
             account,
             currentPeriod,
-            accountDebt.sub(burnableAmount),
-            stakeDebt.sub(burnableAmount),
+            item.accountDebt.sub(burnableAmount),
+            item.stakeDebt.sub(burnableAmount),
             newTotalDebt,
             newLastDebt,
-            newDtokens,
-            lastTime
+            item.dtokens,
+            item.lastTime
         );
 
         Synth(USD).burn(payer, burnableAmount);
@@ -171,7 +182,7 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
         uint256 period
     ) external view returns (uint256) {
         (uint256 lastDebt, ) = Storage().getLastDebt(period);
-        (uint256 debtPercentage, ) = _getDebtPercentage(stake, account, period, lastDebt);
+        (uint256 debtPercentage, , ) = _getDebtPercentage(stake, account, period, lastDebt);
         return debtPercentage;
     }
 
