@@ -4,7 +4,8 @@ interface IIssuer {
     function issueDebt(
         bytes32 stake,
         address account,
-        uint256 amount
+        uint256 amount,
+        uint256 dTokenMintedAmount
     ) external;
 
     function burnDebt(
@@ -26,7 +27,7 @@ interface IIssuer {
         uint256 amount
     ) external;
 
-    function getDebt(bytes32 stake, address account) external view returns (uint256);
+    function getDebt(bytes32 stake, address account) external view returns (uint256, uint256);
 
     function getTotalDebt() external view returns (uint256);
 

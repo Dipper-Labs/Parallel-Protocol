@@ -124,21 +124,21 @@ contract Trader is Rewards, ITrader {
         tradingAmount = fromSynthValue.decimalDivide(fromSynthPrice);
     }
 
+    function getTradingFee(address account, uint256 period) external view returns (uint256) {
+        return Storage().getTradingFee(account, period);
+    }
+
     function claim(address account)
-        external
-        onlyAddress(CONTRACT_SYNTHX)
-        returns (
-            uint256 period,
-            uint256 amount
-        )
+    external
+    onlyAddress(CONTRACT_SYNTHX)
+    returns (
+        uint256 period,
+        uint256 amount
+    )
     {
     }
 
     function getClaimable(address account) public view returns (uint256) {
         return 0;
-    }
-
-    function getTradingFee(address account, uint256 period) external view returns (uint256) {
-        return Storage().getTradingFee(account, period);
     }
 }

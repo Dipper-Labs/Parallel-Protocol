@@ -20,6 +20,7 @@ interface IStats {
         uint256 liquidationFeeRate;
         uint256 staked;
         uint256 debt;
+        uint256 dtokens;
         uint256 transferable;
         uint256 balance;
         uint256 price;

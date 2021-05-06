@@ -15,4 +15,11 @@ interface IRewardsStorage {
         address account,
         uint256 period
     ) external view returns (uint256);
+
+    function setLastClaimedPeriod(
+        address account,
+        uint256 period
+    ) external;
+
+    function getLastClaimedPeriod(address account) external view returns (uint256);
 }

@@ -9,11 +9,11 @@ import './base/Pausable.sol';
 import './base/Importable.sol';
 import './interfaces/ISynthx.sol';
 import './interfaces/IStaker.sol';
+import './interfaces/IHolder.sol';
 import './interfaces/ITrader.sol';
 import './interfaces/IAssetPrice.sol';
 import './interfaces/ISetting.sol';
 import './interfaces/IIssuer.sol';
-import './interfaces/IRewards.sol';
 import './interfaces/ISynthxToken.sol';
 import './interfaces/ISynthxDToken.sol';
 import './interfaces/IMarket.sol';
@@ -44,6 +44,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
             CONTRACT_SETTING,
             CONTRACT_ISSUER,
             CONTRACT_TRADER,
+            CONTRACT_HOLDER,
             CONTRACT_SYNTHX_TOKEN,
             CONTRACT_SYNTHX_DTOKEN,
             CONTRACT_MARKET,
@@ -55,6 +56,10 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
 
     function Staker() private view returns (IStaker) {
         return IStaker(requireAddress(CONTRACT_STAKER));
+    }
+
+    function Holder() private view returns (IHolder) {
+        return IHolder(requireAddress(CONTRACT_HOLDER));
     }
 
     function AssetPrice() private view returns (IAssetPrice) {
@@ -71,10 +76,6 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
 
     function Trader() private view returns (ITrader) {
         return ITrader(requireAddress(CONTRACT_TRADER));
-    }
-
-    function Rewards(bytes32 reward) private view returns (IRewards) {
-        return IRewards(requireAddress(reward));
     }
 
     function SynthxToken() private view returns (ISynthxToken) {
@@ -98,7 +99,8 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
     }
 
     function stakeFromCoin() external payable returns (bool) {
-        require(Issuer().getDebt(nativeCoin, msg.sender) > 0, 'Synthx: Debt must be greater than zero');
+        (uint256 debt, ) = Issuer().getDebt(nativeCoin, msg.sender);
+        require(debt > 0, 'Synthx: Debt must be greater than zero');
 
         _stake(nativeCoin, msg.value, FROM_BALANCE);
         History().addAction('Stake', msg.sender, 'Stake', nativeCoin, msg.value, bytes32(0), 0);
@@ -110,7 +112,8 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
 
     function stakeFromToken(bytes32 stake, uint256 amount) external returns (bool) {
         require(stake != nativeCoin, 'Synthx: Native Coin use "mintFromCoin" function');
-        require(Issuer().getDebt(stake, msg.sender) > 0, 'Synthx: Debt must be greater than zero');
+        (uint256 debt, ) = Issuer().getDebt(stake, msg.sender);
+        require(debt > 0, 'Synthx: Debt must be greater than zero');
 
         _stake(stake, amount, FROM_BALANCE);
         History().addAction('Stake', msg.sender, 'Stake', stake, amount, bytes32(0), 0);
@@ -193,7 +196,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         SynthxDToken().mint(msg.sender, dTokenMintedAmount);
 
         // issue debt
-        Issuer().issueDebt(stake, msg.sender, mintedAmount);
+        Issuer().issueDebt(stake, msg.sender, mintedAmount, dTokenMintedAmount);
 
         History().addAction('Stake', msg.sender, 'Mint', stake, amount, USD, issueAmount);
         Liquidator().watchAccount(stake, msg.sender);
@@ -211,7 +214,10 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         uint256 burnAmount = Issuer().burnDebt(stake, msg.sender, dUSDAmount, msg.sender);
 
         uint256 stakerTransferable = Staker().getTransferable(stake, msg.sender);
-        if (Issuer().getDebt(stake, msg.sender) == 0) transfer(stake, msg.sender, stakerTransferable);
+        (uint256 debt, ) = Issuer().getDebt(stake, msg.sender);
+        if (debt == 0) {
+            transfer(stake, msg.sender, stakerTransferable);
+        }
 
         // burn dToken
         SynthxDToken().burn(msg.sender, dTokenAmount);
@@ -274,7 +280,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
     }
 
     function claimReward() external onlyInitialized notPaused returns (bool) {
-        Rewards(CONTRACT_STAKER).claim(msg.sender);
+        Holder().claim(msg.sender);
         return true;
     }
 

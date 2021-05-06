@@ -32,15 +32,21 @@ contract Rewards is Importable, ExternalStorable, IRewards {
         return RewardsStorage().getClaimed(account, period);
     }
 
+    function setLastClaimedPeriod(address account, uint256 period) internal {
+        RewardsStorage().setLastClaimedPeriod(account, period);
+    }
+
+    function getLastClaimedPeriod(address account) public view returns (uint256) {
+        return RewardsStorage().getLastClaimedPeriod(account);
+    }
+
     function getClaimablePeriod() internal view returns (uint256) {
         uint256 period = SupplySchedule().lastMintPeriod();
         return (period == 0) ? period : period.sub(1);
     }
 
-    function getRewardSupply(bytes32 recipient) internal view returns (uint256) {
+    function getRewardSupply(bytes32 recipient, uint256 period) internal view returns (uint256) {
         if (now > SupplySchedule().nextMintTime()) return 0;
-
-        uint256 period = getClaimablePeriod();
         return SupplySchedule().mintableSupply(recipient, period);
     }
 }

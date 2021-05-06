@@ -7,6 +7,7 @@ const SettingStorage = artifacts.require("SettingStorage");
 const IssuerStorage = artifacts.require("IssuerStorage");
 const LiquidatorStorage = artifacts.require("LiquidatorStorage");
 const StakerStorage = artifacts.require("StakerStorage");
+const HolderStorage = artifacts.require("HolderStorage");
 const OracleStorage = artifacts.require("OracleStorage");
 const TraderStorage = artifacts.require("TraderStorage");
 const TokenStorage = artifacts.require("TokenStorage");
@@ -17,6 +18,7 @@ const Issuer = artifacts.require("Issuer");
 const History = artifacts.require("History");
 const Liquidator = artifacts.require("Liquidator");
 const Staker = artifacts.require("Staker");
+const Holder = artifacts.require("Holder");
 const AssetPrice = artifacts.require("AssetPrice");
 const Oracle = artifacts.require("SynthxOracle");
 const Trader = artifacts.require("Trader");
@@ -80,6 +82,12 @@ module.exports = function(deployer, network, accounts) {
             checkUndefined(staker);
             contracts.staker = staker;
             contractsAddrs.staker = staker.address;
+            return deployer.deploy(Holder, contracts.resolver.address);
+        })
+        .then((holder) => {
+            checkUndefined(holder);
+            contracts.holder = holder;
+            contractsAddrs.holder = holder.address;
             return deployer.deploy(AssetPrice);
         })
         .then((assetPrice) => {
@@ -154,6 +162,11 @@ module.exports = function(deployer, network, accounts) {
         .then((stakerStorage) => {
             contracts.stakerStorage = stakerStorage;
             checkUndefined(contracts.stakerStorage);
+            return deployer.deploy(HolderStorage, contracts.holder.address);
+        })
+        .then((holderStorage) => {
+            contracts.holderStorage = holderStorage;
+            checkUndefined(contracts.holderStorage);
             return deployer.deploy(OracleStorage, contracts.oracle.address);
         })
         .then((oracleStorage) => {
@@ -180,6 +193,10 @@ module.exports = function(deployer, network, accounts) {
         })
         .then((receipt) => {
             console.log('staker.setStorage receipts: ', receipt);
+            return contracts.holder.setStorage(contracts.holderStorage.address);
+        })
+        .then((receipt) => {
+            console.log('holder.setStorage receipts: ', receipt);
             return contracts.oracle.setStorage(contracts.oracleStorage.address);
         })
         .then((receipt) => {
@@ -317,6 +334,10 @@ module.exports = function(deployer, network, accounts) {
         })
         .then((receipt) => {
             console.log('resolver.setAddress(Staker) receipts: ', receipt);
+            return contracts.resolver.setAddress(Web3Utils.fromAscii('Holder'), contracts.holder.address);
+        })
+        .then((receipt) => {
+            console.log('resolver.setAddress(Holder) receipts: ', receipt);
             return contracts.resolver.setAddress(Web3Utils.fromAscii('AssetPrice'), contracts.assetPrice.address);
         })
         .then((receipt) => {
@@ -386,6 +407,10 @@ module.exports = function(deployer, network, accounts) {
         })
         .then((receipt) => {
             console.log('staker.refreshCache receipt: ', receipt);
+            return contracts.holder.refreshCache();
+        })
+        .then((receipt) => {
+            console.log('holder.refreshCache receipt: ', receipt);
             return contracts.trader.refreshCache();
         })
         .then((receipt) => {

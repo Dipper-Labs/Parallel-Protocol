@@ -64,7 +64,7 @@ contract Staker is Rewards, IStaker {
     }
 
     function getTransferable(bytes32 token, address account) external view returns (uint256 staker) {
-        uint256 debt = Issuer().getDebt(token, account);
+        (uint256 debt,) = Issuer().getDebt(token, account);
         uint256 price = AssetPrice().getPrice(token);
         uint256 staked = getStaked(token, account);
         uint256 collateralRate = Setting().getCollateralRate(token);
@@ -79,33 +79,25 @@ contract Staker is Rewards, IStaker {
     }
 
     function getCollateralRate(bytes32 token, address account) public view returns (uint256) {
-        uint256 debt = Issuer().getDebt(token, account);
+        (uint256 debt, ) = Issuer().getDebt(token, account);
         uint256 price = AssetPrice().getPrice(token);
         uint256 staked = getStaked(token, account);
         return staked.decimalMultiply(price).decimalDivide(debt);
     }
 
+
     function claim(address account)
-        external
-        onlyAddress(CONTRACT_SYNTHX)
-        returns (
-            uint256 period,
-            uint256 amount
-        )
+    external
+    onlyAddress(CONTRACT_SYNTHX)
+    returns (
+        uint256 period,
+        uint256 amount
+    )
     {
-        uint256 claimable = getClaimable(account);
-        require(claimable > 0, 'Holder: claimable is zero');
-
-        uint256 claimablePeriod = getClaimablePeriod();
-        setClaimed(account, claimablePeriod, claimable);
-
-        IERC20(requireAddress(CONTRACT_SYNTHX_TOKEN)).safeTransfer(account, claimable);
-        return (claimablePeriod, claimable);
     }
 
     function getClaimable(address account) public view returns (uint256) {
-        // TODO
-        uint256 claimable = IERC20(requireAddress(CONTRACT_SYNTHX_TOKEN)).balanceOf(address(this));
-        return claimable;
+        return 0;
     }
+
 }

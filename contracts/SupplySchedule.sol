@@ -27,16 +27,16 @@ contract SupplySchedule is Importable, ISupplySchedule {
         imports = [
             CONTRACT_SYNTHX_TOKEN,
             CONTRACT_SETTING,
-            CONTRACT_STAKER,
             CONTRACT_FOUNDATION,
             CONTRACT_ECOLOGY,
+            CONTRACT_HOLDER,
             CONTRACT_HISTORY
         ];
 
         startMintTime = (_startMintTime == 0) ? now : _startMintTime;
         lastMintTime = (_lastMintTime < startMintTime) ? startMintTime : _lastMintTime;
 
-        percentages[CONTRACT_STAKER] = 0.8 ether; // 80%
+        percentages[CONTRACT_HOLDER] = 0.8 ether; // 80%
         percentages[CONTRACT_FOUNDATION] = 0.15 ether; // 15%
         percentages[CONTRACT_ECOLOGY] = 0.05 ether; // 5%
     }
@@ -51,7 +51,7 @@ contract SupplySchedule is Importable, ISupplySchedule {
 
     function setPercentage(bytes32 recipient, uint256 percent) external onlyOwner {
         require(_isRecipient(recipient), 'SupplySchedule: invalid recipient');
-        require(recipient != CONTRACT_STAKER, 'SupplySchedule: invalid recipient');
+        require(recipient != CONTRACT_HOLDER, 'SupplySchedule: invalid recipient');
 
         emit SupplyPercentageChanged(recipient, percentages[recipient], percent);
         percentages[recipient] = percent;
@@ -60,12 +60,12 @@ contract SupplySchedule is Importable, ISupplySchedule {
             totalPercentage <= PreciseMath.DECIMAL_ONE(),
             'SupplySchedule: total percent must be no greater than 100%'
         );
-        percentages[CONTRACT_STAKER] = PreciseMath.DECIMAL_ONE().sub(totalPercentage);
+        percentages[CONTRACT_HOLDER] = PreciseMath.DECIMAL_ONE().sub(totalPercentage);
     }
 
     function _isRecipient(bytes32 recipient) private pure returns (bool) {
         return (recipient == CONTRACT_FOUNDATION ||
-            recipient == CONTRACT_STAKER ||
+            recipient == CONTRACT_HOLDER ||
             recipient == CONTRACT_ECOLOGY);
     }
 
@@ -92,7 +92,7 @@ contract SupplySchedule is Importable, ISupplySchedule {
         for (uint256 i = lastMintPeriod; i < currentPeriod; i++) {
             uint256 supply = periodSupply(i);
 
-            uint256 stakerPeriodSupply = supply.decimalMultiply(percentages[CONTRACT_STAKER]);
+            uint256 stakerPeriodSupply = supply.decimalMultiply(percentages[CONTRACT_HOLDER]);
             uint256 foundationPeriodSupply = supply.decimalMultiply(percentages[CONTRACT_FOUNDATION]);
             uint256 ecologyPeriodSupply = supply.sub(stakerPeriodSupply).sub(foundationPeriodSupply);
 
@@ -105,7 +105,7 @@ contract SupplySchedule is Importable, ISupplySchedule {
         if (totalSupply == 0) return (recipients, amounts);
 
         recipients = new address[](3);
-        recipients[0] = requireAddress(CONTRACT_STAKER);
+        recipients[0] = requireAddress(CONTRACT_HOLDER);
         recipients[1] = requireAddress(CONTRACT_FOUNDATION);
         recipients[2] = requireAddress(CONTRACT_ECOLOGY);
 

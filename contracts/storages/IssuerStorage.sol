@@ -16,6 +16,7 @@ contract IssuerStorage is ExternalStorage, IIssuerStorage {
         uint256 period,
         uint256 accountDebt,
         uint256 totalDebt,
+        uint256 dtokens,
         uint256 time
     ) external onlyManager(managerName) {
         bytes32 PERIOD = bytes32(period);
@@ -25,7 +26,7 @@ contract IssuerStorage is ExternalStorage, IIssuerStorage {
 
         if (_last[PERIOD].time == 0 && _last[DEFAULT].time > 0) _last[bytes32(period.sub(1))] = _last[DEFAULT];
 
-        _storage[stake][account][PERIOD] = Debt(period, accountDebt, totalDebt, time);
+        _storage[stake][account][PERIOD] = Debt(period, accountDebt, totalDebt, dtokens, time);
         _storage[stake][account][DEFAULT] = _storage[stake][account][PERIOD];
 
         _last[PERIOD] = _storage[stake][account][PERIOD];
@@ -42,19 +43,20 @@ contract IssuerStorage is ExternalStorage, IIssuerStorage {
         returns (
             uint256 accountDebt,
             uint256 totalDebt,
+            uint256 dtokens,
             uint256 time
         )
     {
         Debt memory debt = _storage[stake][account][bytes32(period)];
         if (debt.time == 0) debt = _storage[stake][account][DEFAULT];
-        if (debt.period > period) return (0, 0, 0);
-        return (debt.account, debt.total, debt.time);
+        if (debt.period > period) return (0, 0, 0, 0);
+        return (debt.account, debt.total, debt.dtokens, debt.time);
     }
 
-    function getLastDebt(uint256 period) external view returns (uint256) {
+    function getLastDebt(uint256 period) external view returns (uint256, uint256) {
         Debt memory debt = _last[bytes32(period)];
         if (debt.time == 0) debt = _last[DEFAULT];
-        if (debt.period > period) return 0;
-        return debt.total;
+        if (debt.period > period) return (0, 0);
+        return (debt.total, debt.dtokens);
     }
 }

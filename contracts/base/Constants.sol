@@ -13,6 +13,7 @@ contract Constants {
     bytes32 internal constant CONTRACT_ISSUER = 'Issuer';
 
     bytes32 internal constant CONTRACT_STAKER = 'Staker';
+    bytes32 internal constant CONTRACT_HOLDER = 'Holder';
     bytes32 internal constant CONTRACT_TRADER = 'Trader';
     bytes32 internal constant CONTRACT_FOUNDATION = 'FOUNDATION';
     bytes32 internal constant CONTRACT_ECOLOGY = 'ECOLOGY';
