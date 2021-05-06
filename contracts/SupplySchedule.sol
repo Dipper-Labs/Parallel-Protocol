@@ -85,30 +85,34 @@ contract SupplySchedule is Importable, ISupplySchedule {
         uint256 lastMintPeriod = lastMintPeriod();
 
         uint256 totalSupply = 0;
-        uint256 traderSupply = 0;
-        uint256 teamSupply = 0;
-        uint256 escrowSupply = 0;
+        uint256 stakerSupply = 0;
+        uint256 foundationSupply = 0;
+        uint256 ecologySupply = 0;
 
         for (uint256 i = lastMintPeriod; i < currentPeriod; i++) {
             uint256 supply = periodSupply(i);
 
-            uint256 traderPeriodSupply = supply.decimalMultiply(percentages[CONTRACT_TRADER]);
-            uint256 escrowPeriodSupply = supply.sub(traderSupply);
+            uint256 stakerPeriodSupply = supply.decimalMultiply(percentages[CONTRACT_STAKER]);
+            uint256 foundationPeriodSupply = supply.decimalMultiply(percentages[CONTRACT_FOUNDATION]);
+            uint256 ecologyPeriodSupply = supply.sub(stakerPeriodSupply).sub(foundationPeriodSupply);
 
-            traderSupply = traderSupply.add(traderPeriodSupply);
-            escrowSupply = escrowSupply.add(escrowPeriodSupply);
-            teamSupply = teamSupply.add(supply.decimalMultiply(percentages[CONTRACT_FOUNDATION]));
-            totalSupply = totalSupply.add(traderSupply).add(escrowSupply);
+            stakerSupply = stakerSupply.add(stakerPeriodSupply);
+            foundationSupply = foundationSupply.add(foundationPeriodSupply);
+            ecologySupply = ecologySupply.add(ecologyPeriodSupply);
+            totalSupply = totalSupply.add(supply);
         }
 
         if (totalSupply == 0) return (recipients, amounts);
 
-        recipients = new address[](2);
-        recipients[0] = requireAddress(CONTRACT_TRADER);
-        recipients[1] = requireAddress(CONTRACT_ESCROW);
-        amounts = new uint256[](2);
-        amounts[0] = traderSupply;
-        amounts[1] = escrowSupply;
+        recipients = new address[](3);
+        recipients[0] = requireAddress(CONTRACT_STAKER);
+        recipients[1] = requireAddress(CONTRACT_FOUNDATION);
+        recipients[2] = requireAddress(CONTRACT_ECOLOGY);
+
+        amounts = new uint256[](3);
+        amounts[0] = stakerSupply;
+        amounts[1] = foundationSupply;
+        amounts[2] = ecologySupply;
 
         lastMintTime = now;
     }
