@@ -10,8 +10,6 @@ import './interfaces/IERC20.sol';
 contract Holder is Rewards, IHolder {
     using SafeERC20 for IERC20;
 
-    address public constant LOCK_ADDRESS = 0x010C10C10C10C10c10c10C10c10C10c10c10C10c;
-
     constructor(IResolver _resolver) public Importable(_resolver) {
         setContractName(CONTRACT_HOLDER);
         imports = [CONTRACT_SYNTHX, CONTRACT_SUPPLY_SCHEDULE, CONTRACT_SYNTHX_DTOKEN];
@@ -25,7 +23,7 @@ contract Holder is Rewards, IHolder {
         return IERC20(requireAddress(CONTRACT_SYNTHX_DTOKEN));
     }
 
-    function setBalance(address account) external onlyAddress(CONTRACT_SYNTHX) {
+    function updateBalance(address account) external onlyAddress(CONTRACT_SYNTHX) {
         uint256 balance = ERC20DToken().balanceOf(account);
         uint256 totalSupply = ERC20DToken().totalSupply();
         Storage().setBalance(account, getCurrentPeriod(), balance, totalSupply);
