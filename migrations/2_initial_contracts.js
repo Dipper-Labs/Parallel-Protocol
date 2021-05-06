@@ -214,7 +214,7 @@ module.exports = function(deployer, network, accounts) {
             return contracts.resolver.setAddress(Web3Utils.fromAscii('Issuer'), contracts.issuer.address);
         })
         .then((receipt) => {
-            console.log('resolver.setStorage receipts: ', receipt);
+            console.log('resolver.setAddress receipts: ', receipt);
             return deployer.deploy(Synth);
         })
         .then((dUSD) => {
@@ -370,10 +370,14 @@ module.exports = function(deployer, network, accounts) {
         })
         .then((receipt) => {
             console.log('resolver.setAddress(SupplySchedule) receipts: ', receipt);
-            return contracts.resolver.setAddress(Web3Utils.fromAscii('Team'), accounts[0]);
+            return contracts.resolver.setAddress(Web3Utils.fromAscii('Foundation'), accounts[0]);
         })
         .then((receipt) => {
-            console.log('resolver.setAddress(Team) receipts: ', receipt);
+            console.log('resolver.setAddress(Foundation) receipts: ', receipt);
+            return contracts.resolver.setAddress(Web3Utils.fromAscii('Ecology'), accounts[0]);
+        })
+        .then((receipt) => {
+            console.log('resolver.setAddress(Ecology) receipts: ', receipt);
             return contracts.resolver.setAddress(Web3Utils.fromAscii('Synthx'), contracts.synthx.address);
         })
         .then((receipt) => {
