@@ -73,7 +73,7 @@ contract Liquidator is Importable, ExternalStorable, ILiquidator {
     function getLiquidable(bytes32 stake, address account) external view returns (uint256) {
         if (!canLiquidate(stake, account)) return 0;
 
-        uint256 debt = Issuer().getDebt(stake, account);
+        (uint256 debt, ) = Issuer().getDebt(stake, account);
         uint256 collateralRate = Setting().getCollateralRate(stake);
         uint256 price = AssetPrice().getPrice(stake);
         uint256 currentStakeValue = Staker().getStaked(stake, account).decimalMultiply(price);

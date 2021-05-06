@@ -64,7 +64,7 @@ contract Staker is Rewards, IStaker {
     }
 
     function getTransferable(bytes32 token, address account) external view returns (uint256 staker) {
-        uint256 debt = Issuer().getDebt(token, account);
+        (uint256 debt,) = Issuer().getDebt(token, account);
         uint256 price = AssetPrice().getPrice(token);
         uint256 staked = getStaked(token, account);
         uint256 collateralRate = Setting().getCollateralRate(token);
@@ -79,7 +79,7 @@ contract Staker is Rewards, IStaker {
     }
 
     function getCollateralRate(bytes32 token, address account) public view returns (uint256) {
-        uint256 debt = Issuer().getDebt(token, account);
+        (uint256 debt, ) = Issuer().getDebt(token, account);
         uint256 price = AssetPrice().getPrice(token);
         uint256 staked = getStaked(token, account);
         return staked.decimalMultiply(price).decimalDivide(debt);

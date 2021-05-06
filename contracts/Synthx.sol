@@ -99,7 +99,8 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
     }
 
     function stakeFromCoin() external payable returns (bool) {
-        require(Issuer().getDebt(nativeCoin, msg.sender) > 0, 'Synthx: Debt must be greater than zero');
+        (uint256 debt, ) = Issuer().getDebt(nativeCoin, msg.sender);
+        require(debt > 0, 'Synthx: Debt must be greater than zero');
 
         _stake(nativeCoin, msg.value, FROM_BALANCE);
         History().addAction('Stake', msg.sender, 'Stake', nativeCoin, msg.value, bytes32(0), 0);
@@ -111,7 +112,8 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
 
     function stakeFromToken(bytes32 stake, uint256 amount) external returns (bool) {
         require(stake != nativeCoin, 'Synthx: Native Coin use "mintFromCoin" function');
-        require(Issuer().getDebt(stake, msg.sender) > 0, 'Synthx: Debt must be greater than zero');
+        (uint256 debt, ) = Issuer().getDebt(stake, msg.sender);
+        require(debt > 0, 'Synthx: Debt must be greater than zero');
 
         _stake(stake, amount, FROM_BALANCE);
         History().addAction('Stake', msg.sender, 'Stake', stake, amount, bytes32(0), 0);
@@ -194,7 +196,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         SynthxDToken().mint(msg.sender, dTokenMintedAmount);
 
         // issue debt
-        Issuer().issueDebt(stake, msg.sender, mintedAmount);
+        Issuer().issueDebt(stake, msg.sender, mintedAmount, dTokenMintedAmount);
 
         History().addAction('Stake', msg.sender, 'Mint', stake, amount, USD, issueAmount);
         Liquidator().watchAccount(stake, msg.sender);
@@ -212,7 +214,10 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         uint256 burnAmount = Issuer().burnDebt(stake, msg.sender, dUSDAmount, msg.sender);
 
         uint256 stakerTransferable = Staker().getTransferable(stake, msg.sender);
-        if (Issuer().getDebt(stake, msg.sender) == 0) transfer(stake, msg.sender, stakerTransferable);
+        (uint256 debt, ) = Issuer().getDebt(stake, msg.sender);
+        if (debt == 0) {
+            transfer(stake, msg.sender, stakerTransferable);
+        }
 
         // burn dToken
         SynthxDToken().burn(msg.sender, dTokenAmount);

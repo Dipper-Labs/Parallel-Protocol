@@ -152,7 +152,7 @@ contract Stats is Importable, IStats {
         uint256 liquidationCollateralRate = Setting().getLiquidationRate(stakeName);
         uint256 liquidationFeeRate = Setting().getLiquidationFeeRate(stakeName);
         uint256 staked = Staker().getStaked(stakeName, account);
-        uint256 debt = Issuer().getDebt(stakeName, account);
+        (uint256 debt, uint256 dtokens) = Issuer().getDebt(stakeName, account);
         (uint256 transferable) = Staker().getTransferable(stakeName, account);
         uint256 balance = _getBalance(stakeName, stakeAddress, account);
         return
@@ -165,6 +165,7 @@ contract Stats is Importable, IStats {
                 liquidationFeeRate,
                 staked,
                 debt,
+                dtokens,
                 transferable,
                 balance,
                 stakePrice

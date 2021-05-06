@@ -5,6 +5,7 @@ interface IIssuerStorage {
         uint256 period;
         uint256 account;
         uint256 total;
+        uint256 dtokens;
         uint256 time;
     }
 
@@ -14,6 +15,7 @@ interface IIssuerStorage {
         uint256 period,
         uint256 accountDebt,
         uint256 totalDebt,
+        uint256 dtokens,
         uint256 time
     ) external;
 
@@ -27,8 +29,9 @@ interface IIssuerStorage {
         returns (
             uint256 accountDebt,
             uint256 totalDebt,
+            uint256 dtokens,
             uint256 time
         );
 
-    function getLastDebt(uint256 period) external view returns (uint256);
+    function getLastDebt(uint256 period) external view returns (uint256, uint256);
 }
