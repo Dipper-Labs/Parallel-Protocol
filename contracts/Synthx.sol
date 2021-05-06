@@ -194,6 +194,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         }
         // mint dToken
         SynthxDToken().mint(msg.sender, dTokenMintedAmount);
+        Holder().updateBalance(msg.sender);
 
         // issue debt
         Issuer().issueDebt(stake, msg.sender, mintedAmount, dTokenMintedAmount);
@@ -221,6 +222,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
 
         // burn dToken
         SynthxDToken().burn(msg.sender, dTokenAmount);
+        Holder().updateBalance(msg.sender);
 
         History().addAction('Stake', msg.sender, 'Burn', stake, 0, DTOKEN, dTokenAmount);
         Liquidator().watchAccount(stake, msg.sender);
