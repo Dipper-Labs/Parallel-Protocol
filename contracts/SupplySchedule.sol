@@ -45,10 +45,6 @@ contract SupplySchedule is Importable, ISupplySchedule {
         return ISetting(requireAddress(CONTRACT_SETTING));
     }
 
-<<<<<<< HEAD
-=======
-
->>>>>>> synthx
     function History() private view returns (IHistory) {
         return IHistory(requireAddress(CONTRACT_HISTORY));
     }
@@ -85,7 +81,6 @@ contract SupplySchedule is Importable, ISupplySchedule {
     {
         if (now < nextMintTime()) return (recipients, amounts);
 
-<<<<<<< HEAD
         uint256 currentPeriod = currentPeriod();
         uint256 lastMintPeriod = lastMintPeriod();
 
@@ -114,12 +109,6 @@ contract SupplySchedule is Importable, ISupplySchedule {
         amounts = new uint256[](2);
         amounts[0] = traderSupply;
         amounts[1] = escrowSupply;
-=======
-        recipients = new address[](1);
-        recipients[0] = requireAddress(CONTRACT_STAKER);
-        amounts = new uint256[](2);
-        amounts[0] = 1e19;
->>>>>>> synthx
 
         lastMintTime = now;
     }
