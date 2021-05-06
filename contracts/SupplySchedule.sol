@@ -28,8 +28,8 @@ contract SupplySchedule is Importable, ISupplySchedule {
             CONTRACT_SYNTHX_TOKEN,
             CONTRACT_SETTING,
             CONTRACT_STAKER,
-            CONTRACT_TRADER,
-            CONTRACT_TEAM,
+            CONTRACT_FOUNDATION,
+            CONTRACT_ECOLOGY,
             CONTRACT_HISTORY
         ];
 
@@ -37,14 +37,13 @@ contract SupplySchedule is Importable, ISupplySchedule {
         lastMintTime = (_lastMintTime < startMintTime) ? startMintTime : _lastMintTime;
 
         percentages[CONTRACT_STAKER] = 0.8 ether; // 80%
-        percentages[CONTRACT_TEAM] = 0.15 ether; // 15%
-        percentages[CONTRACT_TRADER] = 0.01 ether; // 1%
+        percentages[CONTRACT_FOUNDATION] = 0.15 ether; // 15%
+        percentages[CONTRACT_ECOLOGY] = 0.05 ether; // 5%
     }
 
     function Setting() private view returns (ISetting) {
         return ISetting(requireAddress(CONTRACT_SETTING));
     }
-
 
     function History() private view returns (IHistory) {
         return IHistory(requireAddress(CONTRACT_HISTORY));
@@ -65,15 +64,14 @@ contract SupplySchedule is Importable, ISupplySchedule {
     }
 
     function _isRecipient(bytes32 recipient) private pure returns (bool) {
-        return (recipient == CONTRACT_TRADER ||
-            recipient == CONTRACT_TEAM ||
-            recipient == CONTRACT_STAKER);
+        return (recipient == CONTRACT_FOUNDATION ||
+            recipient == CONTRACT_STAKER ||
+            recipient == CONTRACT_ECOLOGY);
     }
 
     function _getTotalPercentageWithoutStaker() private view returns (uint256) {
-        return
-            percentages[CONTRACT_TRADER]
-                .add(percentages[CONTRACT_TEAM]);
+        return percentages[CONTRACT_FOUNDATION]
+            .add(percentages[CONTRACT_ECOLOGY]);
     }
 
     function distributeSupply()
@@ -83,10 +81,38 @@ contract SupplySchedule is Importable, ISupplySchedule {
     {
         if (now < nextMintTime()) return (recipients, amounts);
 
-        recipients = new address[](1);
+        uint256 currentPeriod = currentPeriod();
+        uint256 lastMintPeriod = lastMintPeriod();
+
+        uint256 totalSupply = 0;
+        uint256 stakerSupply = 0;
+        uint256 foundationSupply = 0;
+        uint256 ecologySupply = 0;
+
+        for (uint256 i = lastMintPeriod; i < currentPeriod; i++) {
+            uint256 supply = periodSupply(i);
+
+            uint256 stakerPeriodSupply = supply.decimalMultiply(percentages[CONTRACT_STAKER]);
+            uint256 foundationPeriodSupply = supply.decimalMultiply(percentages[CONTRACT_FOUNDATION]);
+            uint256 ecologyPeriodSupply = supply.sub(stakerPeriodSupply).sub(foundationPeriodSupply);
+
+            stakerSupply = stakerSupply.add(stakerPeriodSupply);
+            foundationSupply = foundationSupply.add(foundationPeriodSupply);
+            ecologySupply = ecologySupply.add(ecologyPeriodSupply);
+            totalSupply = totalSupply.add(supply);
+        }
+
+        if (totalSupply == 0) return (recipients, amounts);
+
+        recipients = new address[](3);
         recipients[0] = requireAddress(CONTRACT_STAKER);
-        amounts = new uint256[](2);
-        amounts[0] = 1e19;
+        recipients[1] = requireAddress(CONTRACT_FOUNDATION);
+        recipients[2] = requireAddress(CONTRACT_ECOLOGY);
+
+        amounts = new uint256[](3);
+        amounts[0] = stakerSupply;
+        amounts[1] = foundationSupply;
+        amounts[2] = ecologySupply;
 
         lastMintTime = now;
     }
