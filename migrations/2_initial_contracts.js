@@ -451,7 +451,7 @@ module.exports = function(deployer, network, accounts) {
         })
         .then((receipt) => {
             console.log('setting.setLiquidationDelay receipt: ', receipt);
-            return contracts.setting.setMintPeriodDuration(1); // second
+            return contracts.setting.setMintPeriodDuration(3600*24); // second
         })
         .then((receipt) => {
             console.log('setting.setMintPeriodDuration receipt: ', receipt);
