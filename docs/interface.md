@@ -175,6 +175,7 @@ CollateralRate = (dUSDAmount * 1) / (ETHAmount * ETHPrice)
     liquidationFeeRate: '0',
     staked: '20000000000000000000',
     debt: '17999999999999999999750',
+    dtokens: '200000000000000000',
     transferable: '2000000000000000001',
     balance: '999996637603276526373410000000000',
     price: '2000000000000000000000'
@@ -183,7 +184,7 @@ CollateralRate = (dUSDAmount * 1) / (ETHAmount * ETHPrice)
 ```
 
 其中assetName为资产名，currentCollateralRate为当前抵押率，staked为仓位中质押的ETH数量, debt为仓位中质押出的dUSD数量, balance为账户中ETH余额，
-price为ETH价格
+price为ETH价格, dtokens为仓位分配的dtoken数量
 
 2. 新债仓的抵押率为
 
