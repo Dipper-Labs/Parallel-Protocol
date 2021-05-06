@@ -61,7 +61,7 @@ contract Resolver is AddressStorage, IResolver {
         address previousAddress,
         address newAddress
     ) private {
-        bytes32[2] memory contracts = [CONTRACT_ESCROW, CONTRACT_TRADER];
+        bytes32[1] memory contracts = [CONTRACT_TRADER];
         if (previousAddress == address(0)) return;
         address synthxToken = getAddressValue(CONTRACT_SYNTHX_TOKEN);
         if (synthxToken == address(0)) return;

@@ -10,7 +10,6 @@ contract Constants {
     bytes32 internal constant CONTRACT_SETTING = 'Setting';
 
     bytes32 internal constant CONTRACT_SYNTHX = 'Synthx';
-    bytes32 internal constant CONTRACT_ESCROW = 'Escrow';
     bytes32 internal constant CONTRACT_ISSUER = 'Issuer';
 
     bytes32 internal constant CONTRACT_STAKER = 'Staker';

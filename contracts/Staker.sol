@@ -1,16 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.5.17;
 
+import './lib/SafeERC20.sol';
+
 import './base/Rewards.sol';
 import './interfaces/IStaker.sol';
 import './interfaces/storages/IStakerStorage.sol';
 import './interfaces/IIssuer.sol';
 import './interfaces/ISetting.sol';
 import './interfaces/IAssetPrice.sol';
-import './interfaces/IEscrow.sol';
-import './interfaces/ITrader.sol';
+import './interfaces/IERC20.sol';
 
 contract Staker is Rewards, IStaker {
+    using SafeERC20 for IERC20;
+
     constructor(IResolver _resolver) public Importable(_resolver) {
         setContractName(CONTRACT_STAKER);
         imports = [
@@ -19,8 +22,7 @@ contract Staker is Rewards, IStaker {
             CONTRACT_ISSUER,
             CONTRACT_SETTING,
             CONTRACT_ASSET_PRICE,
-            CONTRACT_ESCROW,
-            CONTRACT_TRADER
+            CONTRACT_SYNTHX_TOKEN
         ];
     }
 
@@ -38,14 +40,6 @@ contract Staker is Rewards, IStaker {
 
     function AssetPrice() private view returns (IAssetPrice) {
         return IAssetPrice(requireAddress(CONTRACT_ASSET_PRICE));
-    }
-
-    function Escrow() private view returns (IEscrow) {
-        return IEscrow(requireAddress(CONTRACT_ESCROW));
-    }
-
-    function Trader() private view returns (ITrader) {
-        return ITrader(requireAddress(CONTRACT_TRADER));
     }
 
     function stake(
@@ -91,7 +85,7 @@ contract Staker is Rewards, IStaker {
         return staked.decimalMultiply(price).decimalDivide(debt);
     }
 
-    function claim(bytes32 asset, address account)
+    function claim(address account)
         external
         onlyAddress(CONTRACT_SYNTHX)
         returns (
@@ -99,48 +93,19 @@ contract Staker is Rewards, IStaker {
             uint256 amount
         )
     {
-        uint256 claimable = getClaimable(asset, account);
-        require(claimable > 0, 'Staker: claimable is zero');
+        uint256 claimable = getClaimable(account);
+        require(claimable > 0, 'Holder: claimable is zero');
 
         uint256 claimablePeriod = getClaimablePeriod();
-        setClaimed(asset, account, claimablePeriod, claimable);
+        setClaimed(account, claimablePeriod, claimable);
 
-        if (asset == USD) {
-            Issuer().burnSynth(USD, Trader().FEE_ADDRESS(), claimable);
-            Issuer().issueSynth(USD, account, claimable);
-        } else {
-            Escrow().deposit(claimablePeriod, account, claimable);
-        }
-
+        IERC20(requireAddress(CONTRACT_SYNTHX_TOKEN)).safeTransfer(account, claimable);
         return (claimablePeriod, claimable);
     }
 
-    function getClaimable(bytes32 asset, address account) public view returns (uint256) {
-        require(asset == SDIP || asset == USD, 'Staker: only supports SYN & yUSD');
-
-        uint256 rewards = getRewardSupply(CONTRACT_STAKER);
-        if (rewards == 0) return 0;
-
-        uint256 claimablePeriod = getClaimablePeriod();
-        if (getClaimed(asset, account, claimablePeriod) > 0) return 0;
-
-        uint256 claimable = 0;
-
-        if (asset == USD) {
-            uint256 rewardPercentage = getRewardPercentage(asset);
-            rewards = Trader().getTradingFee(address(0), claimablePeriod).decimalMultiply(rewardPercentage);
-            if (rewards == 0) return 0;
-        }
-
-        bytes32[] memory stakes = assets('Stake');
-        for (uint256 i = 0; i < stakes.length; i++) {
-            uint256 collateralRate = getCollateralRate(stakes[i], account);
-            if (collateralRate < Setting().getCollateralRate(stakes[i])) continue;
-
-            uint256 percentage = Issuer().getDebtPercentage(stakes[i], account, claimablePeriod).toDecimal();
-            claimable = claimable.add(rewards.decimalMultiply(percentage));
-        }
-
+    function getClaimable(address account) public view returns (uint256) {
+        // TODO
+        uint256 claimable = IERC20(requireAddress(CONTRACT_SYNTHX_TOKEN)).balanceOf(address(this));
         return claimable;
     }
 }

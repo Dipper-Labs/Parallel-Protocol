@@ -5,7 +5,6 @@ import './lib/SafeMath.sol';
 import './lib/PreciseMath.sol';
 import './base/Importable.sol';
 import './interfaces/ISetting.sol';
-import './interfaces/IEscrow.sol';
 import './interfaces/IHistory.sol';
 
 contract SupplySchedule is Importable, ISupplySchedule {
@@ -27,7 +26,7 @@ contract SupplySchedule is Importable, ISupplySchedule {
         setContractName(CONTRACT_SUPPLY_SCHEDULE);
         imports = [
             CONTRACT_SYNTHX_TOKEN,
-            CONTRACT_SETTIN,
+            CONTRACT_SETTING,
             CONTRACT_STAKER,
             CONTRACT_FOUNDATION,
             CONTRACT_ECOLOGY,
@@ -46,6 +45,10 @@ contract SupplySchedule is Importable, ISupplySchedule {
         return ISetting(requireAddress(CONTRACT_SETTING));
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> synthx
     function History() private view returns (IHistory) {
         return IHistory(requireAddress(CONTRACT_HISTORY));
     }
@@ -82,6 +85,7 @@ contract SupplySchedule is Importable, ISupplySchedule {
     {
         if (now < nextMintTime()) return (recipients, amounts);
 
+<<<<<<< HEAD
         uint256 currentPeriod = currentPeriod();
         uint256 lastMintPeriod = lastMintPeriod();
 
@@ -110,6 +114,12 @@ contract SupplySchedule is Importable, ISupplySchedule {
         amounts = new uint256[](2);
         amounts[0] = traderSupply;
         amounts[1] = escrowSupply;
+=======
+        recipients = new address[](1);
+        recipients[0] = requireAddress(CONTRACT_STAKER);
+        amounts = new uint256[](2);
+        amounts[0] = 1e19;
+>>>>>>> synthx
 
         lastMintTime = now;
     }

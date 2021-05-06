@@ -18,20 +18,18 @@ contract Rewards is Importable, ExternalStorable, IRewards {
     }
 
     function setClaimed(
-        bytes32 asset,
         address account,
         uint256 period,
         uint256 amount
     ) internal {
-        RewardsStorage().setClaimed(asset, account, period, amount);
+        RewardsStorage().setClaimed(account, period, amount);
     }
 
     function getClaimed(
-        bytes32 asset,
         address account,
         uint256 period
     ) public view returns (uint256) {
-        return RewardsStorage().getClaimed(asset, account, period);
+        return RewardsStorage().getClaimed(account, period);
     }
 
     function getClaimablePeriod() internal view returns (uint256) {
@@ -44,20 +42,5 @@ contract Rewards is Importable, ExternalStorable, IRewards {
 
         uint256 period = getClaimablePeriod();
         return SupplySchedule().mintableSupply(recipient, period);
-    }
-
-    function setRewardPercentage(bytes32 asset, uint256 percentage) external onlyOwner {
-        uint256 totalPercentage = RewardsStorage().getRewardPercentage(TOTAL);
-        uint256 previousPercentage = RewardsStorage().getRewardPercentage(asset);
-        uint256 newTotalPercentage = totalPercentage.sub(previousPercentage).add(percentage);
-
-        require(newTotalPercentage <= PreciseMath.DECIMAL_ONE(), 'Rewards: total percent must be no greater than 100%');
-        RewardsStorage().setRewardPercentage(asset, percentage);
-        RewardsStorage().setRewardPercentage(TOTAL, newTotalPercentage);
-        emit RewardPercentageChanged(asset, previousPercentage, percentage);
-    }
-
-    function getRewardPercentage(bytes32 asset) public view returns (uint256) {
-        return RewardsStorage().getRewardPercentage(asset);
     }
 }
