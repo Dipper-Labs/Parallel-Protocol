@@ -114,7 +114,8 @@ module.exports = function(deployer, network, accounts) {
             checkUndefined(market);
             contracts.market = market;
             contractsAddrs.market = market.address;
-            return deployer.deploy(SupplySchedule, Resolver.address, 0, 0);
+            const startTime = Math.floor(Math.floor(Date.now()/1000)/60)*60;
+            return deployer.deploy(SupplySchedule, Resolver.address, startTime, 0);
         })
         .then((supplySchedule) => {
             checkUndefined(supplySchedule);
