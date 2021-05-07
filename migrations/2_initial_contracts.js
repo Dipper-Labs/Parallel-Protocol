@@ -114,7 +114,8 @@ module.exports = function(deployer, network, accounts) {
             checkUndefined(market);
             contracts.market = market;
             contractsAddrs.market = market.address;
-            return deployer.deploy(SupplySchedule, Resolver.address, 0, 0);
+            const startTime = Math.floor(Math.floor(Date.now()/1000)/60)*60;
+            return deployer.deploy(SupplySchedule, Resolver.address, startTime, 0);
         })
         .then((supplySchedule) => {
             checkUndefined(supplySchedule);
@@ -451,7 +452,7 @@ module.exports = function(deployer, network, accounts) {
         })
         .then((receipt) => {
             console.log('setting.setLiquidationDelay receipt: ', receipt);
-            return contracts.setting.setMintPeriodDuration(1); // second
+            return contracts.setting.setMintPeriodDuration(3600*24); // second
         })
         .then((receipt) => {
             console.log('setting.setMintPeriodDuration receipt: ', receipt);
