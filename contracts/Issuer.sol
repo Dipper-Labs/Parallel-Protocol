@@ -110,7 +110,7 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
         uint256 totalDebt = getTotalDebt();
         (uint256 lastDebt, ) = Storage().getLastDebt(currentPeriod);
 
-        (item.accountDebt, item.lastTime, item.dtokens) = _getDebt(stake, account, currentPeriod, lastDebt, totalDebt);
+        (item.accountDebt, item.dtokens, item.lastTime) = _getDebt(stake, account, currentPeriod, lastDebt, totalDebt);
         (item.stakeDebt, , ) = _getDebt(stake, address(0), currentPeriod, lastDebt, totalDebt);
         require(dTokenBurnedAmount <= item.dtokens, contractName.concat('Issuer: burnable dtokens too large ', bytes32(dTokenBurnedAmount)));
 

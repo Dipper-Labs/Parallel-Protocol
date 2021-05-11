@@ -59,7 +59,7 @@ contract Holder is Rewards, IHolder {
         setClaimed(account, claimablePeriod, claimable);
         setLastClaimedPeriod(account, claimablePeriod);
 
-        ERC20DToken().safeTransfer(account, claimable);
+//        ERC20DToken().safeTransfer(account, claimable);
         return (claimablePeriod, claimable);
     }
 
