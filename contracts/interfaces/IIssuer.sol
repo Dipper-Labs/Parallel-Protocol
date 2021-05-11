@@ -11,7 +11,8 @@ interface IIssuer {
     function burnDebt(
         bytes32 stake,
         address account,
-        uint256 amount,
+        uint256 dTokenBurnedAmount,
+        uint256 usdtAmount,
         address payer
     ) external returns (uint256);
 

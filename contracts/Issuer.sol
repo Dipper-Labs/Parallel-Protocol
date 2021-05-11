@@ -100,7 +100,8 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
     function burnDebt(
         bytes32 stake,
         address account,
-        uint256 amount,
+        uint256 dTokenBurnedAmount,
+        uint256 usdtAmount,
         address payer
     ) external onlyAddress(CONTRACT_SYNTHX) returns (uint256) {
         Item memory item;
@@ -111,14 +112,14 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
 
         (item.accountDebt, item.lastTime, item.dtokens) = _getDebt(stake, account, currentPeriod, lastDebt, totalDebt);
         (item.stakeDebt, , ) = _getDebt(stake, address(0), currentPeriod, lastDebt, totalDebt);
-        require(amount <= item.dtokens, 'Issuer: burnable dtokens too large');
+        require(dTokenBurnedAmount <= item.dtokens, contractName.concat('Issuer: burnable dtokens too large ', bytes32(dTokenBurnedAmount)));
 
-        uint256 burnableAmount = item.accountDebt.min(amount);
+        uint256 burnableAmount = item.accountDebt.min(usdtAmount);
         require(burnableAmount > 0, 'Issuer: burnable is zero');
 
-        uint256 newTotalDebt = totalDebt.sub(burnableAmount);
+        uint256 newTotalDebt = totalDebt.sub(usdtAmount);
         uint256 newLastDebt = 0;
-        item.dtokens = item.dtokens.sub(amount);
+        item.dtokens = item.dtokens.sub(dTokenBurnedAmount);
 
         if (newTotalDebt > 0) {
             uint256 delta = burnableAmount.preciseDivide(newTotalDebt);

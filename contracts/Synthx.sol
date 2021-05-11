@@ -212,7 +212,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         uint256 dTokenTotalSupply = token.totalSupply();
         uint256 dUSDAmount = totalDebt.decimalMultiply(dTokenAmount).decimalDivide(dTokenTotalSupply);
 
-        uint256 burnAmount = Issuer().burnDebt(stake, msg.sender, dUSDAmount, msg.sender);
+        uint256 burnAmount = Issuer().burnDebt(stake, msg.sender, dTokenAmount, dUSDAmount, msg.sender);
 
         uint256 stakerTransferable = Staker().getTransferable(stake, msg.sender);
         (uint256 debt, ) = Issuer().getDebt(stake, msg.sender);
@@ -289,13 +289,14 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
     function liquidate(
         bytes32 stake,
         address account,
-        uint256 amount
+        uint256 dTokenBurnedAmount,
+        uint256 usdtAmount
     ) external onlyInitialized notPaused returns (bool) {
         uint256 liquidable = Liquidator().getLiquidable(stake, account);
-        liquidable.sub(amount, 'Synthx: liquidate amount exceeds liquidable');
+        liquidable.sub(dTokenBurnedAmount, 'Synthx: liquidate amount exceeds liquidable');
 
-        uint256 unstakable = Liquidator().getUnstakable(stake, amount);
-        Issuer().burnDebt(stake, account, amount, msg.sender);
+        uint256 unstakable = Liquidator().getUnstakable(stake, dTokenBurnedAmount);
+        Issuer().burnDebt(stake, account, dTokenBurnedAmount, usdtAmount, msg.sender);
         Staker().unstake(stake, account, unstakable);
 
         if (stake == nativeCoin) {
@@ -306,7 +307,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         }
 
         SynthxToken().mint();
-        emit Liquidated(msg.sender, stake, account, unstakable, amount);
+        emit Liquidated(msg.sender, stake, account, unstakable, dTokenBurnedAmount);
         return true;
     }
 }
