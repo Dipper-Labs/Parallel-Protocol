@@ -11,7 +11,7 @@ const bnbPriceKey = Web3Utils.fromAscii('BNB');
 const btcPriceKey = Web3Utils.fromAscii('BTC');
 const dipPriceKey = Web3Utils.fromAscii('DIP');
 const dTslaPriceKey = Web3Utils.fromAscii('dTSLA');
-const dApplePriceKey = Web3Utils.fromAscii('dAPPLE');
+const dApplePriceKey = Web3Utils.fromAscii('dAPPL');
 
 module.exports = async function(deployer, network, accounts) {
     const oracle = await Oracle.at(oracleAddress);
