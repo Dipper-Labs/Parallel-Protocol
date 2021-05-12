@@ -30,6 +30,7 @@ contract Stats is Importable, IStats {
             CONTRACT_SUPPLY_SCHEDULE,
             CONTRACT_SYNTHX,
             CONTRACT_STAKER,
+            CONTRACT_HOLDER,
             CONTRACT_ASSET_PRICE,
             CONTRACT_SETTING,
             CONTRACT_ISSUER,
@@ -252,9 +253,8 @@ contract Stats is Importable, IStats {
         (tradingAmount, tradingFee, , ) = Trader().getTradingAmountAndFee(fromSynth, toSynth, toAmount);
     }
 
-
     function getRewards(address account) external view returns (uint256) {
-        return Rewards(CONTRACT_STAKER).getClaimable(account);
+        return Rewards(CONTRACT_HOLDER).getClaimable(account);
     }
 
     function getAssetMarket(bytes32 asset)

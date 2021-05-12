@@ -12,7 +12,7 @@ contract Holder is Rewards, IHolder {
 
     constructor(IResolver _resolver) public Importable(_resolver) {
         setContractName(CONTRACT_HOLDER);
-        imports = [CONTRACT_SYNTHX, CONTRACT_SUPPLY_SCHEDULE, CONTRACT_SYNTHX_DTOKEN];
+        imports = [CONTRACT_SYNTHX, CONTRACT_SUPPLY_SCHEDULE, CONTRACT_SYNTHX_TOKEN, CONTRACT_SYNTHX_DTOKEN];
     }
 
     function Storage() private view returns (IHolderStorage) {
@@ -21,6 +21,10 @@ contract Holder is Rewards, IHolder {
 
     function ERC20DToken() private view returns (IERC20) {
         return IERC20(requireAddress(CONTRACT_SYNTHX_DTOKEN));
+    }
+
+    function ERC20Token() private view returns (IERC20) {
+        return IERC20(requireAddress(CONTRACT_SYNTHX_TOKEN));
     }
 
     function updateBalance(address account) external onlyAddress(CONTRACT_SYNTHX) {
@@ -59,7 +63,7 @@ contract Holder is Rewards, IHolder {
         setClaimed(account, claimablePeriod, claimable);
         setLastClaimedPeriod(account, claimablePeriod);
 
-//        ERC20DToken().safeTransfer(account, claimable);
+        ERC20Token().safeTransfer(account, claimable);
         return (claimablePeriod, claimable);
     }
 
