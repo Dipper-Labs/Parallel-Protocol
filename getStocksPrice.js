@@ -10,27 +10,31 @@ const options = {
 
 let prices = {}
 
-const req = https.request(options, res => {
-	res.on('data',d => {
-		let res = /hq_str_gb_aapl="[^,]*,(\d*\.\d*)/g.exec(d.toString());
-		prices.aapl = res[1];
-		res = /hq_str_gb_tsla="[^,]*,(\d*\.\d*)/g.exec(d.toString());
-		prices.tsla = res[1];
-		console.log(prices);
+function DoWork() {
+	const req = https.request(options, res => {
+		res.on('data',d => {
+			let res = /hq_str_gb_aapl="[^,]*,(\d*\.\d*)/g.exec(d.toString());
+			prices.aapl = res[1];
+			res = /hq_str_gb_tsla="[^,]*,(\d*\.\d*)/g.exec(d.toString());
+			prices.tsla = res[1];
+			console.log(prices);
 
-		const stocksPrice = JSON.stringify(prices, null, '\t');
+			const stocksPrice = JSON.stringify(prices, null, '\t');
 
-		fs.writeFile('stocks_price.json', stocksPrice, (err) => {
-			if (err) {
-				throw err;
-			}
-			console.log("prices saved");
-		});
+			fs.writeFile('stocks_price.json', stocksPrice, (err) => {
+				if (err) {
+					throw err;
+				}
+				console.log("prices saved");
+			});
+		})
 	})
-})
 
-req.on('error', error => {
-	console.error(error)
-})
+	req.on('error', error => {
+		console.error(error)
+	})
 
-req.end()
+	req.end()
+}
+
+exports.DoWork = DoWork;

@@ -8,20 +8,24 @@ const options = {
     method: 'GET'
 }
 
-const req = https.request(options, res => {
-    res.on('data', d => {
-        process.stdout.write(d);
-        fs.writeFile('tokens_price.json', d, (err) => {
-            if (err) {
-                throw err;
-            }
-            console.log("prices saved");
-        });
-    })
-})
+function DoWork() {
+    const req = https.request(options, res => {
+        res.on('data', d => {
+            process.stdout.write(d);
+            fs.writeFile('tokens_price.json', d, (err) => {
+                if (err) {
+                    throw err;
+                }
+                console.log("prices saved");
+            });
+        })
+    });
 
-req.on('error', error => {
-    console.error(error)
-})
+    req.on('error', error => {
+        console.error(error)
+    });
 
-req.end()
+    req.end();
+}
+
+exports.DoWork = DoWork;
