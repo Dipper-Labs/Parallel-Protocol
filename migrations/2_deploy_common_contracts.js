@@ -1,6 +1,8 @@
 const fs = require('fs');
 const Web3Utils = require('web3-utils');
-const {checkUndefined} = require('./util')
+const {checkUndefined} = require('./util');
+const {nativeToken, fakeERC20Addr} = require('./config');
+
 
 const Storage = artifacts.require("Storage");
 const AddressStorage = artifacts.require("AddressStorage");
@@ -31,9 +33,6 @@ module.exports = function(deployer, network, accounts) {
 
     const foundationAccount = accounts[0];
     const ecologyAccount = accounts[0];
-
-    const nativeToken = 'ETH';
-    const fakeERC20Addr = '0x84b9b910527ad5c03a9ca831909e21e236ea7b06';
 
     deployer
         .then(function() {

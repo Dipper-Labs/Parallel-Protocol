@@ -1,4 +1,5 @@
 const Web3Utils = require('web3-utils');
+const {liquidationDelay, mintPeriodDuration} = require('./config');
 
 const contractAddrs = require('../finalContractAddrs.json');
 
@@ -7,9 +8,6 @@ const Setting = artifacts.require("Setting");
 const ASSET_ETH = Web3Utils.fromAscii('ETH');
 const ASSET_BTC = Web3Utils.fromAscii('BTC');
 const ASSET_BNB = Web3Utils.fromAscii('BNB');
-
-const liquidationDelay = 36000;
-const mintPeriodDuration = 3600*24; // second
 
 module.exports = async function(deployer) {
     let contracts = {};
