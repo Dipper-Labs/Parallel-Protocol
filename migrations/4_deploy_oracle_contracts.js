@@ -36,44 +36,44 @@ module.exports = async function(deployer, network, accounts) {
                 checkUndefined(chainLinkOracle);
                 contracts.chainLinkOracle = chainLinkOracle;
                 commonContractAddrs.chainLinkOracle = contracts.chainLinkOracle.address;
-                return contracts.chainLinkOracle.setAggregator(Web3Utils.fromAscii('BTC'), bscPriceContracts.BTC);
+                return contracts.chainLinkOracle.setAggregator(btcPriceKey, bscPriceContracts.BTC);
             })
             .then(receipt => {
                 console.log('chainLinkOracle.setAggregator(BTC) receipt: ', receipt);
-                return contracts.chainLinkOracle.setAggregator(Web3Utils.fromAscii('ETH'), bscPriceContracts.ETH);
+                return contracts.chainLinkOracle.setAggregator(ethPriceKey, bscPriceContracts.ETH);
             })
             .then(receipt => {
                 console.log('chainLinkOracle.setAggregator(ETH) receipt: ', receipt);
-                return contracts.chainLinkOracle.setAggregator(Web3Utils.fromAscii('BNB'), bscPriceContracts.BNB);
+                return contracts.chainLinkOracle.setAggregator(bnbPriceKey, bscPriceContracts.BNB);
             })
             .then(receipt => {
                 console.log('chainLinkOracle.setAggregator(BNB) receipt: ', receipt);
-                return contracts.chainLinkOracle.setAggregator(Web3Utils.fromAscii('dAAPL'), bscPriceContracts.AAPL);
+                return contracts.chainLinkOracle.setAggregator(dAAPLPriceKey, bscPriceContracts.AAPL);
             })
             .then(receipt => {
                 console.log('chainLinkOracle.setAggregator(AAPL) receipt: ', receipt);
-                return contracts.chainLinkOracle.setAggregator(Web3Utils.fromAscii('dTSLA'), bscPriceContracts.TSLA);
+                return contracts.chainLinkOracle.setAggregator(dTSLAPriceKey, bscPriceContracts.TSLA);
             })
             // assetPrice setOracles
             .then(receipt => {
                 console.log('chainLinkOracle.setAggregator(AAPL) receipt: ', receipt);
-                return contracts.assetPrice.setOracle(Web3Utils.fromAscii('BTC'), contracts.chainLinkOracle.address);
+                return contracts.assetPrice.setOracle(btcPriceKey, contracts.chainLinkOracle.address);
             })
             .then(receipt => {
                 console.log('assetPrice.setOracle(BTC) receipt: ', receipt);
-                return contracts.assetPrice.setOracle(Web3Utils.fromAscii('ETH'), contracts.chainLinkOracle.address);
+                return contracts.assetPrice.setOracle(ethPriceKey, contracts.chainLinkOracle.address);
             })
             .then(receipt => {
                 console.log('assetPrice.setOracle(ETH) receipt: ', receipt);
-                return contracts.assetPrice.setOracle(Web3Utils.fromAscii('BNB'), contracts.chainLinkOracle.address);
+                return contracts.assetPrice.setOracle(bnbPriceKey, contracts.chainLinkOracle.address);
             })
             .then(receipt => {
                 console.log('assetPrice.setOracle(BNB) receipt: ', receipt);
-                return contracts.assetPrice.setOracle(Web3Utils.fromAscii('dAPPL'), contracts.chainLinkOracle.address);
+                return contracts.assetPrice.setOracle(dAAPLPriceKey, contracts.chainLinkOracle.address);
             })
             .then(receipt => {
                 console.log('assetPrice.setOracle(dAPPL) receipt: ', receipt);
-                return contracts.assetPrice.setOracle(Web3Utils.fromAscii('dTSLA'), contracts.chainLinkOracle.address);
+                return contracts.assetPrice.setOracle(dTSLAPriceKey, contracts.chainLinkOracle.address);
             })
             .then(receipt => {
                 console.log('assetPrice.setOracle(dTSLA) receipt: ', receipt);
@@ -112,36 +112,36 @@ module.exports = async function(deployer, network, accounts) {
                 checkUndefined(chainLinkOracle);
                 contracts.chainLinkOracle = chainLinkOracle;
                 commonContractAddrs.chainLinkOracle = contracts.chainLinkOracle.address;
-                return contracts.chainLinkOracle.setAggregator(Web3Utils.fromAscii('BTC'), bscTestnetPriceContracts.BTC);
+                return contracts.chainLinkOracle.setAggregator(btcPriceKey, bscTestnetPriceContracts.BTC);
             })
             .then(receipt => {
                 console.log('chainLinkOracle.setAggregator(BTC) receipt: ', receipt);
-                return contracts.chainLinkOracle.setAggregator(Web3Utils.fromAscii('ETH'), bscTestnetPriceContracts.ETH);
+                return contracts.chainLinkOracle.setAggregator(ethPriceKey, bscTestnetPriceContracts.ETH);
             })
             .then(receipt => {
                 console.log('chainLinkOracle.setAggregator(ETH) receipt: ', receipt);
-                return contracts.chainLinkOracle.setAggregator(Web3Utils.fromAscii('BNB'), bscTestnetPriceContracts.BNB);
+                return contracts.chainLinkOracle.setAggregator(bnbPriceKey, bscTestnetPriceContracts.BNB);
             })
             // assetPrice setOracles
             .then(receipt => {
                 console.log('chainLinkOracle.setAggregator(BNB) receipt: ', receipt);
-                return contracts.assetPrice.setOracle(Web3Utils.fromAscii('BTC'), contracts.chainLinkOracle.address);
+                return contracts.assetPrice.setOracle(btcPriceKey, contracts.chainLinkOracle.address);
             })
             .then(receipt => {
                 console.log('assetPrice.setOracle(BTC) receipt: ', receipt);
-                return contracts.assetPrice.setOracle(Web3Utils.fromAscii('ETH'), contracts.chainLinkOracle.address);
+                return contracts.assetPrice.setOracle(ethPriceKey, contracts.chainLinkOracle.address);
             })
             .then(receipt => {
                 console.log('assetPrice.setOracle(ETH) receipt: ', receipt);
-                return contracts.assetPrice.setOracle(Web3Utils.fromAscii('BNB'), contracts.chainLinkOracle.address);
+                return contracts.assetPrice.setOracle(bnbPriceKey, contracts.chainLinkOracle.address);
             })
             .then(receipt => {
                 console.log('assetPrice.setOracle(BNB) receipt: ', receipt);
-                return contracts.assetPrice.setOracle(Web3Utils.fromAscii('dAPPL'), contracts.synthxOracle.address);
+                return contracts.assetPrice.setOracle(dAAPLPriceKey, contracts.synthxOracle.address);
             })
             .then(receipt => {
                 console.log('assetPrice.setOracle(dAPPL) receipt: ', receipt);
-                return contracts.assetPrice.setOracle(Web3Utils.fromAscii('dTSLA'), contracts.synthxOracle.address);
+                return contracts.assetPrice.setOracle(dTSLAPriceKey, contracts.synthxOracle.address);
             })
             .then(receipt => {
                 console.log('assetPrice.setOracle(dTSLA) receipt: ', receipt);
@@ -212,27 +212,27 @@ module.exports = async function(deployer, network, accounts) {
             // assetPrice setOracles
             .then(receipt => {
                 console.log('synthxOracle.setPrice[dAAPL] receipt: ', receipt);
-                return contracts.assetPrice.setOracle(Web3Utils.fromAscii('BTC'), contracts.synthxOracle.address);
+                return contracts.assetPrice.setOracle(btcPriceKey, contracts.synthxOracle.address);
             })
             .then(receipt => {
                 console.log('assetPrice.setOracle(BTC) receipt: ', receipt);
-                return contracts.assetPrice.setOracle(Web3Utils.fromAscii('ETH'), contracts.synthxOracle.address);
+                return contracts.assetPrice.setOracle(ethPriceKey, contracts.synthxOracle.address);
             })
             .then(receipt => {
                 console.log('assetPrice.setOracle(ETH) receipt: ', receipt);
-                return contracts.assetPrice.setOracle(Web3Utils.fromAscii('BNB'), contracts.synthxOracle.address);
+                return contracts.assetPrice.setOracle(bnbPriceKey, contracts.synthxOracle.address);
             })
             .then(receipt => {
                 console.log('assetPrice.setOracle(BNB) receipt: ', receipt);
-                return contracts.assetPrice.setOracle(Web3Utils.fromAscii('dAPPL'), contracts.synthxOracle.address);
+                return contracts.assetPrice.setOracle(dAAPLPriceKey, contracts.synthxOracle.address);
             })
             .then(receipt => {
                 console.log('assetPrice.setOracle(dAPPL) receipt: ', receipt);
-                return contracts.assetPrice.setOracle(Web3Utils.fromAscii('dTSLA'), contracts.synthxOracle.address);
+                return contracts.assetPrice.setOracle(dTSLAPriceKey, contracts.synthxOracle.address);
             })
             .then(receipt => {
                 console.log('assetPrice.setOracle(dTSLA) receipt: ', receipt);
-                return contracts.assetPrice.setOracle(Web3Utils.fromAscii('DIP'), contracts.synthxOracle.address);
+                return contracts.assetPrice.setOracle(dipPriceKey, contracts.synthxOracle.address);
             })
             .then(receipt => {
                 console.log('assetPrice.setOracle(DIP) receipt: ', receipt);
