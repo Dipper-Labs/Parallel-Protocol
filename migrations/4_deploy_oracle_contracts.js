@@ -145,6 +145,10 @@ module.exports = async function(deployer, network, accounts) {
             })
             .then(receipt => {
                 console.log('assetPrice.setOracle(dTSLA) receipt: ', receipt);
+                return contracts.assetPrice.setOracle(dipPriceKey, contracts.synthxOracle.address);
+            })
+            .then(receipt => {
+                console.log('assetPrice.setOracle(DIP) receipt: ', receipt);
                 return contracts.synthxOracle.setPrice(dipPriceKey, Web3Utils.toWei(tokensPrice['dipper-network'].usd.toString(), 'ether'))
             })
             .then(receipt => {
