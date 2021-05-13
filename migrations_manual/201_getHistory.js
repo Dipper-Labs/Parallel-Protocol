@@ -7,13 +7,11 @@ const History = artifacts.require("History");
 const topic = Web3Utils.fromAscii('Stake');
 
 module.exports = async function(deployer, network, accounts) {
-    let contracts = {};
-    contracts.history = await History.at(contractAddrs.history);
-    console.log(contracts.history.address);
+    const history = await History.at(contractAddrs.history);
 
     await deployer
         .then(() => {
-            return contracts.history.getHistory(topic, accounts[0], 10, 1);
+            return history.getHistory(topic, accounts[0], 10, 1);
         })
         .then((result) => {
             console.log(result);
