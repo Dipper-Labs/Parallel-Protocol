@@ -2,8 +2,10 @@ build
 package-lock.json
 node_modules
 .idea
-contractsAddrs.json
 tokens_price.json
 stocks_price.json
 StocksPrice.js
 nohup.out
+finalContractAddrs.json
+commonContractAddrs.json
+contractAddrs.json
