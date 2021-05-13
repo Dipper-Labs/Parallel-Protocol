@@ -1,5 +1,6 @@
 const fs = require('fs');
 const Web3Utils = require('web3-utils');
+const {checkUndefined} = require('./util')
 
 const contractAddrs = require('../contractAddrs.json');
 
@@ -9,15 +10,6 @@ const TokenStorage = artifacts.require("TokenStorage");
 const Synth = artifacts.require("Synth");
 const SynthxToken = artifacts.require("SynthxToken");   // sDIP
 const SynthxDToken = artifacts.require("SynthxDToken"); // DToken
-
-function checkUndefined(obj) {
-    if (obj == undefined) {
-        console.log('undefined');
-        process.exit(-1);
-    } else {
-        console.log(obj.address);
-    }
-}
 
 module.exports = async function(deployer) {
     let contracts = {};

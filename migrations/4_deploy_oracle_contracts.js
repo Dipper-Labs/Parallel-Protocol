@@ -1,5 +1,6 @@
 const fs = require('fs');
 const Web3Utils = require('web3-utils');
+const {checkUndefined} = require('./util')
 
 const commonContractAddrs = require('../commonContractAddrs.json');
 const bscPriceContracts = require('./bsc_price_contracts.json');
@@ -18,15 +19,6 @@ const bnbPriceKey = Web3Utils.fromAscii('BNB');
 const dipPriceKey = Web3Utils.fromAscii('DIP');
 const dAAPLPriceKey = Web3Utils.fromAscii('dAPPL');
 const dTSLAPriceKey = Web3Utils.fromAscii('dTSLA');
-
-function checkUndefined(obj) {
-    if (obj == undefined) {
-        console.log('undefined');
-        process.exit(-1);
-    } else {
-        console.log(obj.address);
-    }
-}
 
 const contractAddrsFile = 'contractAddrs.json';
 

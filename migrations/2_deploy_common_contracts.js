@@ -1,5 +1,6 @@
 const fs = require('fs');
 const Web3Utils = require('web3-utils');
+const {checkUndefined} = require('./util')
 
 const Storage = artifacts.require("Storage");
 const AddressStorage = artifacts.require("AddressStorage");
@@ -23,15 +24,6 @@ const Market = artifacts.require("Market");
 const SupplySchedule = artifacts.require("SupplySchedule");
 const Stats = artifacts.require("Stats");
 const Synthx = artifacts.require("Synthx");
-
-function checkUndefined(obj) {
-    if (obj == undefined) {
-        console.log('undefined');
-        process.exit(-1);
-    } else {
-        console.log(obj.address);
-    }
-}
 
 module.exports = function(deployer, network, accounts) {
     let contracts = {};

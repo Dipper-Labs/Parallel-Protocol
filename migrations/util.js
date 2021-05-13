@@ -6,3 +6,5 @@ function checkUndefined(obj) {
         console.log(obj.address);
     }
 }
+
+exports.checkUndefined = checkUndefined;
