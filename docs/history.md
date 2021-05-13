@@ -154,21 +154,23 @@ function getHistory(
 - pageSize: 分页大小
 - pageNumber: 分页编号，从1开始
 
-## 返回值说明
-- Action.actionType: ['Stake', 'Mint', 'Burn', 'Transfer']，分别表示
-- Action.fromAsset: 
-- Action.fromAmount: 
-- Action.fromPrice: 
-- Action.toAsset: 
-- Action.toAmount: 
-- Action.toPrice: 
-- Action.time: 
+## 返回值说
+Action: 
+- actionType: ['Stake', 'Mint', 'Burn', 'Transfer']
+- fromAsset: 
+- fromAmount: 
+- fromPrice: 
+- toAsset: 
+- toAmount: 
+- toPrice: 
+- time: 时间戳，单位秒，返回的记录是按时间倒序，需要自己排序
 
-- Page.totalRecords: 总记录数
-- Page.totalPages: 总页面数
-- Page.pageRecords: 当前页面记录数
-- Page.pageSize: 每页记录数
-- Page.pageNumber: 当前页数，下标从1开始
+Page: 
+- totalRecords: 总记录数
+- totalPages: 总页面数
+- pageRecords: 当前页面记录数
+- pageSize: 每页记录数
+- pageNumber: 当前页数，下标从1开始
 
 ## eg
 ```bash
@@ -176,7 +178,7 @@ https://github.com/Dipper-Labs/DIPSYN/blob/synthx/migrations_manual/201_getHisto
 ```
 
 返回值
-```json
+```text
 {
   '0': [
     [
