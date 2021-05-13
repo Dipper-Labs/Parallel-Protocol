@@ -12,8 +12,7 @@ do
 	cp migrations_manual/102_setPrices.js migrations
 	cp migrations_manual/103_getPrices.js migrations
 
-	node getStocksPrice.js
-	node getTokensPrice.js
+	node getPrices.js
 
 	truffle migrate --network bsctestnet --skip-dry-run -f 102
 	truffle migrate --network bsctestnet --skip-dry-run -f 103
