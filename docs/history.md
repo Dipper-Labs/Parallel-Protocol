@@ -154,7 +154,7 @@ function getHistory(
 - pageSize: 分页大小
 - pageNumber: 分页编号，从1开始
 
-## 返回值说
+## 返回值说明
 Action: 
 - actionType: ['Stake', 'Mint', 'Burn', 'Transfer']
 - fromAsset: 
