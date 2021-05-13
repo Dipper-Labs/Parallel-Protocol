@@ -1,6 +1,179 @@
 
 # 接口文档
+## History 合约
 
+### 1. 查询历史交易
+
+TODO
+
+
+
+## Token合约
+
+### 1. 查询合约的总供应量
+
+调用对应token合约的totalSupply方法
+
+```aidl
+function totalSupply() external view  returns (uint256)
+```
+
+abi:
+```aidl
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "totalSupply",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+```
+
+
+dToken总供应量，调用dToken合约的totalSupply方法； SDIP总供应量，调用SDIP合约的totalSupply方法。
+
+
+
+### 2. 查询合约余额
+
+```aidl
+function balanceOf(address account) public view returns (uint256)
+```
+
+abi:
+```aidl
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+```
+
+## 主页数据显示
+
+### 1. 基础资产的总价值
+
+1） 先获取系统的基础资产地址列表
+
+调用resolver合约
+
+```aidl
+function getAssets(bytes32 assetType) external view returns (bytes32[] memory)
+```
+
+参数传入"Staker"，获取所有基础资产的合约地址列表。
+
+
+2) 分别调用对应地址合约的balanceOf方法，获取合约的balance
+
+
+```aidl
+function balanceOf(address account) public view returns (uint256)
+```
+其中，参数account传入Synthx合约的地址(即send合约的地址)
+
+abi:
+```aidl
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+```
+
+3） 将结果累加，即基础资产的总价值
+
+### 2. 合成资产的总价值
+
+调用resolver合约
+
+```aidl
+function getAssets(bytes32 assetType) external view returns (bytes32[] memory)
+```
+
+参数传入"Synth"，获取所有合成资产的合约地址列表。
+
+
+2) 分别调用对应地址合约的balanceOf方法，获取合约的balance
+
+
+```aidl
+function balanceOf(address account) public view returns (uint256)
+```
+其中，参数account传入Synthx合约的地址(即send合约的地址)
+
+abi:
+```aidl
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "balanceOf",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+```
+3） 将结果累加，即合成资产的总价值
+
+
+### 3. 系统总抵押率
+
+系统总抵押率 = 合成资产总价值  / 基础资产总价值  ；
+
+结果展示成百分比
 
 ## Setting合约
 
@@ -941,24 +1114,25 @@ dUSDAmount = (dTokenAmount / totalSupply) * totalDebt
 全新的合约地址，已经出炉了：
 
 {
- "setting": "0x4fEb9B8Fe3d7A597Bd7124b27ab3DEa5F58FbB91",
- "resolver": "0x07012D3E60cFfEE4FB99EE84FB9879D372eb7Fb1",
- "issuer": "0xb5D961a0c2deFaF2EB5FD119B53D35c09640a61f",
- "history": "0xad9257FFbB11Ea403058e442994acEbd44724AAc",
- "liquidator": "0xd35e68C8DB1C08a5b25c481a14E7B70607A7E710",
- "staker": "0xd6dcbb5f4abbF9B6eF8bd5B85BcC9A0c741F4c1b",
- "holder": "0x7f58A459424C9508Bfa980aeC0F5f3Fe46735Ae7",
- "assetPrice": "0xCe691A729f74D6E134f0d414a4639A42583AFf62",
- "oracle": "0x9634bFDDC1f5A9f167595E4Ee8e923BFa963cB3f",
- "trader": "0x9fd87B0479a80f62D926b6f71A5Ec113bd98CEa7",
- "market": "0x240C6F7F3Cd41BE095244349C366a13Bc0D077D5",
- "supplySchedule": "0x96F3618ff84eAE1C6807E0135e7d0482C044e221",
- "stats(query合约)": "0x5988a26E592C11580E9d37c47a84436E65Ea6C78",
- "synthx(send合约)": "0xE2B88400989E63a6614aE5B0202FA537174D6677",
- "dUSD": "0xaD89666F40a49C7beed726510916ee884b91d736",
- "synthxToken": "0xd726fDD846d6D816A68c0125edd792753D239049",
- "synthxDToken": "0xF12537bBBbE84c6a8efB99287BF158DbA836A33c",
- "dTSLA": "0x4BE28B03fAa638e74F24140de481b8345247e201",
- "dAPPLE": "0xBAbb11E7009A674F763eC30ac6D996B48C24fd98"
+ "setting": "0x25A35fb12c39A43DBB0C5Fad3809d7d9A66D44c2",
+ "resolver": "0x4438b29c24F0246Ef753Bc0030b40c47288C827b",
+ "issuer": "0x3f3Fe214A3A0d2b3f4534390B447fFaEeE76309E",
+ "history": "0xa8f765a4868FF2B1FDC9157246EA34Ef03546B88",
+ "liquidator": "0xfB132eCAE1f521C1726393964630C54feF2Ee397",
+ "staker": "0x2593C7311b920169C08f5d70453b13b409586783",
+ "holder": "0x66C8e307BC118513c3F2D232bA9b4BF2AC7EdC09",
+ "assetPrice": "0x06806aD86f4BcF94F453824a7c670E3B1F077365",
+ "trader": "0x6304A83E906efbCD550eE4971091Df9Fe30A1f17",
+ "market": "0xB47b5F04Ca40d0bA78B1A63C3c7b97944666fbA6",
+ "supplySchedule": "0x1daCf933DBda3088216f911bB0998224D197b849",
+ "stats": "0x2904AD4dE9239FE798C1c41CBc3d9cc924121145",
+ "synthx": "0x7F2fC99e0C997EB1D2199a563b17a4d585374ade",
+ "synthxOracle": "0x4024F262e47842b24441116e51a31F3449f9A7eD",
+ "chainLinkOracle": "0x5d82C3a7E1015E4e64c9629d8564bdDe1bc58903",
+ "dUSD": "0x01e048d33AE0a81406247ea402a98a6c1099aCab",
+ "synthxToken": "0xDda965FEE061457a165AB463fF3E054672b4115C",
+ "synthxDToken": "0x66e9596f41d69cBE2b06138F4e61bbEc3Ac1d385",
+ "dTSLA": "0x6B500c84B15705EdC4c5F93D85DD5896D407D512",
+ "dAPPL": "0x5671bF7736cAe00E6cebb796624311b785Ea4680"
 }
 ```
