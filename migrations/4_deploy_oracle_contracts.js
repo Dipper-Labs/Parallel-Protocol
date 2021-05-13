@@ -101,7 +101,7 @@ module.exports = async function(deployer, network, accounts) {
                 return deployer.deploy(OracleStorage, synthxOracle.address);
             })
             .then((oracleStorage) => {
-                checkUndefined(contracts.oracleStorage);
+                checkUndefined(oracleStorage);
                 return contracts.synthxOracle.setStorage(oracleStorage.address);
             })
             .then(receipt => {
