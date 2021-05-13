@@ -171,8 +171,11 @@ function getHistory(
 - Page.pageNumber: 当前页数，下标从1开始
 
 ## eg
+```bash
+https://github.com/Dipper-Labs/DIPSYN/blob/synthx/migrations_manual/201_getHistory.js
+```
 
-
+返回值
 ```json
 {
   '0': [
