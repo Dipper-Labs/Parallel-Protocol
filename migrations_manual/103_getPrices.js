@@ -19,26 +19,26 @@ module.exports = async function(deployer, network, accounts) {
             return assetPrice.getPriceFromOracle(dipPriceKey);
         })
         .then(price => {
-            console.log('price[dip]: ', price.toString());
+            console.log('price[dip]: ', price.price.toString());
             return assetPrice.getPriceFromOracle(btcPriceKey);
         })
         .then(price => {
-            console.log('price[btc]: ', price.toString());
+            console.log('price[btc]: ', price.price.toString());
             return assetPrice.getPriceFromOracle(ethPriceKey);
         })
         .then(price => {
-            console.log('price[eth]: ', price.toString());
+            console.log('price[eth]: ', price.price.toString());
             return assetPrice.getPriceFromOracle(bnbPriceKey);
         })
         .then(price => {
-            console.log('price[bnb]: ', price.toString());
+            console.log('price[bnb]: ', price.price.toString());
             return assetPrice.getPriceFromOracle(dAAPLPriceKey);
         })
         .then(price => {
-            console.log('price[dAAPL]: ', price.toString());
+            console.log('price[dAAPL]: ', price.price.toString());
             return assetPrice.getPriceFromOracle(dTSLAPriceKey);
         })
         .then(price => {
-            console.log('price[dTSLA]: ', price.toString());
+            console.log('price[dTSLA]: ', price.price.toString());
         });
 }

@@ -232,6 +232,10 @@ module.exports = async function(deployer, network, accounts) {
             })
             .then(receipt => {
                 console.log('assetPrice.setOracle(dTSLA) receipt: ', receipt);
+                return contracts.assetPrice.setOracle(Web3Utils.fromAscii('DIP'), contracts.synthxOracle.address);
+            })
+            .then(receipt => {
+                console.log('assetPrice.setOracle(DIP) receipt: ', receipt);
                 console.log("oracle contracts deployment finished\n\n");
 
                 const addrs = JSON.stringify(commonContractAddrs, null, '\t');
