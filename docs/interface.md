@@ -1066,6 +1066,78 @@ abi
 ```
 
 
+### 查询合成资产的交易量
+
+调用Stats合约（即query合约）的getAssetMarket方法。
+
+```aidl
+
+    function getAssetMarket(bytes32 asset)
+        external
+        view
+        returns (
+            uint256 open,
+            uint256 last,
+            uint256 low,
+            uint256 hight,
+            uint256 volume,
+            uint256 turnover
+        )
+```
+
+参数传入合成资产的名字。返回结果中，volum表示成交量。
+
+abi
+```aidl
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "asset",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getAssetMarket",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "open",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "last",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "low",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "hight",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "volume",
+          "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "turnover",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+```
+
+
 ### burn时，根据要burn的dToken数量，查询需要burn的dUSD数量
 
 假设要burn的dToken数量为dTokenAmount
