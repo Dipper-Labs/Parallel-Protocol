@@ -15,7 +15,7 @@ module.exports = async function(deployer, network, accounts) {
     contracts.stats = await Stats.at(contractAddrs.stats);
     contracts.synthxDToken = await SynthxDToken.at(contractAddrs.synthxDToken);
     contracts.dTSLA = await Synth.at(contractAddrs.dTSLA);
-    contracts.dAPPLE = await Synth.at(contractAddrs.dAPPL);
+    contracts.dAPPL = await Synth.at(contractAddrs.dAPPL);
 
     await deployer
         .then(() => {
