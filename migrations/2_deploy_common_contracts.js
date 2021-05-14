@@ -1,8 +1,7 @@
 const fs = require('fs');
 const Web3Utils = require('web3-utils');
 const {checkUndefined} = require('./util');
-const {nativeToken, fakeERC20Addr} = require('./config');
-
+const {nativeToken, fakeERC20Addr, foundationAddr, ecologyAddr} = require('./config');
 
 const Storage = artifacts.require("Storage");
 const AddressStorage = artifacts.require("AddressStorage");
@@ -31,8 +30,15 @@ module.exports = function(deployer, network, accounts) {
     let contracts = {};
     let contractAddrs = {};
 
-    const foundationAccount = accounts[0];
-    const ecologyAccount = accounts[0];
+    if ('' == foundationAddr) {
+        console.log('foundation account must be setup in config.js');
+        process.exit(-1);
+    }
+
+    if ('' == ecologyAddr) {
+        console.log('ecology account must be setup in config.js');
+        process.exit(-1);
+    }
 
     deployer
         .then(function() {
@@ -238,11 +244,11 @@ module.exports = function(deployer, network, accounts) {
         })
         .then((receipt) => {
             console.log('resolver.setAddress(SupplySchedule) receipts: ', receipt);
-            return contracts.resolver.setAddress(Web3Utils.fromAscii('Foundation'), foundationAccount);
+            return contracts.resolver.setAddress(Web3Utils.fromAscii('Foundation'), foundationAddr);
         })
         .then((receipt) => {
             console.log('resolver.setAddress(Foundation) receipts: ', receipt);
-            return contracts.resolver.setAddress(Web3Utils.fromAscii('Ecology'), ecologyAccount);
+            return contracts.resolver.setAddress(Web3Utils.fromAscii('Ecology'), ecologyAddr);
         })
         .then((receipt) => {
             console.log('resolver.setAddress(Ecology) receipts: ', receipt);

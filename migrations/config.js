@@ -10,8 +10,14 @@ const liquidationDelay = 36000;
 // for setting.setMintPeriodDuration
 const mintPeriodDuration = 3600*24; // second
 
+// for foundation and ecology account
+const foundationAddr = '';
+const ecologyAddr = '';
+
 
 exports.nativeToken = nativeToken;
 exports.fakeERC20Addr = fakeERC20Addr;
 exports.liquidationDelay = liquidationDelay;
 exports.mintPeriodDuration = mintPeriodDuration;
+exports.foundationAddr = foundationAddr;
+exports.ecologyAddr = ecologyAddr;
