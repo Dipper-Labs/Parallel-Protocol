@@ -74,6 +74,8 @@ interface IStats {
         );
 
     function getSynthValue(address account) external view returns (uint256);
+    function getTotalSynthValue() external view returns (uint256);
+    function getTotalVaultValue() external view returns (uint256);
 
     function getTradingAmountAndFee(
         bytes32 fromSynth,

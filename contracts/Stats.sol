@@ -190,6 +190,19 @@ contract Stats is Importable, IStats {
         return items;
     }
 
+    function getTotalVaultValue() external view returns (uint256) {
+        bytes32[] memory stakes = assets(STAKE);
+        uint256[] memory prices = AssetPrice().getPrices(stakes);
+
+        uint256 total = 0;
+        for (uint256 i = 0; i < stakes.length; i++) {
+            address stakeAddress = requireAsset(STAKE, stakes[i]);
+            address account = requireAddress(CONTRACT_SYNTHX);
+            total = total.add(_getBalance(stakes[i], stakeAddress, account).decimalMultiply(prices[i]));
+        }
+        return total;
+    }
+
     function getTotalCollateral(address account)
         external
         view
@@ -231,6 +244,21 @@ contract Stats is Importable, IStats {
         for (uint256 i = 0; i < synths.length; i++) {
             bytes32 assetName = synths[i];
             address assetAddress = requireAsset(SYNTH, assetName);
+            total = total.add(_getBalance(assetName, assetAddress, account).decimalMultiply(prices[i]));
+        }
+
+        return total;
+    }
+
+    function getTotalSynthValue() external view returns (uint256) {
+        bytes32[] memory synths = assets(SYNTH);
+        uint256[] memory prices = AssetPrice().getPrices(synths);
+
+        uint256 total = 0;
+        for (uint256 i = 0; i < synths.length; i++) {
+            bytes32 assetName = synths[i];
+            address assetAddress = requireAsset(SYNTH, assetName);
+            address account = requireAddress(CONTRACT_SYNTHX);
             total = total.add(_getBalance(assetName, assetAddress, account).decimalMultiply(prices[i]));
         }
 
