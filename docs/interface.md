@@ -255,7 +255,47 @@ abi
     }
 ```
 
+### 查询可提现数量
 
+```aidl
+function getTransferable(bytes32 token, address account) external view returns (uint256 staker) 
+```
+
+其中token为基础资产名字，account为帐户地址。
+
+
+signature:```0x668187b8```
+
+abi
+
+```aidl
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "token",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "address",
+          "name": "account",
+          "type": "address"
+        }
+      ],
+      "name": "getTransferable",
+      "outputs": [
+        {
+          "internalType": "uint256",
+          "name": "staker",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+```
 ## Issuer合约
 
 ### 查询账户负债
