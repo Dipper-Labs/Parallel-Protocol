@@ -1,5 +1,6 @@
-const fs = require('fs');
 const Web3Utils = require('web3-utils');
+
+const contractAddrs = require('../finalContractAddrs.json');
 
 const Synthx = artifacts.require("Synthx");
 const Synth = artifacts.require("Synth");
@@ -7,20 +8,14 @@ const Stats = artifacts.require("Stats");
 const SynthxDToken = artifacts.require("SynthxDToken");
 
 module.exports = async function(deployer, network, accounts) {
-    let contractsAddrs = {};
-
-    const data = fs.readFileSync('contractsAddrs.json', 'utf-8')
-    contractsAddrs = JSON.parse(data.toString());
-
-    console.log(contractsAddrs);
-
     let contracts = {};
-    contracts.synthx = await Synthx.at(contractsAddrs.synthx);
-    contracts.dUSD = await Synth.at(contractsAddrs.dUSD);
-    contracts.stats = await Stats.at(contractsAddrs.stats);
-    contracts.synthxDToken = await SynthxDToken.at(contractsAddrs.synthxDToken);
-    contracts.dTSLA = await Synth.at(contractsAddrs.dTSLA);
-    contracts.dAPPLE = await Synth.at(contractsAddrs.dAPPLE);
+
+    contracts.synthx = await Synthx.at(contractAddrs.synthx);
+    contracts.dUSD = await Synth.at(contractAddrs.dUSD);
+    contracts.stats = await Stats.at(contractAddrs.stats);
+    contracts.synthxDToken = await SynthxDToken.at(contractAddrs.synthxDToken);
+    contracts.dTSLA = await Synth.at(contractAddrs.dTSLA);
+    contracts.dAPPLE = await Synth.at(contractAddrs.dAPPLE);
 
     await deployer
         .then(() => {
