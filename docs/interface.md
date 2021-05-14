@@ -4,9 +4,7 @@
 
 ### 1. 查询历史交易
 
-TODO
-
-
+[](./history.md)
 
 ## Token合约
 
@@ -728,6 +726,42 @@ abi
 ```
 
 ## Stats合约
+
+### 获取K线
+
+```aidl
+function getLine(bytes32 asset, uint256 size) external view returns (uint256[] memory)
+```
+
+abi
+```aidl
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "asset",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "uint256",
+          "name": "size",
+          "type": "uint256"
+        }
+      ],
+      "name": "getLine",
+      "outputs": [
+        {
+          "internalType": "uint256[]",
+          "name": "",
+          "type": "uint256[]"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+```
 
 ### 查询账户收益
 
