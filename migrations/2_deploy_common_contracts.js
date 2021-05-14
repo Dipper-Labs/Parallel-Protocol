@@ -1,7 +1,7 @@
 const fs = require('fs');
 const Web3Utils = require('web3-utils');
 const {checkUndefined} = require('./util');
-const {nativeToken, fakeERC20Addr, foundationAddr, ecologyAddr} = require('./config');
+const {nativeToken, fakeERC20Addr, foundationAddr, ecologyAddr, maxDelayTime} = require('./config');
 
 const Storage = artifacts.require("Storage");
 const AddressStorage = artifacts.require("AddressStorage");
@@ -200,12 +200,12 @@ module.exports = function(deployer) {
 
         // resolver setAddresses
         .then((receipt) => {
-            console.log('resolver.addAsset receipt: ', receipt);
+            console.log('resolver.addAsset(native) receipt: ', receipt);
             return contracts.resolver.setAddress(Web3Utils.fromAscii('Issuer'), contracts.issuer.address);
         })
         .then((receipt) => {
             console.log('resolver.setAddress(Issuer) receipts: ', receipt);
-            return contracts.assetPrice.setMaxDelayTime(360000);
+            return contracts.assetPrice.setMaxDelayTime(maxDelayTime);
         })
         .then((receipt) => {
             console.log('assetPrice.setMaxDelayTime receipts: ', receipt);
