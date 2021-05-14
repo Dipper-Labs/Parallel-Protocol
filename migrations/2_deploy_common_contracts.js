@@ -26,16 +26,16 @@ const SupplySchedule = artifacts.require("SupplySchedule");
 const Stats = artifacts.require("Stats");
 const Synthx = artifacts.require("Synthx");
 
-module.exports = function(deployer, network, accounts) {
+module.exports = function(deployer) {
     let contracts = {};
     let contractAddrs = {};
 
-    if ('' == foundationAddr) {
+    if ('' === foundationAddr) {
         console.log('foundation account must be setup in config.js');
         process.exit(-1);
     }
 
-    if ('' == ecologyAddr) {
+    if ('' === ecologyAddr) {
         console.log('ecology account must be setup in config.js');
         process.exit(-1);
     }
@@ -200,6 +200,7 @@ module.exports = function(deployer, network, accounts) {
 
         // resolver setAddresses
         .then((receipt) => {
+            console.log('resolver.addAsset receipt: ', receipt);
             return contracts.resolver.setAddress(Web3Utils.fromAscii('Issuer'), contracts.issuer.address);
         })
         .then((receipt) => {
