@@ -1,6 +1,9 @@
 const fs = require('fs');
 const Web3Utils = require('web3-utils');
-const {checkUndefined} = require('./util')
+
+const {checkUndefined} = require('./util');
+const {AssetTypeStake, AssetTypeSynth, sDIP, dToken, Synth_dUSD, Synth_dAPPL, Synth_dTSLA} = require('./common');
+const {NativeToken, NativeERC20Addr, BTCToken, BTCERC20Addr} = require('./config');
 
 const contractAddrs = require('../contractAddrs.json');
 
@@ -115,24 +118,31 @@ module.exports = async function(deployer) {
         })
         .then((receipt) => {
             console.log('dAPPL.initialize receipts: ', receipt);
-            return contracts.resolver.setAddress(Web3Utils.fromAscii('SynthxToken'), contracts.synthxToken.address);
+            return contracts.resolver.setAddress(sDIP, contracts.synthxToken.address);
         })
         .then((receipt) => {
-            console.log('resolver.setAddress(SynthxToken) receipts: ', receipt);
-            return contracts.resolver.setAddress(Web3Utils.fromAscii('SynthxDToken'), contracts.synthxDToken.address);
+            console.log('resolver.setAddress(sDIP) receipts: ', receipt);
+            return contracts.resolver.setAddress(dToken, contracts.synthxDToken.address);
         })
         .then((receipt) => {
-            console.log('resolver.setAddress(SynthxDToken) receipts: ', receipt);
-            return contracts.resolver.addAsset(Web3Utils.fromAscii('Synth'), Web3Utils.fromAscii('dUSD'), contracts.dUSD.address);
+            console.log('resolver.setAddress(dToken) receipts: ', receipt);
+            return contracts.resolver.addAsset(AssetTypeSynth, Synth_dUSD, contracts.dUSD.address);
         })
         .then((receipt) => {
             console.log('resolver.addAsset(Synth-dUSD) receipts: ', receipt);
-            return contracts.resolver.addAsset(Web3Utils.fromAscii('Synth'), Web3Utils.fromAscii('dTSLA'), contracts.dTSLA.address);
+            return contracts.resolver.addAsset(AssetTypeSynth, Synth_dTSLA, contracts.dTSLA.address);
         })
         .then((receipt) => {
-            console.log(receipt);
             console.log('resolver.addAsset(Synth-dTSLA) receipts: ', receipt);
-            return contracts.resolver.addAsset(Web3Utils.fromAscii('Synth'), Web3Utils.fromAscii('dAPPL'), contracts.dAPPL.address);
+            return contracts.resolver.addAsset(AssetTypeSynth, Synth_dAPPL, contracts.dAPPL.address);
+        })
+        .then((receipt) => {
+            console.log('resolver.addAsset(Stake-Native) receipts: ', receipt);
+            return contracts.resolver.addAsset(AssetTypeStake, NativeToken, NativeERC20Addr);
+        })
+        .then((receipt) => {
+            console.log('resolver.addAsset(Stake-BTC) receipts: ', receipt);
+            return contracts.resolver.addAsset(AssetTypeStake, BTCToken, BTCERC20Addr);
         })
 
         // save contract addresses

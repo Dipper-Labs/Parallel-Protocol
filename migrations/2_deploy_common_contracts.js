@@ -2,7 +2,7 @@ const fs = require('fs');
 const Web3Utils = require('web3-utils');
 
 const {checkUndefined} = require('./util');
-const {NativeToken, FakeERC20Addr, FoundationAddr, EcologyAddr, MaxDelayTime} = require('./config');
+const {NativeToken, FoundationAddr, EcologyAddr, MaxDelayTime} = require('./config');
 
 const Storage = artifacts.require("Storage");
 const AddressStorage = artifacts.require("AddressStorage");
@@ -196,12 +196,6 @@ module.exports = function(deployer) {
         })
         .then((receipt) => {
             console.log('synthx.initialize receipt: ', receipt);
-            return contracts.resolver.addAsset(Web3Utils.fromAscii('Stake'), NativeToken, FakeERC20Addr);
-        })
-
-        // resolver setAddresses
-        .then((receipt) => {
-            console.log('resolver.addAsset(native) receipt: ', receipt);
             return contracts.resolver.setAddress(Web3Utils.fromAscii('Issuer'), contracts.issuer.address);
         })
         .then((receipt) => {
