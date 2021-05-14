@@ -1,5 +1,5 @@
 const Web3Utils = require('web3-utils');
-const {liquidationDelay, mintPeriodDuration} = require('./config');
+const {LiquidationDelay, MintPeriodDuration} = require('./config');
 
 const contractAddrs = require('../finalContractAddrs.json');
 
@@ -16,11 +16,11 @@ module.exports = async function(deployer) {
 
     await deployer
         .then(() => {
-            return contracts.setting.setLiquidationDelay(liquidationDelay);
+            return contracts.setting.setLiquidationDelay(LiquidationDelay);
         })
         .then(receipt => {
             console.log('setting.setLiquidationDelay receipt: ', receipt);
-            return contracts.setting.setMintPeriodDuration(mintPeriodDuration);
+            return contracts.setting.setMintPeriodDuration(MintPeriodDuration);
         })
 
         // setup BTC

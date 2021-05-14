@@ -1,7 +1,8 @@
 const fs = require('fs');
 const Web3Utils = require('web3-utils');
+
 const {checkUndefined} = require('./util');
-const {nativeToken, fakeERC20Addr, foundationAddr, ecologyAddr, maxDelayTime} = require('./config');
+const {NativeToken, FakeERC20Addr, FoundationAddr, EcologyAddr, MaxDelayTime} = require('./config');
 
 const Storage = artifacts.require("Storage");
 const AddressStorage = artifacts.require("AddressStorage");
@@ -30,12 +31,12 @@ module.exports = function(deployer) {
     let contracts = {};
     let contractAddrs = {};
 
-    if ('' === foundationAddr) {
+    if ('' === FoundationAddr) {
         console.log('foundation account must be setup in config.js');
         process.exit(-1);
     }
 
-    if ('' === ecologyAddr) {
+    if ('' === EcologyAddr) {
         console.log('ecology account must be setup in config.js');
         process.exit(-1);
     }
@@ -191,11 +192,11 @@ module.exports = function(deployer) {
         // init nativeCoin as ETH
         .then((receipt) => {
             console.log('trader.setStorage receipts: ', receipt);
-            return contracts.synthx.initialize(Resolver.address, Web3Utils.fromAscii(nativeToken));
+            return contracts.synthx.initialize(Resolver.address, NativeToken);
         })
         .then((receipt) => {
             console.log('synthx.initialize receipt: ', receipt);
-            return contracts.resolver.addAsset(Web3Utils.fromAscii('Stake'), Web3Utils.fromAscii(nativeToken), fakeERC20Addr);
+            return contracts.resolver.addAsset(Web3Utils.fromAscii('Stake'), NativeToken, FakeERC20Addr);
         })
 
         // resolver setAddresses
@@ -205,7 +206,7 @@ module.exports = function(deployer) {
         })
         .then((receipt) => {
             console.log('resolver.setAddress(Issuer) receipts: ', receipt);
-            return contracts.assetPrice.setMaxDelayTime(maxDelayTime);
+            return contracts.assetPrice.setMaxDelayTime(MaxDelayTime);
         })
         .then((receipt) => {
             console.log('assetPrice.setMaxDelayTime receipts: ', receipt);
@@ -245,11 +246,11 @@ module.exports = function(deployer) {
         })
         .then((receipt) => {
             console.log('resolver.setAddress(SupplySchedule) receipts: ', receipt);
-            return contracts.resolver.setAddress(Web3Utils.fromAscii('Foundation'), foundationAddr);
+            return contracts.resolver.setAddress(Web3Utils.fromAscii('Foundation'), FoundationAddr);
         })
         .then((receipt) => {
             console.log('resolver.setAddress(Foundation) receipts: ', receipt);
-            return contracts.resolver.setAddress(Web3Utils.fromAscii('Ecology'), ecologyAddr);
+            return contracts.resolver.setAddress(Web3Utils.fromAscii('Ecology'), EcologyAddr);
         })
         .then((receipt) => {
             console.log('resolver.setAddress(Ecology) receipts: ', receipt);
