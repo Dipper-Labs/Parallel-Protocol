@@ -7,8 +7,8 @@ const BTCToken = Web3Utils.fromAscii('BTC');
 const BTCERC20Addr = '0xe90cec8332a17361f427b1b8ffa5270b39b21076';
 
 // for foundation and ecology account
-const FoundationAddr = '0xdBdBaD81F21eb97b17B67FD31c1c1667Dc5dEeF8';
-const EcologyAddr = '0xdBdBaD81F21eb97b17B67FD31c1c1667Dc5dEeF8';
+const FoundationAddr = '';
+const EcologyAddr = '';
 
 // contractName_configurationName
 const Setting_LiquidationDelay = 36000;
