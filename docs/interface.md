@@ -409,14 +409,20 @@ CollateralRate = (USDAmount + deltaUSDAmount) / ((ETHAmount + ETHDeltaAmount) * 
 
 #### 1.1  如果基础资产是ETH, 调用如下接口
 ```cgo
- function mintFromCoin() external payable returns (bool)
+function mintFromCoin(uint256 mintedAmount) external payable returns (bool)
 ```
 
 abi
 ```cgo
-    {
+{
       "constant": false,
-      "inputs": [],
+      "inputs": [
+        {
+          "internalType": "uint256",
+          "name": "mintedAmount",
+          "type": "uint256"
+        }
+      ],
       "name": "mintFromCoin",
       "outputs": [
         {
@@ -431,9 +437,11 @@ abi
     }
 ```
 
+signature:```0x768ab0fc```
+
 #### 1.2  如果基础资产是ERC20，调用如下接口
 ```cgo
-function mintFromToken(bytes32 stake, uint256 amount) external returns (bool)
+function mintFromToken(bytes32 stake, uint256 amount, uint256 mintedAmount) external returns (bool) 
 ```
 
 abi
@@ -450,6 +458,11 @@ abi
           "internalType": "uint256",
           "name": "amount",
           "type": "uint256"
+        },
+        {
+          "internalType": "uint256",
+          "name": "mintedAmount",
+          "type": "uint256"
         }
       ],
       "name": "mintFromToken",
@@ -465,6 +478,10 @@ abi
       "type": "function"
     }
 ```
+
+
+signature: ```05635bc4```
+
 参数说明：
 
 stake为资产名字，bytes32类型。
