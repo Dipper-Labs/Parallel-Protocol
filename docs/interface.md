@@ -75,37 +75,17 @@ abi:
 
 ### 1. 基础资产的总价值
 
-1） 先获取系统的基础资产地址列表
-
-调用resolver合约
-
 ```aidl
-function getAssets(bytes32 assetType) external view returns (bytes32[] memory)
+function getTotalVaultValue() external view returns (uint256)
 ```
 
-参数传入"Staker"，获取所有基础资产的合约地址列表。
+abi
 
-
-2) 分别调用对应地址合约的balanceOf方法，获取合约的balance
-
-
-```aidl
-function balanceOf(address account) public view returns (uint256)
-```
-其中，参数account传入Synthx合约的地址(即send合约的地址)
-
-abi:
 ```aidl
     {
       "constant": true,
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
-        }
-      ],
-      "name": "balanceOf",
+      "inputs": [],
+      "name": "getTotalVaultValue",
       "outputs": [
         {
           "internalType": "uint256",
@@ -118,40 +98,19 @@ abi:
       "type": "function"
     }
 ```
-
-3） 将结果累加，即基础资产的总价值
 
 ### 2. 合成资产的总价值
 
-调用resolver合约
-
 ```aidl
-function getAssets(bytes32 assetType) external view returns (bytes32[] memory)
+function getTotalSynthValue() external view returns (uint256)
 ```
 
-参数传入"Synth"，获取所有合成资产的合约地址列表。
-
-
-2) 分别调用对应地址合约的balanceOf方法，获取合约的balance
-
-
-```aidl
-function balanceOf(address account) public view returns (uint256)
-```
-其中，参数account传入Synthx合约的地址(即send合约的地址)
-
-abi:
+abi
 ```aidl
     {
       "constant": true,
-      "inputs": [
-        {
-          "internalType": "address",
-          "name": "account",
-          "type": "address"
-        }
-      ],
-      "name": "balanceOf",
+      "inputs": [],
+      "name": "getTotalSynthValue",
       "outputs": [
         {
           "internalType": "uint256",
@@ -164,8 +123,6 @@ abi:
       "type": "function"
     }
 ```
-3） 将结果累加，即合成资产的总价值
-
 
 ### 3. 系统总抵押率
 
@@ -968,6 +925,7 @@ assetType 为Synth时，返回账户中的合成资产；assetType为Stake时，
 ]
 
 ```
+
 
 ### 查询账户合成资产总价值
 ```cgo
