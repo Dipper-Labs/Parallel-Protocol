@@ -105,7 +105,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         _stake(nativeCoin, msg.value, FROM_BALANCE);
         History().addAction('Stake', msg.sender, 'Stake', nativeCoin, msg.value, bytes32(0), 0);
         Liquidator().watchAccount(nativeCoin, msg.sender);
-//        SynthxToken().mint();
+        SynthxToken().mint();
         emit Staked(msg.sender, FROM_BALANCE, nativeCoin, msg.value);
         return true;
     }
@@ -118,7 +118,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         _stake(stake, amount, FROM_BALANCE);
         History().addAction('Stake', msg.sender, 'Stake', stake, amount, bytes32(0), 0);
         Liquidator().watchAccount(stake, msg.sender);
-//        SynthxToken().mint();
+        SynthxToken().mint();
         emit Staked(msg.sender, FROM_BALANCE, stake, amount);
         return true;
     }
