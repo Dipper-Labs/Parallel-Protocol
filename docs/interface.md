@@ -741,6 +741,96 @@ abi
 
 ## Stats合约
 
+
+### 获取合成资产market统计信息
+
+
+```aidl
+    function getSynthAssetMarkets()
+        external
+        view
+        returns (SynthAssetStats[] memory)
+```
+
+abi
+
+```aidl
+    {
+      "constant": true,
+      "inputs": [],
+      "name": "getSynthAssetMarkets",
+      "outputs": [
+        {
+          "components": [
+            {
+              "internalType": "bytes32",
+              "name": "assetName",
+              "type": "bytes32"
+            },
+            {
+              "internalType": "uint256",
+              "name": "volume",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "liquidity",
+              "type": "uint256"
+            },
+            {
+              "internalType": "uint256",
+              "name": "price",
+              "type": "uint256"
+            }
+          ],
+          "internalType": "struct IStats.SynthAssetStats[]",
+          "name": "",
+          "type": "tuple[]"
+        }
+      ],
+      "payable": false,
+      "stateMutability": "view",
+      "type": "function"
+    }
+```
+
+返回结果示例：
+
+```aidl
+
+  [
+    '0x6455534400000000000000000000000000000000000000000000000000000000',
+    '10000000000000000000',
+    '990000000000000000000',
+    '1000000000000000000',
+    assetName: '0x6455534400000000000000000000000000000000000000000000000000000000',
+    volume: '10000000000000000000',
+    liquidity: '990000000000000000000',
+    price: '1000000000000000000'
+  ],
+  [
+    '0x6454534c41000000000000000000000000000000000000000000000000000000',
+    '17956624953369281',
+    '9410259999999999776',
+    '589740000000000000000',
+    assetName: '0x6454534c41000000000000000000000000000000000000000000000000000000',
+    volume: '17956624953369281',
+    liquidity: '9410259999999999776',
+    price: '589740000000000000000'
+  ],
+  [
+    '0x644150504c000000000000000000000000000000000000000000000000000000',
+    '4627226363279717',
+    '589739999999999931',
+    '127450000000000000000',
+    assetName: '0x644150504c000000000000000000000000000000000000000000000000000000',
+    volume: '4627226363279717',
+    liquidity: '589739999999999931',
+    price: '127450000000000000000'
+  ]
+]
+
+```
 ### 获取K线
 
 ```aidl
