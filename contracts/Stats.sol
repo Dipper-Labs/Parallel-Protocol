@@ -258,8 +258,11 @@ contract Stats is Importable, IStats {
         for (uint256 i = 0; i < synths.length; i++) {
             bytes32 assetName = synths[i];
             address assetAddress = requireAsset(SYNTH, assetName);
-            address account = requireAddress(CONTRACT_SYNTHX);
-            total = total.add(_getBalance(assetName, assetAddress, account).decimalMultiply(prices[i]));
+
+            IERC20 token = IERC20(assetAddress);
+            uint256 totalSupply = token.totalSupply();
+
+            total = total.add(totalSupply.decimalMultiply(prices[i]));
         }
 
         return total;
@@ -303,6 +306,42 @@ contract Stats is Importable, IStats {
         low = (low == 0) ? last : low.min(last);
         hight = hight.max(last);
     }
+
+    function getSynthAssetMarkets()
+        external
+        view
+        returns (SynthAssetStats[] memory)
+    {
+        bytes32[] memory synths = assets(SYNTH);
+        uint256[] memory prices = AssetPrice().getPrices(synths);
+
+        SynthAssetStats[] memory items = new SynthAssetStats[](synths.length);
+        for (uint256 i = 0; i < synths.length; i++) {
+            items[i] = _getSynthAssetStat(synths[i], prices[i]);
+        }
+
+        return items;
+    }
+
+    function _getSynthAssetStat(
+        bytes32 assetName,
+        uint256 assetPrice
+    ) private view returns (SynthAssetStats memory) {
+        address assetAddress = requireAsset(SYNTH, assetName);
+
+        IERC20 token = IERC20(assetAddress);
+        uint256 totalSupply = token.totalSupply();
+
+        (, , , uint256 volume,) = Market().getAssetMarket(assetName);
+        return
+        SynthAssetStats(
+            assetName,
+            volume,
+            totalSupply.decimalMultiply(assetPrice),
+            assetPrice
+        );
+    }
+
 
     function getLine(bytes32 asset, uint256 size) external view returns (uint256[] memory) {
         if (size == 0) return new uint256[](0);

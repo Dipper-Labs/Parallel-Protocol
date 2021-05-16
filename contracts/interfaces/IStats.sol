@@ -26,6 +26,13 @@ interface IStats {
         uint256 price;
     }
 
+    struct SynthAssetStats {
+        bytes32 assetName;
+        uint256 volume;
+        uint256 liquidity;
+        uint256 price;
+    }
+
     struct Pair {
         bytes32 fromAsset;
         uint256 fromAssetPrice;
