@@ -24,7 +24,7 @@ module.exports = async function(deployer) {
     let contracts = {};
 
     contracts.synthxOracle = await SynthxOracle.at(contractAddrs.synthxOracle);
-    contracts.ChainLinkOracle = await ChainLinkOracle.at(contractAddrs.chainLinkOracle);
+    contracts.chainLinkOracle = await ChainLinkOracle.at(contractAddrs.chainLinkOracle);
     contracts.assetPrice = await AssetPrice.at(contractAddrs.assetPrice);
     contracts.resolver = await Resolver.at(contractAddrs.resolver);
     contracts.issuer = await Issuer.at(contractAddrs.issuer);
