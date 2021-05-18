@@ -4,7 +4,7 @@ const NativeToken = Web3Utils.fromAscii('ETH');
 const NativeERC20Addr = '0x84b9b910527ad5c03a9ca831909e21e236ea7b06';
 
 const BTCToken = Web3Utils.fromAscii('BTC');
-const BTCERC20Addr = '0xe90cec8332a17361f427b1b8ffa5270b39b21076';
+const BTCERC20Addr = '';
 
 // for foundation and ecology account
 const FoundationAddr = '';
