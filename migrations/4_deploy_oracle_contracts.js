@@ -17,7 +17,7 @@ const btcPriceKey = Web3Utils.fromAscii('BTC');
 const ethPriceKey = Web3Utils.fromAscii('ETH');
 const bnbPriceKey = Web3Utils.fromAscii('BNB');
 const dipPriceKey = Web3Utils.fromAscii('DIP');
-const dAAPLPriceKey = Web3Utils.fromAscii('dAPPL');
+const dAAPLPriceKey = Web3Utils.fromAscii('dAAPL');
 const dTSLAPriceKey = Web3Utils.fromAscii('dTSLA');
 
 const contractAddrsFile = 'contractAddrs.json';
@@ -72,7 +72,7 @@ module.exports = async function(deployer, network, accounts) {
                 return contracts.assetPrice.setOracle(dAAPLPriceKey, contracts.chainLinkOracle.address);
             })
             .then(receipt => {
-                console.log('assetPrice.setOracle(dAPPL) receipt: ', receipt);
+                console.log('assetPrice.setOracle(dAAPL) receipt: ', receipt);
                 return contracts.assetPrice.setOracle(dTSLAPriceKey, contracts.chainLinkOracle.address);
             })
             .then(receipt => {
@@ -140,7 +140,7 @@ module.exports = async function(deployer, network, accounts) {
                 return contracts.assetPrice.setOracle(dAAPLPriceKey, contracts.synthxOracle.address);
             })
             .then(receipt => {
-                console.log('assetPrice.setOracle(dAPPL) receipt: ', receipt);
+                console.log('assetPrice.setOracle(dAAPL) receipt: ', receipt);
                 return contracts.assetPrice.setOracle(dTSLAPriceKey, contracts.synthxOracle.address);
             })
             .then(receipt => {
@@ -231,7 +231,7 @@ module.exports = async function(deployer, network, accounts) {
                 return contracts.assetPrice.setOracle(dAAPLPriceKey, contracts.synthxOracle.address);
             })
             .then(receipt => {
-                console.log('assetPrice.setOracle(dAPPL) receipt: ', receipt);
+                console.log('assetPrice.setOracle(dAAPL) receipt: ', receipt);
                 return contracts.assetPrice.setOracle(dTSLAPriceKey, contracts.synthxOracle.address);
             })
             .then(receipt => {

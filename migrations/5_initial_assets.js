@@ -2,7 +2,7 @@ const fs = require('fs');
 const Web3Utils = require('web3-utils');
 
 const {checkUndefined} = require('./util');
-const {AssetTypeStake, AssetTypeSynth, sDIP, dToken, Synth_dUSD, Synth_dAPPL, Synth_dTSLA} = require('./common');
+const {AssetTypeStake, AssetTypeSynth, sDIP, dToken, Synth_dUSD, Synth_dAAPL, Synth_dTSLA} = require('./common');
 const {NativeToken, NativeERC20Addr, BTCToken, BTCERC20Addr} = require('./config');
 
 const contractAddrs = require('../contractAddrs.json');
@@ -49,10 +49,10 @@ module.exports = async function(deployer) {
             contractAddrs.dTSLA = dTSLA.address;
             return deployer.deploy(Synth);
         })
-        .then((dAPPL) => {
-            checkUndefined(dAPPL);
-            contracts.dAPPL = dAPPL;
-            contractAddrs.dAPPL = dAPPL.address;
+        .then((dAAPL) => {
+            checkUndefined(dAAPL);
+            contracts.dAAPL = dAAPL;
+            contractAddrs.dAAPL = dAAPL.address;
             return deployer.deploy(TokenStorage, contracts.dUSD.address);
         })
         .then((dUSDStorage) => {
@@ -73,11 +73,11 @@ module.exports = async function(deployer) {
         .then((dTSLAStorage) => {
             contracts.dTSLAStorage = dTSLAStorage;
             checkUndefined(contracts.dTSLAStorage);
-            return deployer.deploy(TokenStorage, contracts.dAPPL.address);
+            return deployer.deploy(TokenStorage, contracts.dAAPL.address);
         })
-        .then((dAPPLStorage) => {
-            contracts.dAPPLStorage = dAPPLStorage;
-            checkUndefined(contracts.dAPPLStorage);
+        .then((dAAPLStorage) => {
+            checkUndefined(dAAPLStorage);
+            contracts.dAAPLStorage = dAAPLStorage;
             return contracts.dUSD.setStorage(contracts.dUSDStorage.address);
         })
         .then((receipt) => {
@@ -94,10 +94,10 @@ module.exports = async function(deployer) {
         })
         .then((receipt) => {
             console.log('dTSLA.setStorage receipts: ', receipt);
-            return contracts.dAPPL.setStorage(contracts.dAPPLStorage.address);
+            return contracts.dAAPL.setStorage(contracts.dAAPLStorage.address);
         })
         .then((receipt) => {
-            console.log('dAPPL.setStorage receipts: ', receipt);
+            console.log('dAAPL.setStorage receipts: ', receipt);
             return contracts.dUSD.initialize(contracts.issuer.address, "dUSD", "dUSD", Web3Utils.fromAscii('erc20'));
         })
         .then((receipt) => {
@@ -114,10 +114,10 @@ module.exports = async function(deployer) {
         })
         .then((receipt) => {
             console.log('dTSLA.initialize receipts: ', receipt);
-            return contracts.dAPPL.initialize(contracts.issuer.address, "dAPPL", "dAPPL", Web3Utils.fromAscii('2'));
+            return contracts.dAAPL.initialize(contracts.issuer.address, "dAAPL", "dAAPL", Web3Utils.fromAscii('2'));
         })
         .then((receipt) => {
-            console.log('dAPPL.initialize receipts: ', receipt);
+            console.log('dAAPL.initialize receipts: ', receipt);
             return contracts.resolver.setAddress(sDIP, contracts.synthxToken.address);
         })
         .then((receipt) => {
@@ -134,20 +134,20 @@ module.exports = async function(deployer) {
         })
         .then((receipt) => {
             console.log('resolver.addAsset(Synth-dTSLA) receipts: ', receipt);
-            return contracts.resolver.addAsset(AssetTypeSynth, Synth_dAPPL, contracts.dAPPL.address);
+            return contracts.resolver.addAsset(AssetTypeSynth, Synth_dAAPL, contracts.dAAPL.address);
         })
         .then((receipt) => {
-            console.log('resolver.addAsset(Stake-Native) receipts: ', receipt);
+            console.log('resolver.addAsset(Stake-dAAPL) receipts: ', receipt);
             return contracts.resolver.addAsset(AssetTypeStake, NativeToken, NativeERC20Addr);
         })
         .then((receipt) => {
-            console.log('resolver.addAsset(Stake-BTC) receipts: ', receipt);
+            console.log('resolver.addAsset(Stake-Native) receipts: ', receipt);
             return contracts.resolver.addAsset(AssetTypeStake, BTCToken, BTCERC20Addr);
         })
 
         // save contract addresses
         .then(receipt => {
-            console.log('resolver.addAsset(Synth-dAAPL) receipt: ', receipt);
+            console.log('resolver.addAsset(Stake-BTC) receipt: ', receipt);
             console.log("oracle contracts deployed finish\n\n");
 
             const addrs = JSON.stringify(contractAddrs, null, '\t');

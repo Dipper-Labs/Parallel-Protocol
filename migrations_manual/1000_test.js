@@ -19,14 +19,14 @@ module.exports = async function(deployer, network, accounts) {
     contracts.synthxDToken = await SynthxDToken.at(contractAddrs.synthxDToken);
     contracts.synthxToken = await SynthxToken.at(contractAddrs.synthxToken);
     contracts.dTSLA = await Synth.at(contractAddrs.dTSLA);
-    contracts.dAPPLE = await Synth.at(contractAddrs.dAPPLE);
+    contracts.dAAPL = await Synth.at(contractAddrs.dAAPL);
 
     console.log(contracts.synthx.address);
     console.log(contracts.dUSD.address);
     console.log(contracts.stats.address);
     console.log(contracts.synthxDToken.address);
     console.log(contracts.dTSLA.address);
-    console.log(contracts.dAPPLE.address);
+    console.log(contracts.dAAPL.address);
 
     console.log("-------- mint synths -------- ");
     await deployer
@@ -94,19 +94,19 @@ module.exports = async function(deployer, network, accounts) {
         .then((balance) => {
             console.log("dTSLA balance:", Web3Utils.fromWei(balance, 'ether'));
 
-            // dTSLA => dAPPLE
-            return contracts.synthx.trade(Web3Utils.fromAscii('dTSLA'), Web3Utils.toWei('10', 'milliether'), Web3Utils.fromAscii('dAPPLE'));
+            // dTSLA => dAAPL
+            return contracts.synthx.trade(Web3Utils.fromAscii('dTSLA'), Web3Utils.toWei('10', 'milliether'), Web3Utils.fromAscii('dAAPL'));
         })
         .then((receipt) => {
-            console.log('synthx.trade(dTSLA => dAPPLE) receipt: ', receipt);
+            console.log('synthx.trade(dTSLA => dAAPL) receipt: ', receipt);
             return contracts.dTSLA.balanceOf(accounts[0]);
         })
         .then((balance) => {
             console.log("dTSLA balance:", Web3Utils.fromWei(balance, 'ether'));
-            return contracts.dAPPLE.balanceOf(accounts[0]);
+            return contracts.dAAPL.balanceOf(accounts[0]);
         })
         .then((balance) => {
-            console.log("dAPPLE balance:", Web3Utils.fromWei(balance, 'ether'));
+            console.log("dAAPL balance:", Web3Utils.fromWei(balance, 'ether'));
             // get synth asset
             return contracts.stats.getAssets(Web3Utils.fromAscii('Synth'), accounts[0]);
         })

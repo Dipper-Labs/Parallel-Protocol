@@ -9,7 +9,7 @@ const bnbPriceKey = Web3Utils.fromAscii('BNB');
 const btcPriceKey = Web3Utils.fromAscii('BTC');
 const dipPriceKey = Web3Utils.fromAscii('DIP');
 const dTSLAPriceKey = Web3Utils.fromAscii('dTSLA');
-const dAAPLPriceKey = Web3Utils.fromAscii('dAPPL');
+const dAAPLPriceKey = Web3Utils.fromAscii('dAAPL');
 
 module.exports = async function(deployer, network, accounts) {
     const assetPrice = await AssetPrice.at(contractAddrs.assetPrice);

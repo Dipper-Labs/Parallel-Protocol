@@ -10,7 +10,7 @@ module.exports = async function(deployer, network, accounts) {
     let contracts = {};
     contracts.synthx = await Synthx.at(contractAddrs.synthx);
     contracts.dTSLA = await Synth.at(contractAddrs.dTSLA);
-    contracts.dAAPL = await Synth.at(contractAddrs.dAPPL);
+    contracts.dAAPL = await Synth.at(contractAddrs.dAAPL);
     contracts.stats = await Stats.at(contractAddrs.stats);
 
     await deployer
@@ -23,7 +23,7 @@ module.exports = async function(deployer, network, accounts) {
         })
         .then(balance => {
             console.log('dAAPL balance: ', Web3Utils.fromWei(balance, 'ether'));
-            return contracts.synthx.mintFromToken(Web3Utils.fromAscii('dAPPL'), Web3Utils.toWei('1', 'ether'), Web3Utils.toWei('0.1', 'ether'));
+            return contracts.synthx.mintFromToken(Web3Utils.fromAscii('dAAPL'), Web3Utils.toWei('1', 'ether'), Web3Utils.toWei('0.1', 'ether'));
         })
         .then(receipt => {
             console.log('synthx.mintFromToken receipt: ', receipt);

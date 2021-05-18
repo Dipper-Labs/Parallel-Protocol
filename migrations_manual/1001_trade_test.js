@@ -15,7 +15,7 @@ module.exports = async function(deployer, network, accounts) {
     contracts.stats = await Stats.at(contractAddrs.stats);
     contracts.synthxDToken = await SynthxDToken.at(contractAddrs.synthxDToken);
     contracts.dTSLA = await Synth.at(contractAddrs.dTSLA);
-    contracts.dAPPL = await Synth.at(contractAddrs.dAPPL);
+    contracts.dAAPL = await Synth.at(contractAddrs.dAAPL);
 
     await deployer
         .then(() => {
@@ -31,19 +31,19 @@ module.exports = async function(deployer, network, accounts) {
         .then((balance) => {
             console.log("dTSLA balance:", Web3Utils.fromWei(balance, 'ether'));
 
-            // dTSLA => dAPPL
-            return contracts.synthx.trade(Web3Utils.fromAscii('dTSLA'), Web3Utils.toWei('4', 'milliether'), Web3Utils.fromAscii('dAPPL'));
+            // dTSLA => dAAPL
+            return contracts.synthx.trade(Web3Utils.fromAscii('dTSLA'), Web3Utils.toWei('4', 'milliether'), Web3Utils.fromAscii('dAAPL'));
         })
         .then((receipt) => {
-            console.log('synthx.trade(dTSLA => dAPPL) receipt: ', receipt);
+            console.log('synthx.trade(dTSLA => dAAPL) receipt: ', receipt);
             return contracts.dTSLA.balanceOf(accounts[0]);
         })
         .then((balance) => {
             console.log("dTSLA balance:", Web3Utils.fromWei(balance, 'ether'));
-            return contracts.dAPPL.balanceOf(accounts[0]);
+            return contracts.dAAPL.balanceOf(accounts[0]);
         })
         .then((balance) => {
-            console.log("dAPPL balance:", Web3Utils.fromWei(balance, 'ether'));
+            console.log("dAAPL balance:", Web3Utils.fromWei(balance, 'ether'));
             // get synth asset
             return contracts.stats.getAssets(Web3Utils.fromAscii('Synth'), accounts[0]);
         })
