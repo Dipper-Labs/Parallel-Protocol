@@ -16,6 +16,10 @@ const SynthxDToken = artifacts.require("SynthxDToken"); // DToken
 
 module.exports = async function(deployer) {
     let contracts = {};
+    if ((BTCERC20Addr === '')) {
+        console.log('BTC ERC20 address not config');
+        process.exit(-1);
+    }
 
     contracts.resolver = await Resolver.at(contractAddrs.resolver);
     contracts.issuer = await Issuer.at(contractAddrs.issuer);
