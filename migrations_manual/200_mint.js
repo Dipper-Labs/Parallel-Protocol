@@ -13,15 +13,10 @@ module.exports = async function(deployer, network, accounts) {
     contracts.dUSD = await Synth.at(contractAddrs.dUSD);
     contracts.stats = await Stats.at(contractAddrs.stats);
     contracts.synthxDToken = await SynthxDToken.at(contractAddrs.synthxDToken);
-    console.log(contracts.synthx.address);
-    console.log(contracts.dUSD.address);
-    console.log(contracts.stats.address);
-    console.log(contracts.synthxDToken.address);
 
-    console.log("-------- mint synths -------- ");
     await deployer
         .then(() => {
-            return contracts.synthx.mintFromCoin(Web3Utils.toWei('1000', 'ether'), {value: Web3Utils.toWei('1', 'ether')});
+            return contracts.synthx.mintFromCoin(Web3Utils.toWei('10000', 'ether'), {value: Web3Utils.toWei('10', 'ether')});
         })
         .then((receipt) => {
             console.log('synthx.mintFromCoin receipt: ', receipt);
