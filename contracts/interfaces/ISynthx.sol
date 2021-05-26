@@ -15,26 +15,13 @@ interface ISynthx {
 
     function burn(bytes32 stake, uint256 dTokenAmount) external returns (bool);
 
-    function transfer(
-        bytes32 stake,
-        address payable recipient,
-        uint256 amount
-    ) external returns (bool);
+    function transfer(bytes32 stake, address payable recipient, uint256 amount) external returns (bool);
 
-    function trade(
-        bytes32 fromSynth,
-        uint256 fromAmount,
-        bytes32 toSynth
-    ) external returns (bool);
+    function trade(bytes32 fromSynth, uint256 fromAmount, bytes32 toSynth) external returns (bool);
 
     function claimReward() external returns (bool);
 
-    function liquidate(
-        bytes32 stake,
-        address account,
-        uint256 dTokenBurnedAmount,
-        uint256 usdtAmount
-    ) external returns (bool);
+    function liquidate(bytes32 stake, address account, uint256 dTokenBurnedAmount, uint256 usdtAmount) external returns (bool);
 
     event Staked(address indexed account, bytes32 indexed from, bytes32 indexed stake, uint256 stakeAmount);
     event Minted(

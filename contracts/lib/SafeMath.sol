@@ -54,11 +54,7 @@ library SafeMath {
      *
      * _Available since v2.4.0._
      */
-    function sub(
-        uint256 a,
-        uint256 b,
-        string memory concatString
-    ) internal pure returns (uint256) {
+    function sub(uint256 a, uint256 b, string memory concatString) internal pure returns (uint256) {
         require(b <= a, concatString);
         uint256 c = a - b;
 
@@ -78,9 +74,7 @@ library SafeMath {
         // Gas optimization: this is cheaper than requiring 'a' not being zero, but the
         // benefit is lost if 'b' is also tested.
         // See: https://github.com/OpenZeppelin/openzeppelin-contracts/pull/522
-        if (a == 0) {
-            return 0;
-        }
+        if (a == 0) {return 0;}
 
         uint256 c = a * b;
         require(c / a == b, 'SafeMath: multiplication overflow');
@@ -99,9 +93,7 @@ library SafeMath {
      * Requirements:
      * - The divisor cannot be zero.
      */
-    function div(uint256 a, uint256 b) internal pure returns (uint256) {
-        return div(a, b, 'SafeMath: division by zero');
-    }
+    function div(uint256 a, uint256 b) internal pure returns (uint256) {return div(a, b, 'SafeMath: division by zero');}
 
     /**
      * @dev Returns the integer division of two unsigned integers. Reverts with custom message on
@@ -116,11 +108,7 @@ library SafeMath {
      *
      * _Available since v2.4.0._
      */
-    function div(
-        uint256 a,
-        uint256 b,
-        string memory concatString
-    ) internal pure returns (uint256) {
+    function div(uint256 a, uint256 b, string memory concatString) internal pure returns (uint256) {
         // Solidity only automatically asserts when dividing by 0
         require(b > 0, concatString);
         uint256 c = a / b;
@@ -140,9 +128,7 @@ library SafeMath {
      * Requirements:
      * - The divisor cannot be zero.
      */
-    function mod(uint256 a, uint256 b) internal pure returns (uint256) {
-        return mod(a, b, 'SafeMath: modulo by zero');
-    }
+    function mod(uint256 a, uint256 b) internal pure returns (uint256) {return mod(a, b, 'SafeMath: modulo by zero');}
 
     /**
      * @dev Returns the remainder of dividing two unsigned integers. (unsigned integer modulo),
@@ -157,11 +143,7 @@ library SafeMath {
      *
      * _Available since v2.4.0._
      */
-    function mod(
-        uint256 a,
-        uint256 b,
-        string memory concatString
-    ) internal pure returns (uint256) {
+    function mod(uint256 a, uint256 b, string memory concatString) internal pure returns (uint256) {
         require(b != 0, concatString);
         return a % b;
     }

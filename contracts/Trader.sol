@@ -17,54 +17,20 @@ contract Trader is Rewards, ITrader {
 
     constructor(IResolver _resolver) public Importable(_resolver) {
         setContractName(CONTRACT_TRADER);
-        imports = [
-            CONTRACT_SYNTHX,
-            CONTRACT_SUPPLY_SCHEDULE,
-            CONTRACT_ISSUER,
-            CONTRACT_SETTING,
-            CONTRACT_ASSET_PRICE,
-            CONTRACT_SYNTHX_TOKEN
-        ];
+        imports = [CONTRACT_SYNTHX, CONTRACT_SUPPLY_SCHEDULE, CONTRACT_ISSUER, CONTRACT_SETTING, CONTRACT_ASSET_PRICE, CONTRACT_SYNTHX_TOKEN];
     }
 
-    function Storage() private view returns (ITraderStorage) {
-        return ITraderStorage(getStorage());
-    }
+    function Storage() private view returns (ITraderStorage) {return ITraderStorage(getStorage());}
 
-    function Issuer() private view returns (IIssuer) {
-        return IIssuer(requireAddress(CONTRACT_ISSUER));
-    }
+    function Issuer() private view returns (IIssuer) {return IIssuer(requireAddress(CONTRACT_ISSUER));}
 
-    function Setting() private view returns (ISetting) {
-        return ISetting(requireAddress(CONTRACT_SETTING));
-    }
+    function Setting() private view returns (ISetting) {return ISetting(requireAddress(CONTRACT_SETTING));}
 
-    function AssetPrice() private view returns (IAssetPrice) {
-        return IAssetPrice(requireAddress(CONTRACT_ASSET_PRICE));
-    }
+    function AssetPrice() private view returns (IAssetPrice) {return IAssetPrice(requireAddress(CONTRACT_ASSET_PRICE));}
 
-    function trade(
-        address account,
-        bytes32 fromSynth,
-        uint256 fromAmount,
-        bytes32 toSynth
-    )
-        external
-        onlyAddress(CONTRACT_SYNTHX)
-        returns (
-            uint256 tradingAmount,
-            uint256 tradingFee,
-            uint256 fromSynthPrice,
-            uint256 toSynthPirce
-        )
-    {
-        uint256 fromStatus;
-        uint256 toStatus;
-        (tradingAmount, tradingFee, fromSynthPrice, toSynthPirce, fromStatus, toStatus) = getTradingAmountAndFee(
-            fromSynth,
-            fromAmount,
-            toSynth
-        );
+    function trade(address account, bytes32 fromSynth, uint256 fromAmount, bytes32 toSynth) external onlyAddress(CONTRACT_SYNTHX) returns (uint256 tradingAmount, uint256 tradingFee, uint256 fromSynthPrice, uint256 toSynthPirce) {
+        uint256 fromStatus; uint256 toStatus;
+        (tradingAmount, tradingFee, fromSynthPrice, toSynthPirce, fromStatus, toStatus) = getTradingAmountAndFee(fromSynth, fromAmount, toSynth);
 
         require(fromStatus == 0, 'Trader: fromSynth is offline');
         require(toStatus == 0, 'Trader: toSynth is offline');
@@ -76,22 +42,7 @@ contract Trader is Rewards, ITrader {
         Storage().incrementTradingFee(account, getCurrentPeriod(), tradingFee);
     }
 
-    function getTradingAmountAndFee(
-        bytes32 fromSynth,
-        uint256 fromAmount,
-        bytes32 toSynth
-    )
-        public
-        view
-        returns (
-            uint256 tradingAmount,
-            uint256 tradingFee,
-            uint256 fromSynthPrice,
-            uint256 toSynthPirce,
-            uint256 fromStatus,
-            uint256 toStatus
-        )
-    {
+    function getTradingAmountAndFee(bytes32 fromSynth, uint256 fromAmount, bytes32 toSynth) public view returns (uint256 tradingAmount, uint256 tradingFee, uint256 fromSynthPrice, uint256 toSynthPirce, uint256 fromStatus, uint256 toStatus){
         (fromSynthPrice, fromStatus) = AssetPrice().getPriceAndStatus(fromSynth);
         (toSynthPirce, toStatus) = AssetPrice().getPriceAndStatus(toSynth);
 
@@ -100,20 +51,7 @@ contract Trader is Rewards, ITrader {
         tradingAmount = fromSynthValue.sub(tradingFee).decimalDivide(toSynthPirce);
     }
 
-    function getTradingAmountAndFee(
-        bytes32 fromSynth,
-        bytes32 toSynth,
-        uint256 toAmount
-    )
-        public
-        view
-        returns (
-            uint256 tradingAmount,
-            uint256 tradingFee,
-            uint256 fromSynthPrice,
-            uint256 toSynthPirce
-        )
-    {
+    function getTradingAmountAndFee(bytes32 fromSynth, bytes32 toSynth, uint256 toAmount) public view returns (uint256 tradingAmount, uint256 tradingFee, uint256 fromSynthPrice, uint256 toSynthPirce){
         fromSynthPrice = AssetPrice().getPrice(fromSynth);
         toSynthPirce = AssetPrice().getPrice(toSynth);
 
@@ -124,21 +62,9 @@ contract Trader is Rewards, ITrader {
         tradingAmount = fromSynthValue.decimalDivide(fromSynthPrice);
     }
 
-    function getTradingFee(address account, uint256 period) external view returns (uint256) {
-        return Storage().getTradingFee(account, period);
-    }
+    function getTradingFee(address account, uint256 period) external view returns (uint256) {return Storage().getTradingFee(account, period);}
 
-    function claim(address account)
-    external
-    onlyAddress(CONTRACT_SYNTHX)
-    returns (
-        uint256 period,
-        uint256 amount
-    )
-    {
-    }
+    function claim(address account) external onlyAddress(CONTRACT_SYNTHX) returns (uint256 period, uint256 amount) {}
 
-    function getClaimable(address account) public view returns (uint256) {
-        return 0;
-    }
+    function getClaimable(address account) public view returns (uint256) {return 0;}
 }

@@ -17,18 +17,11 @@ contract Rewards is Importable, ExternalStorable, IRewards {
         return IRewardsStorage(getStorage());
     }
 
-    function setClaimed(
-        address account,
-        uint256 period,
-        uint256 amount
-    ) internal {
+    function setClaimed(address account, uint256 period, uint256 amount) internal {
         RewardsStorage().setClaimed(account, period, amount);
     }
 
-    function getClaimed(
-        address account,
-        uint256 period
-    ) public view returns (uint256) {
+    function getClaimed(address account, uint256 period) public view returns (uint256) {
         return RewardsStorage().getClaimed(account, period);
     }
 

@@ -13,11 +13,7 @@ library Paging {
 
     using SafeMath for uint256;
 
-    function getPage(
-        uint256 totalRecords,
-        uint256 pageSize,
-        uint256 pageNumber
-    ) internal pure returns (Page memory) {
+    function getPage(uint256 totalRecords, uint256 pageSize, uint256 pageNumber) internal pure returns (Page memory) {
         Page memory page = Page(totalRecords, 0, 0, 0, 1);
         if (totalRecords == 0 || pageSize == 0) return page;
 

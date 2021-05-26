@@ -27,10 +27,8 @@ contract Ownable is Constants, IOwnable {
     }
 
     modifier allManager() {
-        require(
-            msg.sender == manager || msg.sender == owner,
-            contractName.concat(': caller is not the manager or the owner')
-        );
+        require(msg.sender == manager || msg.sender == owner,
+            contractName.concat(': caller is not the manager or the owner'));
         _;
     }
 

@@ -15,17 +15,11 @@ contract Holder is Rewards, IHolder {
         imports = [CONTRACT_SYNTHX, CONTRACT_SUPPLY_SCHEDULE, CONTRACT_SYNTHX_TOKEN, CONTRACT_SYNTHX_DTOKEN];
     }
 
-    function Storage() private view returns (IHolderStorage) {
-        return IHolderStorage(getStorage());
-    }
+    function Storage() private view returns (IHolderStorage) {return IHolderStorage(getStorage());}
 
-    function ERC20DToken() private view returns (IERC20) {
-        return IERC20(requireAddress(CONTRACT_SYNTHX_DTOKEN));
-    }
+    function ERC20DToken() private view returns (IERC20) {return IERC20(requireAddress(CONTRACT_SYNTHX_DTOKEN));}
 
-    function ERC20Token() private view returns (IERC20) {
-        return IERC20(requireAddress(CONTRACT_SYNTHX_TOKEN));
-    }
+    function ERC20Token() private view returns (IERC20) {return IERC20(requireAddress(CONTRACT_SYNTHX_TOKEN));}
 
     function updateBalance(address account) external onlyAddress(CONTRACT_SYNTHX) {
         uint256 balance = ERC20DToken().balanceOf(account);
@@ -33,29 +27,13 @@ contract Holder is Rewards, IHolder {
         Storage().setBalance(account, getCurrentPeriod(), balance, totalSupply);
     }
 
-    function getBalance(address account) external view returns (uint256) {
-        return ERC20DToken().balanceOf(account);
-    }
+    function getBalance(address account) external view returns (uint256) {return ERC20DToken().balanceOf(account);}
 
-    function getTotalSupply() external view returns (uint256) {
-        return ERC20DToken().totalSupply();
-    }
+    function getTotalSupply() external view returns (uint256) {return ERC20DToken().totalSupply();}
 
-    function getPeriodBalance(
-        address account,
-        uint256 period
-    ) external view returns (uint256) {
-        return Storage().getBalance(account, period);
-    }
+    function getPeriodBalance(address account, uint256 period) external view returns (uint256) {return Storage().getBalance(account, period);}
 
-    function claim(address account)
-        external
-        onlyAddress(CONTRACT_SYNTHX)
-        returns (
-            uint256 period,
-            uint256 amount
-        )
-    {
+    function claim(address account) external onlyAddress(CONTRACT_SYNTHX) returns (uint256 period, uint256 amount) {
         uint256 claimable = getClaimable(account);
         require(claimable > 0, 'Holder: claimable is zero');
 

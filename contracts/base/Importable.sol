@@ -10,9 +10,7 @@ contract Importable is Ownable {
 
     mapping(bytes32 => address) private _cache;
 
-    constructor(IResolver _resolver) public {
-        resolver = _resolver;
-    }
+    constructor(IResolver _resolver) public {resolver = _resolver;}
 
     modifier onlyAddress(bytes32 name) {
         require(msg.sender == _cache[name], contractName.concat(': caller is not the ', name));

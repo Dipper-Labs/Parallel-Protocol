@@ -18,14 +18,7 @@ contract Market is Importable, IMarket {
         imports = [CONTRACT_SYNTHX];
     }
 
-    function addTrade(
-        bytes32 fromSynth,
-        uint256 fromAmount,
-        uint256 fromSynthPrice,
-        bytes32 toSynth,
-        uint256 toAmount,
-        uint256 toSynthPrice
-    ) external containAddressOrOwner(imports) {
+    function addTrade(bytes32 fromSynth, uint256 fromAmount, uint256 fromSynthPrice, bytes32 toSynth, uint256 toAmount, uint256 toSynthPrice) external containAddressOrOwner(imports) {
         uint256 turnover = fromAmount.decimalMultiply(fromSynthPrice);
         uint256 toPrice = toSynthPrice.decimalDivide(fromSynthPrice);
         _setAssetMarket(keccak256(abi.encodePacked(fromSynth, toSynth)), toPrice, toAmount, turnover);
@@ -37,12 +30,7 @@ contract Market is Importable, IMarket {
         _setAssetMarket(toSynth, toSynthPrice, toAmount, turnover);
     }
 
-    function _setAssetMarket(
-        bytes32 asset,
-        uint256 price,
-        uint256 volume,
-        uint256 turnover
-    ) private {
+    function _setAssetMarket(bytes32 asset, uint256 price, uint256 volume, uint256 turnover) private {
         uint256 hour = now / 3600;
         Market storage market = _storage[asset][hour];
         if (market.asset == bytes32(0)) {
@@ -57,31 +45,11 @@ contract Market is Importable, IMarket {
         }
     }
 
-    function getPairMarket(bytes32 fromSynth, bytes32 toSynth)
-        external
-        view
-        returns (
-            uint256 open,
-            uint256 low,
-            uint256 hight,
-            uint256 volume,
-            uint256 turnover
-        )
-    {
+    function getPairMarket(bytes32 fromSynth, bytes32 toSynth) external view returns (uint256 open, uint256 low, uint256 hight, uint256 volume, uint256 turnover) {
         return getAssetMarket(keccak256(abi.encodePacked(fromSynth, toSynth)));
     }
 
-    function getAssetMarket(bytes32 asset)
-        public
-        view
-        returns (
-            uint256 open,
-            uint256 low,
-            uint256 hight,
-            uint256 volume,
-            uint256 turnover
-        )
-    {
+    function getAssetMarket(bytes32 asset) public view returns (uint256 open, uint256 low, uint256 hight, uint256 volume, uint256 turnover) {
         uint256 start = now / 3600;
         for (uint256 i = 0; i < 24; i++) {
             Market memory market = _storage[asset][start.sub(i)];

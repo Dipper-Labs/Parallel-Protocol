@@ -9,13 +9,9 @@ import '../interfaces/storages/IOracleStorage.sol';
 contract SynthxOracle is ExternalStorable, IOracle, ISynthxOracle {
     using SafeMath for uint256;
 
-    constructor() public {
-        contractName = 'SynthxOracle';
-    }
+    constructor() public {contractName = 'SynthxOracle';}
 
-    function Storage() internal view returns (IOracleStorage) {
-        return IOracleStorage(getStorage());
-    }
+    function Storage() internal view returns (IOracleStorage) {return IOracleStorage(getStorage());}
 
     function setPrice(bytes32 asset, uint256 price) public allManager {
         uint256 round = Storage().getRound(asset);
@@ -31,15 +27,7 @@ contract SynthxOracle is ExternalStorable, IOracle, ISynthxOracle {
         }
     }
 
-    function getPrice(bytes32 asset)
-        external
-        view
-        returns (
-            uint256 round,
-            uint256 price,
-            uint256 time
-        )
-    {
+    function getPrice(bytes32 asset) external view returns (uint256 round, uint256 price, uint256 time) {
         round = Storage().getRound(asset);
         (price, time) = Storage().getPrice(asset, round);
     }
@@ -48,7 +36,5 @@ contract SynthxOracle is ExternalStorable, IOracle, ISynthxOracle {
         (price, time) = Storage().getPrice(asset, round);
     }
 
-    function getLastRound(bytes32 asset) external view returns (uint256) {
-        return Storage().getRound(asset);
-    }
+    function getLastRound(bytes32 asset) external view returns (uint256) {return Storage().getRound(asset);}
 }

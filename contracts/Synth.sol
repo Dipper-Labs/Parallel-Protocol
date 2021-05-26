@@ -7,12 +7,7 @@ import './interfaces/ISynth.sol';
 contract Synth is Token, ISynth {
     bytes32 private _category;
 
-    function initialize(
-        address issuer,
-        string calldata name,
-        string calldata symbol,
-        bytes32 category
-    ) external onlyOwner returns (bool) {
+    function initialize(address issuer, string calldata name, string calldata symbol, bytes32 category) external onlyOwner returns (bool) {
         setInitialized();
         setManager(issuer);
         _name = name;
@@ -22,26 +17,14 @@ contract Synth is Token, ISynth {
         return true;
     }
 
-    function category() external view onlyInitialized returns (bytes32) {
-        return _category;
-    }
+    function category() external view onlyInitialized returns (bytes32) {return _category;}
 
-    function mint(address account, uint256 amount)
-        external
-        onlyInitialized
-        onlyManager(CONTRACT_ISSUER)
-        returns (bool)
-    {
+    function mint(address account, uint256 amount) external onlyInitialized onlyManager(CONTRACT_ISSUER) returns (bool) {
         _mint(account, amount);
         return true;
     }
 
-    function burn(address account, uint256 amount)
-        external
-        onlyInitialized
-        onlyManager(CONTRACT_ISSUER)
-        returns (bool)
-    {
+    function burn(address account, uint256 amount) external onlyInitialized onlyManager(CONTRACT_ISSUER) returns (bool) {
         _burn(account, amount);
         return true;
     }

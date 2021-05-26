@@ -38,65 +38,31 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         resolver = _resolver;
         nativeCoin = _nativeCoin;
         setContractName(CONTRACT_SYNTHX);
-        imports = [
-            CONTRACT_STAKER,
-            CONTRACT_ASSET_PRICE,
-            CONTRACT_SETTING,
-            CONTRACT_ISSUER,
-            CONTRACT_TRADER,
-            CONTRACT_HOLDER,
-            CONTRACT_SYNTHX_TOKEN,
-            CONTRACT_SYNTHX_DTOKEN,
-            CONTRACT_MARKET,
-            CONTRACT_HISTORY,
-            CONTRACT_LIQUIDATOR
-        ];
+        imports = [CONTRACT_STAKER, CONTRACT_ASSET_PRICE, CONTRACT_SETTING, CONTRACT_ISSUER, CONTRACT_TRADER, CONTRACT_HOLDER, CONTRACT_SYNTHX_TOKEN, CONTRACT_SYNTHX_DTOKEN, CONTRACT_MARKET, CONTRACT_HISTORY, CONTRACT_LIQUIDATOR];
         return true;
     }
 
-    function Staker() private view returns (IStaker) {
-        return IStaker(requireAddress(CONTRACT_STAKER));
-    }
+    function Staker() private view returns (IStaker) {return IStaker(requireAddress(CONTRACT_STAKER));}
 
-    function Holder() private view returns (IHolder) {
-        return IHolder(requireAddress(CONTRACT_HOLDER));
-    }
+    function Holder() private view returns (IHolder) {return IHolder(requireAddress(CONTRACT_HOLDER));}
 
-    function AssetPrice() private view returns (IAssetPrice) {
-        return IAssetPrice(requireAddress(CONTRACT_ASSET_PRICE));
-    }
+    function AssetPrice() private view returns (IAssetPrice) {return IAssetPrice(requireAddress(CONTRACT_ASSET_PRICE));}
 
-    function Setting() private view returns (ISetting) {
-        return ISetting(requireAddress(CONTRACT_SETTING));
-    }
+    function Setting() private view returns (ISetting) {return ISetting(requireAddress(CONTRACT_SETTING));}
 
-    function Issuer() private view returns (IIssuer) {
-        return IIssuer(requireAddress(CONTRACT_ISSUER));
-    }
+    function Issuer() private view returns (IIssuer) {return IIssuer(requireAddress(CONTRACT_ISSUER));}
 
-    function Trader() private view returns (ITrader) {
-        return ITrader(requireAddress(CONTRACT_TRADER));
-    }
+    function Trader() private view returns (ITrader) {return ITrader(requireAddress(CONTRACT_TRADER));}
 
-    function SynthxToken() private view returns (ISynthxToken) {
-        return ISynthxToken(requireAddress(CONTRACT_SYNTHX_TOKEN));
-    }
+    function SynthxToken() private view returns (ISynthxToken) {return ISynthxToken(requireAddress(CONTRACT_SYNTHX_TOKEN));}
 
-    function SynthxDToken() private view returns (ISynthxDToken) {
-        return ISynthxDToken(requireAddress(CONTRACT_SYNTHX_DTOKEN));
-    }
+    function SynthxDToken() private view returns (ISynthxDToken) {return ISynthxDToken(requireAddress(CONTRACT_SYNTHX_DTOKEN));}
 
-    function Market() private view returns (IMarket) {
-        return IMarket(requireAddress(CONTRACT_MARKET));
-    }
+    function Market() private view returns (IMarket) {return IMarket(requireAddress(CONTRACT_MARKET));}
 
-    function History() private view returns (IHistory) {
-        return IHistory(requireAddress(CONTRACT_HISTORY));
-    }
+    function History() private view returns (IHistory) {return IHistory(requireAddress(CONTRACT_HISTORY));}
 
-    function Liquidator() private view returns (ILiquidator) {
-        return ILiquidator(requireAddress(CONTRACT_LIQUIDATOR));
-    }
+    function Liquidator() private view returns (ILiquidator) {return ILiquidator(requireAddress(CONTRACT_LIQUIDATOR));}
 
     function stakeFromCoin() external payable returns (bool) {
         (uint256 debt, ) = Issuer().getDebt(nativeCoin, msg.sender);
@@ -123,11 +89,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         return true;
     }
 
-    function _stake(
-        bytes32 stake,
-        uint256 amount,
-        bytes32 from
-    ) private onlyInitialized notPaused {
+    function _stake(bytes32 stake, uint256 amount, bytes32 from) private onlyInitialized notPaused {
         require(amount > 0, 'Synthx: amount must be greater than zero');
         address stakeAddress = requireAsset('Stake', stake);
 
@@ -139,11 +101,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
 
         if (stake != nativeCoin) {
             IERC20 token = IERC20(stakeAddress);
-            token.safeTransferFrom(
-                msg.sender,
-                address(this),
-                amount.decimalsTo(PreciseMath.DECIMALS(), token.decimals())
-            );
+            token.safeTransferFrom(msg.sender, address(this), amount.decimalsTo(PreciseMath.DECIMALS(), token.decimals()));
         }
 
         Staker().stake(stake, msg.sender, amount);
@@ -167,12 +125,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         return true;
     }
 
-    function _mint(
-        bytes32 stake,
-        uint256 amount,
-        uint256 mintedAmount,
-        bytes32 from
-    ) internal {
+    function _mint(bytes32 stake, uint256 amount, uint256 mintedAmount, bytes32 from) internal {
         _stake(stake, amount, from);
         uint256 value = amount.decimalMultiply(AssetPrice().getPrice(stake));
         uint256 collateralRate = Setting().getCollateralRate(stake);
@@ -232,11 +185,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         return true;
     }
 
-    function transfer(
-        bytes32 stake,
-        address payable recipient,
-        uint256 amount
-    ) public onlyInitialized notPaused returns (bool) {
+    function transfer(bytes32 stake, address payable recipient, uint256 amount) public onlyInitialized notPaused returns (bool) {
         (uint256 transferable) = Staker().getTransferable(stake, msg.sender);
         transferable.sub(amount, 'Synthx: transfer amount exceeds transferable');
 
@@ -256,28 +205,14 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         return true;
     }
 
-    function trade(
-        bytes32 fromSynth,
-        uint256 fromAmount,
-        bytes32 toSynth
-    ) external onlyInitialized notPaused returns (bool) {
-        (uint256 tradingAmount, uint256 tradingFee, uint256 fromSynthPrice, uint256 toSynthPirce) =
-            Trader().trade(msg.sender, fromSynth, fromAmount, toSynth);
+    function trade(bytes32 fromSynth, uint256 fromAmount, bytes32 toSynth) external onlyInitialized notPaused returns (bool) {
+        (uint256 tradingAmount, uint256 tradingFee, uint256 fromSynthPrice, uint256 toSynthPirce) = Trader().trade(msg.sender, fromSynth, fromAmount, toSynth);
 
         Market().addTrade(fromSynth, fromAmount, fromSynthPrice, toSynth, tradingAmount, toSynthPirce);
         History().addTrade(msg.sender, fromSynth, fromAmount, fromSynthPrice, toSynth, tradingAmount, toSynthPirce);
 
         SynthxToken().mint();
-        emit Traded(
-            msg.sender,
-            fromSynth,
-            toSynth,
-            fromAmount,
-            tradingAmount,
-            tradingFee,
-            fromSynthPrice,
-            toSynthPirce
-        );
+        emit Traded(msg.sender, fromSynth, toSynth, fromAmount, tradingAmount, tradingFee, fromSynthPrice, toSynthPirce);
         return true;
     }
 
@@ -286,12 +221,7 @@ contract Synthx is Proxyable, Pausable, Importable, ISynthx {
         return true;
     }
 
-    function liquidate(
-        bytes32 stake,
-        address account,
-        uint256 dTokenBurnedAmount,
-        uint256 usdtAmount
-    ) external onlyInitialized notPaused returns (bool) {
+    function liquidate(bytes32 stake, address account, uint256 dTokenBurnedAmount, uint256 usdtAmount) external onlyInitialized notPaused returns (bool) {
         uint256 liquidable = Liquidator().getLiquidable(stake, account);
         liquidable.sub(dTokenBurnedAmount, 'Synthx: liquidate amount exceeds liquidable');
 

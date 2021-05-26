@@ -21,42 +21,20 @@ contract History is Importable, IHistory {
         imports = [CONTRACT_SYNTHX, CONTRACT_SUPPLY_SCHEDULE];
     }
 
-    function addAction(
-        bytes32 topic,
-        address account,
-        bytes32 actionType,
-        bytes32 fromAsset,
-        uint256 fromAmount,
-        bytes32 toAsset,
-        uint256 toAmount
-    ) external containAddressOrOwner(imports) {
+    function addAction(bytes32 topic, address account, bytes32 actionType, bytes32 fromAsset, uint256 fromAmount, bytes32 toAsset, uint256 toAmount) external containAddressOrOwner(imports) {
         uint256 index = _actions.push(Action(actionType, fromAsset, fromAmount, 0, toAsset, toAmount, 0, now));
         _accountActions[topic][account].push(index);
     }
 
-    function addTrade(
-        address account,
-        bytes32 fromSynth,
-        uint256 fromAmount,
-        uint256 fromSynthPrice,
-        bytes32 toSynth,
-        uint256 toAmount,
-        uint256 toSynthPirce
-    ) external containAddressOrOwner(imports) {
+    function addTrade(address account, bytes32 fromSynth, uint256 fromAmount, uint256 fromSynthPrice, bytes32 toSynth, uint256 toAmount, uint256 toSynthPirce) external containAddressOrOwner(imports) {
         bytes32 asset = keccak256(abi.encodePacked(fromSynth & toSynth));
 
-        uint256 index =
-            _actions.push(Action('Trade', fromSynth, fromAmount, fromSynthPrice, toSynth, toAmount, toSynthPirce, now));
+        uint256 index = _actions.push(Action('Trade', fromSynth, fromAmount, fromSynthPrice, toSynth, toAmount, toSynthPirce, now));
         _assetTrades[asset].push(index);
         _accountActions['Trade'][account].push(index);
     }
 
-    function getHistory(
-        bytes32 topic,
-        address account,
-        uint256 pageSize,
-        uint256 pageNumber
-    ) public view returns (Action[] memory, Paging.Page memory) {
+    function getHistory(bytes32 topic, address account, uint256 pageSize, uint256 pageNumber) public view returns (Action[] memory, Paging.Page memory) {
         Paging.Page memory page = Paging.getPage(_accountActions[topic][account].length, pageSize, pageNumber);
         uint256 start = page.pageNumber.sub(1).mul(page.pageSize);
         uint256 last = _accountActions[topic][account].length;
@@ -70,11 +48,7 @@ contract History is Importable, IHistory {
         return (items, page);
     }
 
-    function getAssetHistory(
-        bytes32 asset,
-        uint256 pageSize,
-        uint256 pageNumber
-    ) public view returns (Action[] memory, Paging.Page memory) {
+    function getAssetHistory(bytes32 asset, uint256 pageSize, uint256 pageNumber) public view returns (Action[] memory, Paging.Page memory) {
         Paging.Page memory page = Paging.getPage(_assetTrades[asset].length, pageSize, pageNumber);
         uint256 start = page.pageNumber.sub(1).mul(page.pageSize);
         uint256 last = _assetTrades[asset].length;
@@ -88,12 +62,7 @@ contract History is Importable, IHistory {
         return (items, page);
     }
 
-    function getPairHistory(
-        bytes32 fromSynth,
-        bytes32 toSynth,
-        uint256 pageSize,
-        uint256 pageNumber
-    ) external view returns (Action[] memory, Paging.Page memory) {
+    function getPairHistory(bytes32 fromSynth, bytes32 toSynth, uint256 pageSize, uint256 pageNumber) external view returns (Action[] memory, Paging.Page memory) {
         bytes32 asset = keccak256(abi.encodePacked(fromSynth & toSynth));
         return getAssetHistory(asset, pageSize, pageNumber);
     }

@@ -9,15 +9,9 @@ import './interfaces/ISynthxToken.sol';
 contract Resolver is AddressStorage, IResolver {
     mapping(bytes32 => bytes32[]) _assets;
 
-    constructor() public {
-        setContractName(CONTRACT_RESOLVER);
-    }
+    constructor() public {setContractName(CONTRACT_RESOLVER);}
 
-    function addAsset(
-        bytes32 assetType,
-        bytes32 assetName,
-        address assetAddress
-    ) external onlyOwner {
+    function addAsset(bytes32 assetType, bytes32 assetName, address assetAddress) external onlyOwner {
         Arrays.push(_assets[assetType], assetName);
         emit AssetChanged(assetType, assetName, getAddressValue(assetType, assetName), assetAddress);
         setAddressValue(assetType, assetName, assetAddress);
@@ -34,9 +28,7 @@ contract Resolver is AddressStorage, IResolver {
         return (exist, getAddressValue(assetType, assetName));
     }
 
-    function getAssets(bytes32 assetType) external view returns (bytes32[] memory) {
-        return _assets[assetType];
-    }
+    function getAssets(bytes32 assetType) external view returns (bytes32[] memory) {return _assets[assetType];}
 
     function importAddress(bytes32[] calldata name, address[] calldata value) external onlyOwner {
         require(name.length == value.length, 'Resolver: name and value length mismatch');
@@ -52,15 +44,9 @@ contract Resolver is AddressStorage, IResolver {
         setAddressValue(name, value);
     }
 
-    function getAddress(bytes32 name) external view returns (address) {
-        return getAddressValue(name);
-    }
+    function getAddress(bytes32 name) external view returns (address) {return getAddressValue(name);}
 
-    function _migrateSynthxToken(
-        bytes32 name,
-        address previousAddress,
-        address newAddress
-    ) private {
+    function _migrateSynthxToken(bytes32 name, address previousAddress, address newAddress) private {
         bytes32[1] memory contracts = [CONTRACT_TRADER];
         if (previousAddress == address(0)) return;
         address synthxToken = getAddressValue(CONTRACT_SYNTHX_TOKEN);

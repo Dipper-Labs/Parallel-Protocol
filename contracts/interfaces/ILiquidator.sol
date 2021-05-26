@@ -12,9 +12,5 @@ interface ILiquidator {
 
     function getUnstakable(bytes32 stake, uint256 amount) external view returns (uint256);
 
-    function getAccounts(
-        bytes32 stake,
-        uint256 pageSize,
-        uint256 pageNumber
-    ) external view returns (address[] memory, Paging.Page memory);
+    function getAccounts(bytes32 stake, uint256 pageSize, uint256 pageNumber) external view returns (address[] memory, Paging.Page memory);
 }

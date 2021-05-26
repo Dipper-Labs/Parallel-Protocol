@@ -11,10 +11,5 @@ interface IHolder {
 
     function getClaimable(address account) external view returns (uint256);
 
-    function claim(address account)
-    external
-    returns (
-        uint256 period,
-        uint256 amount
-    );
+    function claim(address account) external returns (uint256 period, uint256 amount);
 }

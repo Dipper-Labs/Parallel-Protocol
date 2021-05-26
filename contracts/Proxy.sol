@@ -28,9 +28,7 @@ contract Proxy is Ownable {
         }
     }
 
-    function implementation() external view returns (address) {
-        return getTarget();
-    }
+    function implementation() external view returns (address) {return getTarget();}
 
     function getTarget() internal view returns (address) {
         bytes32 solt = TARGET_SLOT;
@@ -41,9 +39,7 @@ contract Proxy is Ownable {
         return target;
     }
 
-    function() external payable {
-        _delegate(getTarget());
-    }
+    function() external payable {_delegate(getTarget());}
 
     function _delegate(address target) internal {
         assembly {

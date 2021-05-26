@@ -25,38 +25,18 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
 
     constructor(IResolver _resolver) public Importable(_resolver) {
         setContractName(CONTRACT_ISSUER);
-        imports = [
-            CONTRACT_SYNTHX,
-            CONTRACT_SUPPLY_SCHEDULE,
-            CONTRACT_ASSET_PRICE,
-            CONTRACT_SETTING,
-            CONTRACT_TRADER,
-            CONTRACT_STAKER
-        ];
+        imports = [CONTRACT_SYNTHX, CONTRACT_SUPPLY_SCHEDULE, CONTRACT_ASSET_PRICE, CONTRACT_SETTING, CONTRACT_TRADER, CONTRACT_STAKER];
     }
 
-    function Setting() private view returns (ISetting) {
-        return ISetting(requireAddress(CONTRACT_SETTING));
-    }
+    function Setting() private view returns (ISetting) {return ISetting(requireAddress(CONTRACT_SETTING));}
 
-    function AssetPrice() private view returns (IAssetPrice) {
-        return IAssetPrice(requireAddress(CONTRACT_ASSET_PRICE));
-    }
+    function AssetPrice() private view returns (IAssetPrice) {return IAssetPrice(requireAddress(CONTRACT_ASSET_PRICE));}
 
-    function Synth(bytes32 synth) private view returns (ISynth) {
-        return ISynth(requireAsset('Synth', synth));
-    }
+    function Synth(bytes32 synth) private view returns (ISynth) {return ISynth(requireAsset('Synth', synth));}
 
-    function Storage() internal view returns (IIssuerStorage) {
-        return IIssuerStorage(getStorage());
-    }
+    function Storage() internal view returns (IIssuerStorage) {return IIssuerStorage(getStorage());}
 
-    function issueDebt(
-        bytes32 stake,
-        address account,
-        uint256 amount,
-        uint256 dTokenMintedAmount
-    ) external onlyAddress(CONTRACT_SYNTHX) {
+    function issueDebt(bytes32 stake, address account, uint256 amount, uint256 dTokenMintedAmount) external onlyAddress(CONTRACT_SYNTHX) {
         Item memory item;
 
         uint256 currentPeriod = getCurrentPeriod();
@@ -75,17 +55,7 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
             newLastDebt = lastDebt.preciseMultiply(PreciseMath.PRECISE_ONE().sub(delta));
         }
 
-        _setDebt(
-            stake,
-            account,
-            currentPeriod,
-            item.accountDebt.add(amount),
-            item.stakeDebt.add(amount),
-            newTotalDebt,
-            newLastDebt,
-            item.dtokens,
-            now
-        );
+        _setDebt(stake, account, currentPeriod, item.accountDebt.add(amount), item.stakeDebt.add(amount), newTotalDebt, newLastDebt, item.dtokens, now);
 
         Synth(USD).mint(account, amount);
     }
@@ -97,13 +67,7 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
         uint256 lastTime;
     }
 
-    function burnDebt(
-        bytes32 stake,
-        address account,
-        uint256 dTokenBurnedAmount,
-        uint256 usdtAmount,
-        address payer
-    ) external onlyAddress(CONTRACT_SYNTHX) returns (uint256) {
+    function burnDebt(bytes32 stake, address account, uint256 dTokenBurnedAmount, uint256 usdtAmount, address payer) external onlyAddress(CONTRACT_SYNTHX) returns (uint256) {
         Item memory item;
 
         uint256 currentPeriod = getCurrentPeriod();
@@ -126,43 +90,24 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
             newLastDebt = lastDebt.preciseMultiply(PreciseMath.PRECISE_ONE().add(delta));
         }
 
-        _setDebt(
-            stake,
-            account,
-            currentPeriod,
-            item.accountDebt.sub(burnableAmount),
-            item.stakeDebt.sub(burnableAmount),
-            newTotalDebt,
-            newLastDebt,
-            item.dtokens,
-            item.lastTime
-        );
+        _setDebt(stake, account, currentPeriod, item.accountDebt.sub(burnableAmount), item.stakeDebt.sub(burnableAmount), newTotalDebt, newLastDebt, item.dtokens, item.lastTime);
 
         Synth(USD).burn(payer, burnableAmount);
         return burnableAmount;
     }
 
-    function issueSynth(
-        bytes32 synth,
-        address account,
-        uint256 amount
-    ) external containAddress(ISSUEABLE_CONTRACTS) {
+    function issueSynth(bytes32 synth, address account, uint256 amount) external containAddress(ISSUEABLE_CONTRACTS) {
         Synth(synth).mint(account, amount);
     }
 
-    function burnSynth(
-        bytes32 synth,
-        address account,
-        uint256 amount
-    ) external containAddress(ISSUEABLE_CONTRACTS) {
+    function burnSynth(bytes32 synth, address account, uint256 amount) external containAddress(ISSUEABLE_CONTRACTS) {
         Synth(synth).burn(account, amount);
     }
 
     function getDebt(bytes32 stake, address account) external view returns (uint256, uint256) {
         uint256 currentPeriod = getCurrentPeriod();
         (uint256 lastDebt, ) = Storage().getLastDebt(currentPeriod);
-        (uint256 debt, uint256 dtokens, ) =
-            _getDebt(stake, account, currentPeriod, lastDebt, getTotalDebt());
+        (uint256 debt, uint256 dtokens, ) = _getDebt(stake, account, currentPeriod, lastDebt, getTotalDebt());
         return (debt, dtokens);
     }
 
@@ -177,49 +122,24 @@ contract Issuer is Importable, ExternalStorable, IIssuer {
         return total;
     }
 
-    function getDebtPercentage(
-        bytes32 stake,
-        address account,
-        uint256 period
-    ) external view returns (uint256) {
+    function getDebtPercentage(bytes32 stake, address account, uint256 period) external view returns (uint256) {
         (uint256 lastDebt, ) = Storage().getLastDebt(period);
         (uint256 debtPercentage, , ) = _getDebtPercentage(stake, account, period, lastDebt);
         return debtPercentage;
     }
 
-    function _getDebt(
-        bytes32 stake,
-        address account,
-        uint256 period,
-        uint256 lastDebt,
-        uint256 totalDebt
-    ) private view returns (uint256, uint256, uint256) {
+    function _getDebt(bytes32 stake, address account, uint256 period, uint256 lastDebt, uint256 totalDebt) private view returns (uint256, uint256, uint256) {
         (uint256 debtPercentage, uint256 dtokens, uint256 time) = _getDebtPercentage(stake, account, period, lastDebt);
         return (totalDebt.toPrecise().preciseMultiply(debtPercentage).toDecimal(), dtokens, time);
     }
 
-    function _getDebtPercentage(
-        bytes32 stake,
-        address account,
-        uint256 period,
-        uint256 lastDebt
-    ) private view returns (uint256, uint256, uint256) {
+    function _getDebtPercentage(bytes32 stake, address account, uint256 period, uint256 lastDebt) private view returns (uint256, uint256, uint256) {
         (uint256 accountDebt, uint256 totalDebt, uint256 dtokens, uint256 time) = Storage().getDebt(stake, account, period);
         if (time == 0) return (0, 0, 0);
         return (lastDebt.preciseDivide(totalDebt).preciseMultiply(accountDebt), dtokens, time);
     }
 
-    function _setDebt(
-        bytes32 stake,
-        address account,
-        uint256 period,
-        uint256 accountDebt,
-        uint256 stakeDebt,
-        uint256 totalDebt,
-        uint256 lastDebt,
-        uint256 dtokens,
-        uint256 time
-    ) private {
+    function _setDebt(bytes32 stake, address account, uint256 period, uint256 accountDebt, uint256 stakeDebt, uint256 totalDebt, uint256 lastDebt, uint256 dtokens, uint256 time) private {
         Storage().setDebt(stake, account, period, accountDebt.preciseDivide(totalDebt), lastDebt, dtokens, time);
         Storage().setDebt(stake, address(0), period, stakeDebt.preciseDivide(totalDebt), lastDebt, dtokens, time);
     }

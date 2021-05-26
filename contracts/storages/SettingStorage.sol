@@ -8,30 +8,17 @@ contract SettingStorage is ExternalStorage, ISettingStorage {
 
     constructor(address _manager) public ExternalStorage(_manager) {}
 
-    function incrementUint(
-        bytes32 key,
-        bytes32 field,
-        uint256 value
-    ) external onlyManager(managerName) returns (uint256) {
+    function incrementUint(bytes32 key, bytes32 field, uint256 value) external onlyManager(managerName) returns (uint256) {
         _storage[key][field] = _storage[key][field].add(value);
         return _storage[key][field];
     }
 
-    function decrementUint(
-        bytes32 key,
-        bytes32 field,
-        uint256 value,
-        string calldata errorMessage
-    ) external onlyManager(managerName) returns (uint256) {
+    function decrementUint(bytes32 key, bytes32 field, uint256 value, string calldata errorMessage) external onlyManager(managerName) returns (uint256) {
         _storage[key][field] = _storage[key][field].sub(value, errorMessage);
         return _storage[key][field];
     }
 
-    function setUint(
-        bytes32 key,
-        bytes32 field,
-        uint256 value
-    ) external onlyManager(managerName) {
+    function setUint(bytes32 key, bytes32 field, uint256 value) external onlyManager(managerName) {
         _storage[key][field] = value;
     }
 
@@ -44,11 +31,7 @@ contract SettingStorage is ExternalStorage, ISettingStorage {
         return _storage[DEFAULT][key];
     }
 
-    function decrementUint(
-        bytes32 key,
-        uint256 value,
-        string calldata errorMessage
-    ) external onlyManager(managerName) returns (uint256) {
+    function decrementUint(bytes32 key, uint256 value, string calldata errorMessage) external onlyManager(managerName) returns (uint256) {
         _storage[DEFAULT][key] = _storage[DEFAULT][key].sub(value, errorMessage);
         return _storage[DEFAULT][key];
     }

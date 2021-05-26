@@ -13,9 +13,7 @@ contract Setting is ExternalStorable, ISetting {
     bytes32 private constant TRADING_FEE_RATE = 'TradingFeeRate';
     bytes32 private constant MINT_PERIOD_DURATION = 'MintPeriodDuration';
 
-    constructor() public {
-        setContractName(CONTRACT_SETTING);
-    }
+    constructor() public {setContractName(CONTRACT_SETTING);}
 
     function Storage() private view returns (ISettingStorage) {
         return ISettingStorage(getStorage());

@@ -50,11 +50,7 @@ interface IStats {
 
     function getBalance(address account) external view returns (Asset[] memory);
 
-    function getAsset(
-        bytes32 assetType,
-        bytes32 assetName,
-        address account
-    ) external view returns (Asset memory);
+    function getAsset(bytes32 assetType, bytes32 assetName, address account) external view returns (Asset memory);
 
     function getAssets(bytes32 assetType, address account) external view returns (Asset[] memory);
 
@@ -62,54 +58,23 @@ interface IStats {
 
     function getVaults(address account) external view returns (Vault[] memory);
 
-    function getTotalCollateral(address account)
-        external
-        view
-        returns (
-            uint256 totalCollateralRatio,
-            uint256 totalCollateralValue,
-            uint256 totalDebt
-        );
+    function getTotalCollateral(address account) external view returns (uint256 totalCollateralRatio, uint256 totalCollateralValue, uint256 totalDebt);
 
 
-    function getAvailable(bytes32 stake, address account)
-        external
-        view
-        returns (
-            uint256 balance,
-            uint256 transferable
-        );
+    function getAvailable(bytes32 stake, address account) external view returns (uint256 balance, uint256 transferable);
 
     function getSynthValue(address account) external view returns (uint256);
     function getTotalSynthValue() external view returns (uint256);
     function getTotalVaultValue() external view returns (uint256);
 
-    function getTradingAmountAndFee(
-        bytes32 fromSynth,
-        uint256 fromAmount,
-        bytes32 toSynth
-    ) external view returns (uint256 tradingAmount, uint256 tradingFee);
+    function getTradingAmountAndFee(bytes32 fromSynth, uint256 fromAmount, bytes32 toSynth) external view returns (uint256 tradingAmount, uint256 tradingFee);
 
-    function getTradingAmountAndFee2(
-        bytes32 fromSynth,
-        bytes32 toSynth,
-        uint256 toAmount
-    ) external view returns (uint256 tradingAmount, uint256 tradingFee);
+    function getTradingAmountAndFee2(bytes32 fromSynth, bytes32 toSynth, uint256 toAmount) external view returns (uint256 tradingAmount, uint256 tradingFee);
 
     function getRewards(address account) external view returns (uint256);
 
 
-    function getAssetMarket(bytes32 asset)
-        external
-        view
-        returns (
-            uint256 open,
-            uint256 last,
-            uint256 low,
-            uint256 hight,
-            uint256 volume,
-            uint256 turnover
-        );
+    function getAssetMarket(bytes32 asset) external view returns (uint256 open, uint256 last, uint256 low, uint256 hight, uint256 volume, uint256 turnover);
 
     function getLine(bytes32 asset, uint256 size) external view returns (uint256[] memory);
 
@@ -119,9 +84,5 @@ interface IStats {
 
     function getTradingFee(address account, uint256 period) external view returns (uint256);
 
-    function getDebtPercentage(
-        bytes32 stake,
-        address account,
-        uint256 period
-    ) external view returns (uint256);
+    function getDebtPercentage(bytes32 stake, address account, uint256 period) external view returns (uint256);
 }

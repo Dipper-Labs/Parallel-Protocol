@@ -14,10 +14,7 @@ contract SynthxDToken is Token, Importable, ISynthxDToken {
 
     constructor(IResolver _resolver) public Importable(_resolver) {
         setContractName(CONTRACT_SYNTHX_DTOKEN);
-        imports = [
-        CONTRACT_ISSUER,
-        CONTRACT_SYNTHX
-        ];
+        imports = [CONTRACT_ISSUER, CONTRACT_SYNTHX];
     }
 
     modifier onlyResolver() {
@@ -38,19 +35,12 @@ contract SynthxDToken is Token, Importable, ISynthxDToken {
         setManager(resolver.getAddress(CONTRACT_ISSUER));
     }
 
-    function mint(address account, uint256 amount) external
-    onlyInitialized
-    containAddress(MINTABLE_CONTRACTS)
-    returns (bool) {
+    function mint(address account, uint256 amount) external onlyInitialized containAddress(MINTABLE_CONTRACTS) returns (bool) {
         _mint(account, amount);
         return true;
     }
 
-    function burn(address account, uint256 amount) external
-    onlyInitialized
-    containAddress(MINTABLE_CONTRACTS)
-    returns (bool)
-    {
+    function burn(address account, uint256 amount) external onlyInitialized containAddress(MINTABLE_CONTRACTS) returns (bool){
         _burn(account, amount);
         return true;
     }

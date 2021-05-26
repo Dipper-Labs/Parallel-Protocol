@@ -254,7 +254,7 @@ module.exports = function(deployer) {
         // save addresses
         .then((receipt) => {
             console.log('resolver.setAddress(Synthx) receipts: ', receipt);
-            console.log("contracts deployment finished\n\n");
+            console.log("common contracts being deployed\n\n");
 
             const addrs = JSON.stringify(contractAddrs, null, '\t');
 

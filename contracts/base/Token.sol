@@ -53,36 +53,19 @@ contract Token is Proxyable, ExternalStorable, IERC20 {
         return true;
     }
 
-    function transferFrom(
-        address sender,
-        address recipient,
-        uint256 amount
-    ) external onlyInitialized returns (bool) {
+    function transferFrom(address sender, address recipient, uint256 amount) external onlyInitialized returns (bool) {
         _transfer(sender, recipient, amount, ': transfer amount exceeds balance');
-        uint256 delta =
-            Storage().getAllowance(sender, msg.sender).sub(
-                amount,
-                contractName.concat(': transfer amount exceeds allowance')
-            );
+        uint256 delta = Storage().getAllowance(sender, msg.sender).sub(amount, contractName.concat(': transfer amount exceeds allowance'));
         _approve(sender, msg.sender, delta);
         return true;
     }
 
-    function _approve(
-        address owner,
-        address spender,
-        uint256 amount
-    ) internal {
+    function _approve(address owner, address spender, uint256 amount) internal {
         Storage().setAllowance(owner, spender, amount);
         emit Approval(owner, spender, amount);
     }
 
-    function _transfer(
-        address sender,
-        address recipient,
-        uint256 amount,
-        string memory errorMessage
-    ) internal {
+    function _transfer(address sender, address recipient, uint256 amount, string memory errorMessage) internal {
         Storage().decrementUint(BALANCE, sender, amount, contractName.concat(errorMessage));
         Storage().incrementUint(BALANCE, recipient, amount);
         emit Transfer(sender, recipient, amount);

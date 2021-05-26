@@ -16,45 +16,22 @@ contract Staker is Rewards, IStaker {
 
     constructor(IResolver _resolver) public Importable(_resolver) {
         setContractName(CONTRACT_STAKER);
-        imports = [
-            CONTRACT_SYNTHX,
-            CONTRACT_SUPPLY_SCHEDULE,
-            CONTRACT_ISSUER,
-            CONTRACT_SETTING,
-            CONTRACT_ASSET_PRICE,
-            CONTRACT_SYNTHX_TOKEN
-        ];
+        imports = [CONTRACT_SYNTHX, CONTRACT_SUPPLY_SCHEDULE, CONTRACT_ISSUER, CONTRACT_SETTING, CONTRACT_ASSET_PRICE, CONTRACT_SYNTHX_TOKEN];
     }
 
-    function Storage() private view returns (IStakerStorage) {
-        return IStakerStorage(getStorage());
-    }
+    function Storage() private view returns (IStakerStorage) {return IStakerStorage(getStorage());}
 
-    function Issuer() private view returns (IIssuer) {
-        return IIssuer(requireAddress(CONTRACT_ISSUER));
-    }
+    function Issuer() private view returns (IIssuer) {return IIssuer(requireAddress(CONTRACT_ISSUER));}
 
-    function Setting() private view returns (ISetting) {
-        return ISetting(requireAddress(CONTRACT_SETTING));
-    }
+    function Setting() private view returns (ISetting) {return ISetting(requireAddress(CONTRACT_SETTING));}
 
-    function AssetPrice() private view returns (IAssetPrice) {
-        return IAssetPrice(requireAddress(CONTRACT_ASSET_PRICE));
-    }
+    function AssetPrice() private view returns (IAssetPrice) {return IAssetPrice(requireAddress(CONTRACT_ASSET_PRICE));}
 
-    function stake(
-        bytes32 token,
-        address account,
-        uint256 amount
-    ) external onlyAddress(CONTRACT_SYNTHX) {
+    function stake(bytes32 token, address account, uint256 amount) external onlyAddress(CONTRACT_SYNTHX) {
         Storage().incrementStaked(token, account, amount);
     }
 
-    function unstake(
-        bytes32 token,
-        address account,
-        uint256 amount
-    ) external onlyAddress(CONTRACT_SYNTHX) {
+    function unstake(bytes32 token, address account, uint256 amount) external onlyAddress(CONTRACT_SYNTHX) {
         Storage().decrementStaked(token, account, amount, 'Staker: unstake amount exceeds staked');
     }
 
@@ -85,19 +62,7 @@ contract Staker is Rewards, IStaker {
         return staked.decimalMultiply(price).decimalDivide(debt);
     }
 
+    function claim(address account) external onlyAddress(CONTRACT_SYNTHX) returns (uint256 period, uint256 amount) {}
 
-    function claim(address account)
-    external
-    onlyAddress(CONTRACT_SYNTHX)
-    returns (
-        uint256 period,
-        uint256 amount
-    )
-    {
-    }
-
-    function getClaimable(address account) public view returns (uint256) {
-        return 0;
-    }
-
+    function getClaimable(address account) public view returns (uint256) {return 0;}
 }

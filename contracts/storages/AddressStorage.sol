@@ -17,11 +17,7 @@ contract AddressStorage is Storage {
         return _storage[DEFAULT][key];
     }
 
-    function setAddressValue(
-        bytes32 key,
-        bytes32 field,
-        address value
-    ) internal {
+    function setAddressValue(bytes32 key, bytes32 field, address value) internal {
         _storage[key][field] = value;
     }
 

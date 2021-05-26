@@ -11,11 +11,7 @@ contract LiquidatorStorage is ExternalStorage, ILiquidatorStorage {
 
     constructor(address _manager) public ExternalStorage(_manager) {}
 
-    function addWatch(
-        bytes32 stake,
-        address account,
-        uint256 time
-    ) external onlyManager(managerName) {
+    function addWatch(bytes32 stake, address account, uint256 time) external onlyManager(managerName) {
         if (_storage[stake][account][0] > 0) return;
 
         _storage[stake][account][1] = time;
@@ -37,11 +33,7 @@ contract LiquidatorStorage is ExternalStorage, ILiquidatorStorage {
         return _storage[stake][account][1];
     }
 
-    function getAccounts(
-        bytes32 stake,
-        uint256 pageSize,
-        uint256 pageNumber
-    ) external view returns (address[] memory, Paging.Page memory) {
+    function getAccounts(bytes32 stake, uint256 pageSize, uint256 pageNumber) external view returns (address[] memory, Paging.Page memory) {
         Paging.Page memory page = Paging.getPage(_accounts[stake].length, pageSize, pageNumber);
         uint256 start = page.pageNumber.sub(1).mul(page.pageSize);
         uint256 last = _accounts[stake].length;

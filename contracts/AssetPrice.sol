@@ -8,9 +8,7 @@ import './interfaces/IAssetPrice.sol';
 contract AssetPrice is AddressStorage, IAssetPrice {
     uint256 public maxDelayTime = 3600;
 
-    constructor() public {
-        setContractName(CONTRACT_ASSET_PRICE);
-    }
+    constructor() public {setContractName(CONTRACT_ASSET_PRICE);}
 
     function setOracle(bytes32 asset, address oracle) external onlyOwner {
         emit OracleChanged(asset, getAddressValue(asset), oracle);
@@ -27,14 +25,7 @@ contract AssetPrice is AddressStorage, IAssetPrice {
         maxDelayTime = time;
     }
 
-    function getPriceFromOracle(bytes32 asset)
-        public
-        view
-        returns (
-            uint256 round,
-            uint256 price,
-            uint256 time
-        )
+    function getPriceFromOracle(bytes32 asset) public view returns (uint256 round, uint256 price, uint256 time)
     {
         address oracleAddress = getAddressValue(asset);
         string memory errorMessage = 'AssetPrice';

@@ -18,20 +18,9 @@ contract SupplySchedule is Importable, ISupplySchedule {
     uint256 public lastMintTime;
     mapping(bytes32 => uint256) public percentages;
 
-    constructor(
-        IResolver _resolver,
-        uint256 _startMintTime,
-        uint256 _lastMintTime
-    ) public Importable(_resolver) {
+    constructor(IResolver _resolver, uint256 _startMintTime, uint256 _lastMintTime) public Importable(_resolver) {
         setContractName(CONTRACT_SUPPLY_SCHEDULE);
-        imports = [
-            CONTRACT_SYNTHX_TOKEN,
-            CONTRACT_SETTING,
-            CONTRACT_FOUNDATION,
-            CONTRACT_ECOLOGY,
-            CONTRACT_HOLDER,
-            CONTRACT_HISTORY
-        ];
+        imports = [CONTRACT_SYNTHX_TOKEN, CONTRACT_SETTING, CONTRACT_FOUNDATION, CONTRACT_ECOLOGY, CONTRACT_HOLDER, CONTRACT_HISTORY];
 
         startMintTime = (_startMintTime == 0) ? now : _startMintTime;
         lastMintTime = (_lastMintTime < startMintTime) ? startMintTime : _lastMintTime;
@@ -41,13 +30,9 @@ contract SupplySchedule is Importable, ISupplySchedule {
         percentages[CONTRACT_ECOLOGY] = 0.05 ether; // 5%
     }
 
-    function Setting() private view returns (ISetting) {
-        return ISetting(requireAddress(CONTRACT_SETTING));
-    }
+    function Setting() private view returns (ISetting) {return ISetting(requireAddress(CONTRACT_SETTING));}
 
-    function History() private view returns (IHistory) {
-        return IHistory(requireAddress(CONTRACT_HISTORY));
-    }
+    function History() private view returns (IHistory) {return IHistory(requireAddress(CONTRACT_HISTORY));}
 
     function setPercentage(bytes32 recipient, uint256 percent) external onlyOwner {
         require(_isRecipient(recipient), 'SupplySchedule: invalid recipient');
@@ -56,29 +41,19 @@ contract SupplySchedule is Importable, ISupplySchedule {
         emit SupplyPercentageChanged(recipient, percentages[recipient], percent);
         percentages[recipient] = percent;
         uint256 totalPercentage = _getTotalPercentageWithoutStaker();
-        require(
-            totalPercentage <= PreciseMath.DECIMAL_ONE(),
-            'SupplySchedule: total percent must be no greater than 100%'
-        );
+        require(totalPercentage <= PreciseMath.DECIMAL_ONE(), 'SupplySchedule: total percent must be no greater than 100%');
         percentages[CONTRACT_HOLDER] = PreciseMath.DECIMAL_ONE().sub(totalPercentage);
     }
 
     function _isRecipient(bytes32 recipient) private pure returns (bool) {
-        return (recipient == CONTRACT_FOUNDATION ||
-            recipient == CONTRACT_HOLDER ||
-            recipient == CONTRACT_ECOLOGY);
+        return (recipient == CONTRACT_FOUNDATION || recipient == CONTRACT_HOLDER || recipient == CONTRACT_ECOLOGY);
     }
 
     function _getTotalPercentageWithoutStaker() private view returns (uint256) {
-        return percentages[CONTRACT_FOUNDATION]
-            .add(percentages[CONTRACT_ECOLOGY]);
+        return percentages[CONTRACT_FOUNDATION].add(percentages[CONTRACT_ECOLOGY]);
     }
 
-    function distributeSupply()
-        external
-        onlyAddress(CONTRACT_SYNTHX_TOKEN)
-        returns (address[] memory recipients, uint256[] memory amounts)
-    {
+    function distributeSupply() external onlyAddress(CONTRACT_SYNTHX_TOKEN) returns (address[] memory recipients, uint256[] memory amounts) {
         if (now < nextMintTime()) return (recipients, amounts);
 
         uint256 currentPeriod = currentPeriod();
@@ -133,13 +108,9 @@ contract SupplySchedule is Importable, ISupplySchedule {
         return SUPPLY_SCHEDULE[year].div(yearlyPeriods);
     }
 
-    function currentPeriod() public view returns (uint256) {
-        return _getPeriod(now);
-    }
+    function currentPeriod() public view returns (uint256) {return _getPeriod(now);}
 
-    function lastMintPeriod() public view returns (uint256) {
-        return _getPeriod(lastMintTime);
-    }
+    function lastMintPeriod() public view returns (uint256) {return _getPeriod(lastMintTime);}
 
     function nextMintTime() public view returns (uint256) {
         return lastMintTime.add(Setting().getMintPeriodDuration());

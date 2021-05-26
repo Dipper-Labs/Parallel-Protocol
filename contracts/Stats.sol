@@ -26,56 +26,26 @@ contract Stats is Importable, IStats {
 
     constructor(IResolver resolver) public Importable(resolver) {
         setContractName(CONTRACT_STATS);
-        imports = [
-            CONTRACT_SUPPLY_SCHEDULE,
-            CONTRACT_SYNTHX,
-            CONTRACT_STAKER,
-            CONTRACT_HOLDER,
-            CONTRACT_ASSET_PRICE,
-            CONTRACT_SETTING,
-            CONTRACT_ISSUER,
-            CONTRACT_TRADER,
-            CONTRACT_MARKET
-        ];
+        imports = [CONTRACT_SUPPLY_SCHEDULE, CONTRACT_SYNTHX, CONTRACT_STAKER, CONTRACT_HOLDER, CONTRACT_ASSET_PRICE, CONTRACT_SETTING, CONTRACT_ISSUER, CONTRACT_TRADER, CONTRACT_MARKET];
     }
 
-    function Synthx() private view returns (ISynthx) {
-        return ISynthx(requireAddress(CONTRACT_SYNTHX));
-    }
+    function Synthx() private view returns (ISynthx) {return ISynthx(requireAddress(CONTRACT_SYNTHX));}
 
-    function Staker() private view returns (IStaker) {
-        return IStaker(requireAddress(CONTRACT_STAKER));
-    }
+    function Staker() private view returns (IStaker) {return IStaker(requireAddress(CONTRACT_STAKER));}
 
-    function AssetPrice() private view returns (IAssetPrice) {
-        return IAssetPrice(requireAddress(CONTRACT_ASSET_PRICE));
-    }
+    function AssetPrice() private view returns (IAssetPrice) {return IAssetPrice(requireAddress(CONTRACT_ASSET_PRICE));}
 
-    function Setting() private view returns (ISetting) {
-        return ISetting(requireAddress(CONTRACT_SETTING));
-    }
+    function Setting() private view returns (ISetting) {return ISetting(requireAddress(CONTRACT_SETTING));}
 
-    function Issuer() private view returns (IIssuer) {
-        return IIssuer(requireAddress(CONTRACT_ISSUER));
-    }
+    function Issuer() private view returns (IIssuer) {return IIssuer(requireAddress(CONTRACT_ISSUER));}
 
-    function Trader() private view returns (ITrader) {
-        return ITrader(requireAddress(CONTRACT_TRADER));
-    }
+    function Trader() private view returns (ITrader) {return ITrader(requireAddress(CONTRACT_TRADER));}
 
-    function Rewards(bytes32 reward) private view returns (IRewards) {
-        return IRewards(requireAddress(reward));
-    }
+    function Rewards(bytes32 reward) private view returns (IRewards) {return IRewards(requireAddress(reward));}
 
-    function Market() private view returns (IMarket) {
-        return IMarket(requireAddress(CONTRACT_MARKET));
-    }
+    function Market() private view returns (IMarket) {return IMarket(requireAddress(CONTRACT_MARKET));}
 
-    function _getBalance(
-        bytes32 assetName,
-        address assetAddress,
-        address account
-    ) private view returns (uint256) {
+    function _getBalance(bytes32 assetName, address assetAddress, address account) private view returns (uint256) {
         if (assetName == Synthx().nativeCoin()) return account.balance;
 
         IERC20 token = IERC20(assetAddress);
@@ -110,11 +80,7 @@ contract Stats is Importable, IStats {
         if (assetType == SYNTH) return ISynth(assetAddress).category();
     }
 
-    function getAsset(
-        bytes32 assetType,
-        bytes32 assetName,
-        address account
-    ) public view returns (Asset memory) {
+    function getAsset(bytes32 assetType, bytes32 assetName, address account) public view returns (Asset memory) {
         address assetAddress = requireAsset(assetType, assetName);
         (uint256 price, uint256 status) = AssetPrice().getPriceAndStatus(assetName);
         uint256 balance = _getBalance(assetName, assetAddress, account);
@@ -143,11 +109,7 @@ contract Stats is Importable, IStats {
         return items;
     }
 
-    function _getVault(
-        address account,
-        bytes32 stakeName,
-        uint256 stakePrice
-    ) private view returns (Vault memory) {
+    function _getVault(address account, bytes32 stakeName, uint256 stakePrice) private view returns (Vault memory) {
         address stakeAddress = requireAsset(STAKE, stakeName);
         uint256 rewardCollateralRate = Setting().getCollateralRate(stakeName);
         uint256 liquidationCollateralRate = Setting().getLiquidationRate(stakeName);
@@ -156,21 +118,20 @@ contract Stats is Importable, IStats {
         (uint256 debt, uint256 dtokens) = Issuer().getDebt(stakeName, account);
         (uint256 transferable) = Staker().getTransferable(stakeName, account);
         uint256 balance = _getBalance(stakeName, stakeAddress, account);
-        return
-            Vault(
-                stakeName,
-                stakeAddress,
-                staked.decimalMultiply(stakePrice).decimalDivide(debt),
-                rewardCollateralRate,
-                liquidationCollateralRate,
-                liquidationFeeRate,
-                staked,
-                debt,
-                dtokens,
-                transferable,
-                balance,
-                stakePrice
-            );
+        return Vault(
+            stakeName,
+            stakeAddress,
+            staked.decimalMultiply(stakePrice).decimalDivide(debt),
+            rewardCollateralRate,
+            liquidationCollateralRate,
+            liquidationFeeRate,
+            staked,
+            debt,
+            dtokens,
+            transferable,
+            balance,
+            stakePrice
+        );
     }
 
     function getVault(bytes32 stake, address account) external view returns (Vault memory) {
@@ -203,15 +164,7 @@ contract Stats is Importable, IStats {
         return total;
     }
 
-    function getTotalCollateral(address account)
-        external
-        view
-        returns (
-            uint256 totalCollateralRatio,
-            uint256 totalCollateralValue,
-            uint256 totalDebt
-        )
-    {
+    function getTotalCollateral(address account) external view returns (uint256 totalCollateralRatio, uint256 totalCollateralValue, uint256 totalDebt) {
         Vault[] memory vaults = getVaults(account);
         for (uint256 i = 0; i < vaults.length; i++) {
             Vault memory vault = vaults[i];
@@ -222,14 +175,7 @@ contract Stats is Importable, IStats {
     }
 
 
-    function getAvailable(bytes32 stake, address account)
-        external
-        view
-        returns (
-            uint256 balance,
-            uint256 transferable
-        )
-    {
+    function getAvailable(bytes32 stake, address account) external view returns (uint256 balance, uint256 transferable) {
         bytes32 assetName = stake;
         address assetAddress = requireAsset(STAKE, assetName);
         balance = _getBalance(assetName, assetAddress, account);
@@ -268,19 +214,11 @@ contract Stats is Importable, IStats {
         return total;
     }
 
-    function getTradingAmountAndFee(
-        bytes32 fromSynth,
-        uint256 fromAmount,
-        bytes32 toSynth
-    ) external view returns (uint256 tradingAmount, uint256 tradingFee) {
+    function getTradingAmountAndFee(bytes32 fromSynth, uint256 fromAmount, bytes32 toSynth) external view returns (uint256 tradingAmount, uint256 tradingFee) {
         (tradingAmount, tradingFee, , , , ) = Trader().getTradingAmountAndFee(fromSynth, fromAmount, toSynth);
     }
 
-    function getTradingAmountAndFee2(
-        bytes32 fromSynth,
-        bytes32 toSynth,
-        uint256 toAmount
-    ) external view returns (uint256 tradingAmount, uint256 tradingFee) {
+    function getTradingAmountAndFee2(bytes32 fromSynth, bytes32 toSynth, uint256 toAmount) external view returns (uint256 tradingAmount, uint256 tradingFee) {
         (tradingAmount, tradingFee, , ) = Trader().getTradingAmountAndFee(fromSynth, toSynth, toAmount);
     }
 
@@ -288,18 +226,7 @@ contract Stats is Importable, IStats {
         return Rewards(CONTRACT_HOLDER).getClaimable(account);
     }
 
-    function getAssetMarket(bytes32 asset)
-        external
-        view
-        returns (
-            uint256 open,
-            uint256 last,
-            uint256 low,
-            uint256 hight,
-            uint256 volume,
-            uint256 turnover
-        )
-    {
+    function getAssetMarket(bytes32 asset) external view returns (uint256 open, uint256 last, uint256 low, uint256 hight, uint256 volume, uint256 turnover) {
         last = AssetPrice().getPrice(asset);
         (open, low, hight, volume, turnover) = Market().getAssetMarket(asset);
         if (open == 0) open = last;
@@ -307,11 +234,7 @@ contract Stats is Importable, IStats {
         hight = hight.max(last);
     }
 
-    function getSynthAssetMarkets()
-        external
-        view
-        returns (SynthAssetStats[] memory)
-    {
+    function getSynthAssetMarkets() external view returns (SynthAssetStats[] memory) {
         bytes32[] memory synths = assets(SYNTH);
         uint256[] memory prices = AssetPrice().getPrices(synths);
 
@@ -323,23 +246,14 @@ contract Stats is Importable, IStats {
         return items;
     }
 
-    function _getSynthAssetStat(
-        bytes32 assetName,
-        uint256 assetPrice
-    ) private view returns (SynthAssetStats memory) {
+    function _getSynthAssetStat(bytes32 assetName, uint256 assetPrice) private view returns (SynthAssetStats memory) {
         address assetAddress = requireAsset(SYNTH, assetName);
 
         IERC20 token = IERC20(assetAddress);
         uint256 totalSupply = token.totalSupply();
 
         (, , , uint256 volume,) = Market().getAssetMarket(assetName);
-        return
-        SynthAssetStats(
-            assetName,
-            volume,
-            totalSupply.decimalMultiply(assetPrice),
-            assetPrice
-        );
+        return SynthAssetStats(assetName, volume, totalSupply.decimalMultiply(assetPrice), assetPrice);
     }
 
 
@@ -350,37 +264,27 @@ contract Stats is Importable, IStats {
         return line;
     }
 
-    function _getPair(
-        bytes32 fromAsset,
-        uint256 fromAssetPrice,
-        uint256 fromAssetStatus,
-        bytes32 toAsset,
-        uint256 toAssetPrice,
-        uint256 toAssetStatus,
-        bytes32 category
-    ) private view returns (Pair memory) {
+    function _getPair(bytes32 fromAsset, uint256 fromAssetPrice, uint256 fromAssetStatus, bytes32 toAsset, uint256 toAssetPrice, uint256 toAssetStatus, bytes32 category) private view returns (Pair memory) {
         uint256 last = toAssetPrice.decimalDivide(fromAssetPrice);
-        (uint256 open, uint256 low, uint256 hight, uint256 volume, uint256 turnover) =
-            Market().getPairMarket(fromAsset, toAsset);
+        (uint256 open, uint256 low, uint256 hight, uint256 volume, uint256 turnover) = Market().getPairMarket(fromAsset, toAsset);
         if (open == 0) open = last;
         low = (low == 0) ? last : low.min(last);
         hight = hight.max(last);
 
-        return
-            Pair(
-                fromAsset,
-                fromAssetPrice,
-                toAsset,
-                toAssetPrice,
-                category,
-                open,
-                last,
-                low,
-                hight,
-                volume,
-                turnover,
-                (fromAssetStatus == 0 && toAssetStatus == 0) ? 0 : 1
-            );
+        return Pair(
+            fromAsset,
+            fromAssetPrice,
+            toAsset,
+            toAssetPrice,
+            category,
+            open,
+            last,
+            low,
+            hight,
+            volume,
+            turnover,
+            (fromAssetStatus == 0 && toAssetStatus == 0) ? 0 : 1
+        );
     }
 
     function getPair(bytes32 fromAsset, bytes32 toAsset) external view returns (Pair memory) {
@@ -428,11 +332,7 @@ contract Stats is Importable, IStats {
         return Trader().getTradingFee(account, period);
     }
 
-    function getDebtPercentage(
-        bytes32 stake,
-        address account,
-        uint256 period
-    ) external view returns (uint256) {
+    function getDebtPercentage(bytes32 stake, address account, uint256 period) external view returns (uint256) {
         return Issuer().getDebtPercentage(stake, account, period);
     }
 }

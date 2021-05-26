@@ -5,21 +5,12 @@ interface IRewardsStorage {
         uint256 amount;
         uint256 time;
     }
-    function setClaimed(
-        address account,
-        uint256 period,
-        uint256 amount
-    ) external;
 
-    function getClaimed(
-        address account,
-        uint256 period
-    ) external view returns (uint256);
+    function setClaimed(address account, uint256 period, uint256 amount) external;
 
-    function setLastClaimedPeriod(
-        address account,
-        uint256 period
-    ) external;
+    function getClaimed(address account, uint256 period) external view returns (uint256);
+
+    function setLastClaimedPeriod(address account, uint256 period) external;
 
     function getLastClaimedPeriod(address account) external view returns (uint256);
 }

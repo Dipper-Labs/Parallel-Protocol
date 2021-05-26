@@ -20,35 +20,18 @@ contract Liquidator is Importable, ExternalStorable, ILiquidator {
 
     constructor(IResolver _resolver) public Importable(_resolver) {
         setContractName(CONTRACT_LIQUIDATOR);
-        imports = [
-            CONTRACT_SYNTHX,
-            CONTRACT_SUPPLY_SCHEDULE,
-            CONTRACT_ISSUER,
-            CONTRACT_SETTING,
-            CONTRACT_ASSET_PRICE,
-            CONTRACT_STAKER
-        ];
+        imports = [CONTRACT_SYNTHX, CONTRACT_SUPPLY_SCHEDULE, CONTRACT_ISSUER, CONTRACT_SETTING, CONTRACT_ASSET_PRICE, CONTRACT_STAKER];
     }
 
-    function Storage() internal view returns (ILiquidatorStorage) {
-        return ILiquidatorStorage(getStorage());
-    }
+    function Storage() internal view returns (ILiquidatorStorage) {return ILiquidatorStorage(getStorage());}
 
-    function Issuer() private view returns (IIssuer) {
-        return IIssuer(requireAddress(CONTRACT_ISSUER));
-    }
+    function Issuer() private view returns (IIssuer) {return IIssuer(requireAddress(CONTRACT_ISSUER));}
 
-    function Setting() private view returns (ISetting) {
-        return ISetting(requireAddress(CONTRACT_SETTING));
-    }
+    function Setting() private view returns (ISetting) {return ISetting(requireAddress(CONTRACT_SETTING));}
 
-    function AssetPrice() private view returns (IAssetPrice) {
-        return IAssetPrice(requireAddress(CONTRACT_ASSET_PRICE));
-    }
+    function AssetPrice() private view returns (IAssetPrice) {return IAssetPrice(requireAddress(CONTRACT_ASSET_PRICE));}
 
-    function Staker() private view returns (IStaker) {
-        return IStaker(requireAddress(CONTRACT_STAKER));
-    }
+    function Staker() private view returns (IStaker) {return IStaker(requireAddress(CONTRACT_STAKER));}
 
     function watchAccount(bytes32 stake, address account) external {
         uint256 currentCollateralRate = Staker().getCollateralRate(stake, account);
@@ -97,11 +80,7 @@ contract Liquidator is Importable, ExternalStorable, ILiquidator {
         return amount.decimalMultiply(PreciseMath.DECIMAL_ONE().add(liquidationFeeRate)).decimalDivide(price);
     }
 
-    function getAccounts(
-        bytes32 stake,
-        uint256 pageSize,
-        uint256 pageNumber
-    ) external view returns (address[] memory, Paging.Page memory) {
+    function getAccounts(bytes32 stake, uint256 pageSize, uint256 pageNumber) external view returns (address[] memory, Paging.Page memory) {
         return Storage().getAccounts(stake, pageSize, pageNumber);
     }
 }

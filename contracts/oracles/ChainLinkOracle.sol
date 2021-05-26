@@ -22,23 +22,12 @@ contract ChainLinkOracle is AddressStorage, IOracle {
         removeAddressValue(asset);
     }
 
-    function getAggregator(bytes32 asset) public view returns (address) {
-        return getAddressValue(asset);
-    }
+    function getAggregator(bytes32 asset) public view returns (address) {return getAddressValue(asset);}
 
-    function getPrice(bytes32 asset)
-        external
-        view
-        returns (
-            uint256 round,
-            uint256 price,
-            uint256 time
-        )
-    {
+    function getPrice(bytes32 asset) external view returns (uint256 round, uint256 price, uint256 time) {
         address aggregator = getAggregator(asset);
         if (aggregator == address(0)) return (0, 0, 0);
-        (uint256 roundId, int256 oraclePrice, , uint256 oracleTime, ) =
-            IChainLinkAggregator(aggregator).latestRoundData();
+        (uint256 roundId, int256 oraclePrice, , uint256 oracleTime, ) = IChainLinkAggregator(aggregator).latestRoundData();
         return (roundId, uint256(oraclePrice * 1e10), oracleTime);
     }
 

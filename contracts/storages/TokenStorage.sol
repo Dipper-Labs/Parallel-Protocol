@@ -9,11 +9,7 @@ contract TokenStorage is ExternalStorage, ITokenStorage {
 
     constructor(address _manager) public ExternalStorage(_manager) {}
 
-    function setAllowance(
-        address key,
-        address field,
-        uint256 value
-    ) external onlyManager(managerName) {
+    function setAllowance(address key, address field, uint256 value) external onlyManager(managerName) {
         _allowances[key][field] = value;
     }
 
@@ -21,30 +17,17 @@ contract TokenStorage is ExternalStorage, ITokenStorage {
         return _allowances[key][field];
     }
 
-    function incrementUint(
-        bytes32 key,
-        address field,
-        uint256 value
-    ) external onlyManager(managerName) returns (uint256) {
+    function incrementUint(bytes32 key, address field, uint256 value) external onlyManager(managerName) returns (uint256) {
         _storage[key][field] = _storage[key][field].add(value);
         return _storage[key][field];
     }
 
-    function decrementUint(
-        bytes32 key,
-        address field,
-        uint256 value,
-        string calldata errorMessage
-    ) external onlyManager(managerName) returns (uint256) {
+    function decrementUint(bytes32 key, address field, uint256 value, string calldata errorMessage) external onlyManager(managerName) returns (uint256) {
         _storage[key][field] = _storage[key][field].sub(value, errorMessage);
         return _storage[key][field];
     }
 
-    function setUint(
-        bytes32 key,
-        address field,
-        uint256 value
-    ) external onlyManager(managerName) {
+    function setUint(bytes32 key, address field, uint256 value) external onlyManager(managerName) {
         _storage[key][field] = value;
     }
 
